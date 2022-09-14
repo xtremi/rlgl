@@ -1,0 +1,27 @@
+#pragma once
+#include <glad/glad.h>
+
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
+
+std::string readFile(const std::string& filePath);
+
+
+class rlglShader
+{
+public:
+    unsigned int ID;
+
+    rlglShader();
+    bool init(const std::string& vertexPath, const std::string& fragmentPath);
+    GLuint compileShader(const std::string& filePath, GLenum shaderType, std::string& err);
+
+    void use() const;
+    void setBool(const std::string& name, bool value) const;
+    void setInt(const std::string& name, int value) const;
+    void setFloat(const std::string& name, float value) const;
+};
+

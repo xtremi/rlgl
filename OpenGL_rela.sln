@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGL_rela", "OpenGL_rela\OpenGL_rela.vcxproj", "{29728E66-EE5F-4A51-B5E6-0D6D68D19C8D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{29728E66-EE5F-4A51-B5E6-0D6D68D19C8D}.Debug|x64.ActiveCfg = Debug|x64
+		{29728E66-EE5F-4A51-B5E6-0D6D68D19C8D}.Debug|x64.Build.0 = Debug|x64
+		{29728E66-EE5F-4A51-B5E6-0D6D68D19C8D}.Release|x64.ActiveCfg = Release|x64
+		{29728E66-EE5F-4A51-B5E6-0D6D68D19C8D}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C2CFBE01-271E-4B6A-B72E-70B7765D3081}
+	EndGlobalSection
+EndGlobal

@@ -1,10 +1,14 @@
 #include "rlglShader.h"
 #include <glm/gtc/type_ptr.hpp>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
+using namespace rlgl;
 
-rlglShader::rlglShader() {}
+Shader::Shader() {}
 
-bool rlglShader::init(const std::string& vertexPath, const std::string& fragmentPath) {
+bool Shader::init(const std::string& vertexPath, const std::string& fragmentPath) {
     std::string errmsg;
     GLuint vShader = compileShader(vertexPath, GL_VERTEX_SHADER, errmsg);
     if (!vShader) {
@@ -36,7 +40,7 @@ bool rlglShader::init(const std::string& vertexPath, const std::string& fragment
     return true;
 }
 
-GLuint rlglShader::compileShader(const std::string& filePath, GLenum shaderType, std::string& err) {
+GLuint Shader::compileShader(const std::string& filePath, GLenum shaderType, std::string& err) {
 
     const std::string shaderContent = readFile(filePath);
     if (shaderContent.empty()) {
@@ -61,29 +65,29 @@ GLuint rlglShader::compileShader(const std::string& filePath, GLenum shaderType,
     return shaderID;
 }
 
-void rlglShader::use() const {
+void Shader::use() const {
     glUseProgram(ID);
 }
 
-void rlglShader::setBool(const std::string& name, bool value) const {
+void Shader::setBool(const std::string& name, bool value) const {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
 }
-void rlglShader::setFloat(const std::string& name, float value) const {
+void Shader::setFloat(const std::string& name, float value) const {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
-void rlglShader::setMat4x4(const std::string& name, const glm::mat4x4& value) const {
+void Shader::setMat4x4(const std::string& name, const glm::mat4x4& value) const {
     glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
-void rlglShader::setUint(const std::string& name, GLuint value) const {
+void Shader::setUint(const std::string& name, GLuint value) const {
     glUniform1ui(glGetUniformLocation(ID, name.c_str()), value);
 }
-void rlglShader::setInt(const std::string& name, GLint value) const {
+void Shader::setInt(const std::string& name, GLint value) const {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 
 
 
-std::string readFile(const std::string& filePath) {
+std::string rlgl::readFile(const std::string& filePath) {
     std::ifstream file;
     file.open(filePath);
     if (!file.is_open()) {

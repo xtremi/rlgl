@@ -11,15 +11,20 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+
+#include "rlglScene.h"
+
+
 #include "rlglShader.h"
-#include "rlglShapeGeometry.h"
+#include "rlglMesh.h"
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
 struct rlglContext {
     GLuint VBO, VAO, EBO;
-    rlglShader shader;
+    rlgl::Shader shader;
 
     GLuint textures[10];
 };
@@ -30,7 +35,7 @@ void triangleTest01_renderRoutine(const rlglContext& ctxt);
 void triangleTest02_renderRoutine(const rlglContext& ctxt);
 
 
-
+void 
 
 int main(int argc, char* argv[]) {
 
@@ -133,7 +138,7 @@ bool triangleTest02_init(rlglContext& ctxt) {
     //texture:
     int width, height, nrChannels;
     unsigned char* imgData = stbi_load(
-        "C:\\coding\\my_projects\\LearnOpenGL\\OpenGL_rela\\data\\checker.jpg", &width, &height, &nrChannels, 0);
+        "..\\data\\checker.jpg", &width, &height, &nrChannels, 0);
 
     glGenTextures(1, &ctxt.textures[0]);
     glActiveTexture(GL_TEXTURE0);

@@ -1,8 +1,5 @@
-#include "rlglShapeGeometry.h"
+#include "rlglMesh.h"
 using namespace rlgl;
-
-
-
 
 
 const Mesh rlgl::plane = {

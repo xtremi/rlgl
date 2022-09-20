@@ -1,5 +1,4 @@
 #pragma once
-#include "rlglShapeGeometry.h"
 #include <glm/glm.hpp>
 
 namespace rlgl{
@@ -7,12 +6,11 @@ namespace rlgl{
 class Object
 {
 public:
-	Mesh* mesh;
-
+	uint32_t meshID;
+	uint32_t shaderID;
+	uint32_t materialID;
 
 	glm::mat4 modelMatrix;
-
-
 };
 
 

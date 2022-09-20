@@ -3,19 +3,19 @@
 #include <glm/glm.hpp>
 
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
+
+
+namespace rlgl{
 
 std::string readFile(const std::string& filePath);
 
 
-class rlglShader
+class Shader
 {
 public:
     unsigned int ID;
 
-    rlglShader();
+    Shader();
     bool init(const std::string& vertexPath, const std::string& fragmentPath);
     GLuint compileShader(const std::string& filePath, GLenum shaderType, std::string& err);
 
@@ -27,3 +27,4 @@ public:
     void setInt(const std::string& name, GLint value) const;
 };
 
+}

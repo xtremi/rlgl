@@ -11,8 +11,6 @@ public:
 
 
 	glm::mat4 modelMatrix;
-
-
 };
 
 

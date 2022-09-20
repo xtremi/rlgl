@@ -24,6 +24,9 @@
     <ClCompile Include="rlglShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rlglShapeGeometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="vertexShaderSimple.vs" />
@@ -31,6 +34,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rlglShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rlglShapeGeometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

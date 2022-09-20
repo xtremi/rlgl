@@ -1,11 +1,11 @@
 #pragma once
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
-
 
 std::string readFile(const std::string& filePath);
 
@@ -21,7 +21,9 @@ public:
 
     void use() const;
     void setBool(const std::string& name, bool value) const;
-    void setInt(const std::string& name, int value) const;
     void setFloat(const std::string& name, float value) const;
+    void setMat4x4(const std::string& name, const glm::mat4x4& value) const;
+    void setUint(const std::string& name, GLuint value) const;
+    void setInt(const std::string& name, GLint value) const;
 };
 

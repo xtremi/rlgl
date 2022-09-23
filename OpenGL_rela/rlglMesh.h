@@ -37,18 +37,22 @@ namespace rlgl {
 class Mesh
 {
 public:
+	void initialize();
+
     GLBuffer<float>  vertices;
     GLBuffer<GLuint> indices;
+	GLuint VAO;
 
 	bool hasIndices = false;
-	bool hasNormals = false;
+	bool hasNormals = false;	
 	bool hasColours = false;
 	bool hasTexCoords = false;
 };
 
-
-extern const Mesh plane;
-extern const Mesh cube;
+namespace primitive_mesh{
+	extern Mesh plane;
+	extern Mesh cube;
+}
 
 }
 

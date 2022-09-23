@@ -6,7 +6,10 @@ namespace rlgl{
 class Material
 {
 public:
-	std::string textureFilePath;
+	virtual void initialize(const std::string& texturePath);
+
+protected:
+	GLuint ID;
 };
 
 }

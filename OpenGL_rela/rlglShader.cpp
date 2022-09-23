@@ -8,7 +8,7 @@ using namespace rlgl;
 
 Shader::Shader() {}
 
-bool Shader::init(const std::string& vertexPath, const std::string& fragmentPath) {
+bool Shader::initialize(const std::string& vertexPath, const std::string& fragmentPath) {
     std::string errmsg;
     GLuint vShader = compileShader(vertexPath, GL_VERTEX_SHADER, errmsg);
     if (!vShader) {

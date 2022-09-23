@@ -6,9 +6,12 @@ namespace rlgl{
 class Object
 {
 public:
-	uint32_t meshID;
-	uint32_t shaderID;
-	uint32_t materialID;
+	Object(uint64_t meshID, uint64_t shaderID, uint64_t materialID);
+
+public:
+	uint64_t meshID;
+	uint64_t shaderID;
+	uint64_t materialID;
 
 	glm::mat4 modelMatrix;
 };

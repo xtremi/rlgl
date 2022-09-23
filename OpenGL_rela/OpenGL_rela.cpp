@@ -16,6 +16,8 @@
 #include "rlglRenderer.h"
 #include "rlglShader.h"
 #include "rlglMesh.h"
+#include "rlglMaterial.h"
+#include "rlglObject.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -36,69 +38,115 @@ void triangleTest02_renderRoutine(const rlglContext& ctxt);
 class SampleApp {
 	
 public:
-	void initializeWindow(float windowX, float windowY);
-	void prepareScene();
-	void renderScene();
+	int initializeWindow(int windowX, int windowY);
+	int prepareScene();
+	int renderScene();
+
+	GLFWwindow* getWindow() {
+		return window;
+	}
 
 private:
 	rlgl::Scene scene;
 	rlgl::Renderer renderer;
 	GLFWwindow* window = nullptr;
-	glm::vec2 windowSize;
+	glm::ivec2 windowSize;
+
+	std::string appLabel = "SampleApp v0.0.1";
+	std::string errmsg = "";
+
+	glm::vec3 backgroundColor = glm::vec3(0.f);
 };
 
-void SampleApp::initializeWindow(float windowX, float windowY) {
+int SampleApp::initializeWindow(int windowX, int windowY) {
+
+	windowSize = glm::ivec2(windowX, windowY);
+
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE)
+
+	window = glfwCreateWindow(windowSize.x, windowSize.y, appLabel.c_str(), NULL, NULL);
+	if (window == NULL)
+	{
+		glfwTerminate();
+		errmsg = "glfwCreateWindow() - Failed to create GLFW window";	
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		errmsg = "gladLoadGLLoader() - Failed to initialize GLAD";
+		return -2;
+	}
+
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
+	glEnable(GL_DEPTH_TEST);
+	return 0;
+}
+
+int SampleApp::prepareScene() {
+
+	rlgl::primitive_mesh::plane.initialize();
+	rlgl::primitive_mesh::cube.initialize();
+
+	uint64_t mesh1 = scene.addMesh(&rlgl::primitive_mesh::plane);
+	uint64_t mesh2 = scene.addMesh(&rlgl::primitive_mesh::cube);
+	
+
+	rlgl::Shader shader1;
+	shader1.initialize("vertexShaderSimple.vs", "fragmentShaderSimple.fs");
+	uint64_t shader1ID = scene.addShader(shader1);
+
+	rlgl::Material material1;
+	material1.initialize("..\\data\\checker.jpg");
+	uint64_t material1ID = scene.addMaterial(material1);
+
+	rlgl::Object obj1(mesh1, shader1ID, material1ID);
+	uint64_t obj1ID = scene.addObject(&obj);
+
+	//texture:
+
+
+	ctxt.shader.setInt("textureID", 0);
+
+
+
+	return true;
+}
+
+int SampleApp::renderScene() {
 
 }
 
 
 int main(int argc, char* argv[]) {
 
+	SampleApp app;
+	if (int err = app.initializeWindow(800, 600)) {
+		return err;
+	}
+    
+	if (int err = app.prepareScene()) {
+		return err;
+	}
 
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE)
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
-    if (window == NULL)
+    while (!glfwWindowShouldClose(app.getWindow()))
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
-
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glEnable(GL_DEPTH_TEST);
-
-    rlglContext rlglCtxt1, rlglCtxt2;
-    if (!triangleTest01_init(rlglCtxt1)) {
-        return 1;
-    }
-    if (!triangleTest02_init(rlglCtxt2)) {
-        return 1;
-    }
-
-
-    while (!glfwWindowShouldClose(window))
-    {
-        processInput(window);
+        processInput(app.getWindow());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        triangleTest01_renderRoutine(rlglCtxt1);
-        triangleTest02_renderRoutine(rlglCtxt2);
+		if (int err = app.renderScene()) {
+			return err;
+		}
 
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(app.getWindow());
         glfwPollEvents();
     }
 
@@ -126,7 +174,7 @@ void processInput(GLFWwindow* window)
 
 
 bool triangleTest02_init(rlglContext& ctxt) {
-    ctxt.shader.init("vertexShaderSimple.vs", "fragmentShaderSimple.fs");
+    ctxt.shader.initialize("vertexShaderSimple.vs", "fragmentShaderSimple.fs");
 
     glGenVertexArrays(1, &ctxt.VAO);
     glBindVertexArray(ctxt.VAO);
@@ -175,7 +223,7 @@ bool triangleTest02_init(rlglContext& ctxt) {
 
 bool triangleTest01_init(rlglContext& ctxt) {
     
-    ctxt.shader.init("vertexShaderSimple.vs", "fragmentShaderSimple.fs");
+    ctxt.shader.initialize("vertexShaderSimple.vs", "fragmentShaderSimple.fs");
 
     glGenVertexArrays(1, &ctxt.VAO);
     glBindVertexArray(ctxt.VAO);

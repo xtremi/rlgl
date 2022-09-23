@@ -16,7 +16,7 @@ public:
     unsigned int ID;
 
     Shader();
-    bool init(const std::string& vertexPath, const std::string& fragmentPath);
+    bool initialize(const std::string& vertexPath, const std::string& fragmentPath);
     GLuint compileShader(const std::string& filePath, GLenum shaderType, std::string& err);
 
     void use() const;

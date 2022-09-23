@@ -78,7 +78,7 @@ Mesh rlgl::primitive_mesh::plane = {
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
     }),
-	true, false, true, true, 4, 6
+	0, true, false, true, true, 4, 6
 	
 };
 
@@ -127,5 +127,5 @@ extern Mesh rlgl::primitive_mesh::cube{
         -0.5f,  0.5f, -0.5f,   1.0f, 0.f, 0.f,   0.0f, 1.0f
      }),
     rlgl::GLBuffer<GLuint>({}),
-	false, false, true, true, 36, 12
+	0, false, false, true, true, 36, 12
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <glad/glad.h>
 
 namespace rlgl{
 
@@ -9,7 +10,7 @@ public:
 	virtual void initialize(const std::string& texturePath);
 
 protected:
-	GLuint ID;
+	GLuint glID = 0;
 };
 
 }

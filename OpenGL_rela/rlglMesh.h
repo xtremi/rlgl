@@ -38,6 +38,8 @@ class Mesh
 {
 public:
 	void initialize();
+	void bind() const;
+	void draw() const;
 
     GLBuffer<float>  vertices;
     GLBuffer<GLuint> indices;
@@ -47,6 +49,9 @@ public:
 	bool hasNormals = false;	
 	bool hasColours = false;
 	bool hasTexCoords = false;
+
+	GLsizei nVertices;
+	GLsizei nElements;
 };
 
 namespace primitive_mesh{

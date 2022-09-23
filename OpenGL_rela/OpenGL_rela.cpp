@@ -41,22 +41,32 @@ public:
 	int initializeWindow(int windowX, int windowY);
 	int prepareScene();
 	int renderScene();
+	int updateScene();
+
+
+	void cleanUp();
 
 	GLFWwindow* getWindow() {
 		return window;
 	}
 
-private:
-	rlgl::Scene scene;
 	rlgl::Renderer renderer;
-	GLFWwindow* window = nullptr;
-	glm::ivec2 windowSize;
+
+private:
+	rlgl::Scene	   scene;
+	GLFWwindow*	   window = nullptr;
+	glm::ivec2	   windowSize = glm::ivec2(800, 600);
 
 	std::string appLabel = "SampleApp v0.0.1";
 	std::string errmsg = "";
 
 	glm::vec3 backgroundColor = glm::vec3(0.f);
 };
+
+void SampleApp::cleanUp() {
+	scene.cleanUp();
+}
+
 
 int SampleApp::initializeWindow(int windowX, int windowY) {
 
@@ -98,36 +108,50 @@ int SampleApp::prepareScene() {
 	uint64_t mesh1 = scene.addMesh(&rlgl::primitive_mesh::plane);
 	uint64_t mesh2 = scene.addMesh(&rlgl::primitive_mesh::cube);
 	
-
 	rlgl::Shader shader1;
 	shader1.initialize("vertexShaderSimple.vs", "fragmentShaderSimple.fs");
+	shader1.setInt("textureID", 0);
 	uint64_t shader1ID = scene.addShader(shader1);
 
 	rlgl::Material material1;
 	material1.initialize("..\\data\\checker.jpg");
 	uint64_t material1ID = scene.addMaterial(material1);
 
-	rlgl::Object obj1(mesh1, shader1ID, material1ID);
-	uint64_t obj1ID = scene.addObject(&obj);
+	rlgl::Object* obj1 = new rlgl::Object(mesh1, shader1ID, material1ID);	//change to smart pointer
+	uint64_t obj1ID = scene.addObject(obj1);
 
-	//texture:
-
-
-	ctxt.shader.setInt("textureID", 0);
-
-
-
-	return true;
+	return 0;
 }
 
 int SampleApp::renderScene() {
 
+	renderer.render(scene);
+
+	return 0;
+}
+
+int SampleApp::updateScene() {
+
+	float curTime = glfwGetTime();
+
+	rlgl::Object* obj1 = scene.object(0);
+
+	glm::mat4 translM = glm::translate(glm::mat4(1.5f), glm::vec3(0.f, 0.f, 1.f));
+	glm::mat4 rotM = glm::rotate(glm::mat4(1.f), curTime, glm::vec3(0.f, 1.f, 1.f));
+	glm::mat4 scaleM = glm::scale(glm::mat4(1.0), glm::vec3(0.6f));
+	obj1->modelMatrix = translM * scaleM * rotM;
+
+
+
+	return 0;
 }
 
 
 int main(int argc, char* argv[]) {
 
 	SampleApp app;
+	app.renderer = rlgl::Renderer(800.f / 600.f);
+
 	if (int err = app.initializeWindow(800, 600)) {
 		return err;
 	}
@@ -140,7 +164,10 @@ int main(int argc, char* argv[]) {
     while (!glfwWindowShouldClose(app.getWindow()))
     {
         processInput(app.getWindow());
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+		app.updateScene();
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if (int err = app.renderScene()) {
 			return err;
@@ -149,6 +176,8 @@ int main(int argc, char* argv[]) {
         glfwSwapBuffers(app.getWindow());
         glfwPollEvents();
     }
+
+	app.cleanUp();
 
     glfwTerminate();
     return 0;
@@ -172,7 +201,7 @@ void processInput(GLFWwindow* window)
 }
 
 
-
+/*
 bool triangleTest02_init(rlglContext& ctxt) {
     ctxt.shader.initialize("vertexShaderSimple.vs", "fragmentShaderSimple.fs");
 
@@ -328,7 +357,7 @@ void triangleTest01_renderRoutine(const rlglContext& ctxt) {
     modelM = modelM * rotM;
     ctxt.shader.setMat4x4("model", modelM);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-}
+}*/
 
 
 

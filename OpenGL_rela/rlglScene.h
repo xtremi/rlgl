@@ -18,9 +18,6 @@ protected:
 	std::vector<Mesh> meshes;
 	std::vector<Shader> shaders;
 	std::vector<Object*> objects;
-
-
-	void render(Renderer* renderer);
 };
 
 

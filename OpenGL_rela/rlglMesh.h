@@ -33,11 +33,17 @@ namespace rlgl {
         glBufferData(target, sizeof(T) * data.size(), (void*)&data[0], usage);
     }
 
+
 class Mesh
 {
 public:
-    GLBuffer<float> vertices;
+    GLBuffer<float>  vertices;
     GLBuffer<GLuint> indices;
+
+	bool hasIndices = false;
+	bool hasNormals = false;
+	bool hasColours = false;
+	bool hasTexCoords = false;
 };
 
 

@@ -3,11 +3,15 @@
 namespace rlgl{
 
 	class Object;
+	class Scene;
 
 class Renderer
 {
 public:
-	void render(Object* obj);
+	void render(const Scene& scene);
+
+protected:
+	void render(const Object* obj);
 };
 
 

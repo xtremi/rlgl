@@ -4,7 +4,12 @@
 using namespace rlgl;
 
 
-void Renderer::render(Object* obj) {
+void Renderer::render(const Scene& scene) {
+
+}
+
+
+void Renderer::render(const Object* obj) {
 
 
 }

@@ -13,8 +13,7 @@
 
 
 #include "rlglScene.h"
-
-
+#include "rlglRenderer.h"
 #include "rlglShader.h"
 #include "rlglMesh.h"
 
@@ -34,8 +33,24 @@ bool triangleTest02_init(rlglContext& ctxt);
 void triangleTest01_renderRoutine(const rlglContext& ctxt);
 void triangleTest02_renderRoutine(const rlglContext& ctxt);
 
+class SampleApp {
+	
+public:
+	void initializeWindow(float windowX, float windowY);
+	void prepareScene();
+	void renderScene();
 
-void 
+private:
+	rlgl::Scene scene;
+	rlgl::Renderer renderer;
+	GLFWwindow* window = nullptr;
+	glm::vec2 windowSize;
+};
+
+void SampleApp::initializeWindow(float windowX, float windowY) {
+
+}
+
 
 int main(int argc, char* argv[]) {
 
@@ -85,8 +100,6 @@ int main(int argc, char* argv[]) {
 
         glfwSwapBuffers(window);
         glfwPollEvents();
-
-
     }
 
     glfwTerminate();

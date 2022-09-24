@@ -1,4 +1,4 @@
-#pragma once
+#
 #include <iostream>
 #include "SampleApp.h"
 
@@ -8,7 +8,8 @@ int main(int argc, char* argv[]) {
     glm::ivec2 windowSize(800, 600);
 
 	SampleApp app;
-	app.renderer = rlgl::Renderer((float)windowSize.x / (float)windowSize.y);
+	app.renderer = rlgl::Renderer();
+    app.camera.aspectRatio = (float)windowSize.x / (float)windowSize.y;
 
 	if (int err = app.initializeWindow(windowSize.x, windowSize.y)) {
 		return err;
@@ -21,7 +22,7 @@ int main(int argc, char* argv[]) {
 
     while (!glfwWindowShouldClose(app.getWindow()))
     {
-        processInput(app.getWindow());
+        app.processInput(app.getWindow());
         
 		app.updateScene();
 

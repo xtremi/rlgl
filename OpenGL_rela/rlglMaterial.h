@@ -8,9 +8,9 @@ class Material
 {
 public:
 	virtual void initialize(const std::string& texturePath);
+	GLuint glID = 0;
 
 protected:
-	GLuint glID = 0;
 };
 
 }

@@ -5,36 +5,39 @@
 
 #include "GLFW/glfw3.h"
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+
 
 using namespace rlgl;
 
+Renderer::Renderer() {}
 
-void Renderer::render(const Scene& scene) {
+void Renderer::render(const Scene& scene, const Camera& cam) {
 	
-	projectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
-	viewMatrix = glm::lookAt(glm::vec3(0.f, 0.f, -10.f), glm::vec3(0.f), glm::vec3(1.f, 0.f, 0.f));
-
 	rlgl::cObjectIt it = scene.cbeginObject();
 
 	for (rlgl::cObjectIt it = scene.cbeginObject(); it != scene.cendObject(); it++) {
-		render(scene, *it);
+		render(scene, cam, *it);
 	}
 
 }
 
 
-void Renderer::render(const Scene& scene, const Object* obj) {
+void Renderer::render(const Scene& scene, const Camera& cam, const Object* obj) {
 
 
 	const Shader* currentShader = scene.shader(obj->shaderID);
+	const Material* currentMaterial = scene.material(obj->materialID);
+
 	currentShader->use();
-	currentShader->setMat4x4("projection", projectionMatrix);
-	currentShader->setMat4x4("view", viewMatrix);
+	currentShader->setMat4x4("projection", cam.projectionMatrix());
+	currentShader->setMat4x4("view", cam.viewMatrix());
 	currentShader->setMat4x4("model", obj->modelMatrix);
 
-	//glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
-	//glBindTexture(GL_TEXTURE_2D, ctxt.textures[0]);
+	glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
+	glBindTexture(GL_TEXTURE_2D, currentMaterial->glID);
+	//currentShader->setInt("textureID", currentMaterial->glID);
+
+
 
 	const Mesh* currentMesh = scene.mesh(obj->meshID);
 	currentMesh->bind();

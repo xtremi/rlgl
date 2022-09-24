@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="OpenGL_rela.cpp" />
+    <ClCompile Include="rlglCamera.cpp" />
     <ClCompile Include="rlglMaterial.cpp" />
     <ClCompile Include="rlglMesh.cpp" />
     <ClCompile Include="rlglObject.cpp" />
@@ -160,6 +161,7 @@
     <None Include="vertexShaderSimple.vs" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="rlglCamera.h" />
     <ClInclude Include="rlglMaterial.h" />
     <ClInclude Include="rlglMesh.h" />
     <ClInclude Include="rlglObject.h" />

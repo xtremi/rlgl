@@ -66,7 +66,7 @@ void Mesh::initialize() {
 }
 
 
-Mesh rlgl::primitive_mesh::plane = {
+Mesh rlgl::primitive_mesh::plane_textureX10 = {
 
     rlgl::GLBuffer<float>({
          0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 10.0f, 10.0f, // top right
@@ -80,6 +80,22 @@ Mesh rlgl::primitive_mesh::plane = {
     }),
 	0, true, false, true, true, 4, 6
 	
+};
+
+Mesh rlgl::primitive_mesh::plane = {
+
+    rlgl::GLBuffer<float>({
+         0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
+         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
+        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+        -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // top left 
+    }),
+    rlgl::GLBuffer<GLuint>({
+        0, 1, 3,   // first triangle
+        1, 2, 3    // second triangle
+    }),
+    0, true, false, true, true, 4, 6
+
 };
 
 extern Mesh rlgl::primitive_mesh::cube{

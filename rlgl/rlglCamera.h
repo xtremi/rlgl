@@ -15,8 +15,9 @@ public:
 	void moveLeft(float distance);
 	void moveRight(float distance);
 
-	glm::vec3 position = glm::vec3(0.f, 0.f, 10.f);
-	glm::vec3 lookAt   = glm::vec3(0.f);
+	glm::vec3 position = glm::vec3(-5.f, -5.f, 1.f);
+	//glm::vec3 lookAt   = glm::vec3(0.f);
+	glm::vec3 front   = glm::vec3(1.f, 0.f, 0.f);
 	glm::vec3 upVector = glm::vec3(0.f, 0.f, 1.f);
 	float fov  = 45.f;
 	float near = 0.1f;

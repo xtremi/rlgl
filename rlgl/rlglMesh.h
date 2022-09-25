@@ -56,6 +56,7 @@ public:
 
 namespace primitive_mesh{
 	extern Mesh plane;
+	extern Mesh plane_textureX10;
 	extern Mesh cube;
 }
 

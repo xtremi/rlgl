@@ -9,7 +9,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-
+static const float CURSOR_YAW_PITCH_SENSITIVITY = 0.25f;
 void SampleApp::handleMouse(double xpos, double ypos)
 {
     static bool firstMouse = true;
@@ -28,11 +28,10 @@ void SampleApp::handleMouse(double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    float sensitivity = 0.1f; // change this value to your liking
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
+    xoffset *= CURSOR_YAW_PITCH_SENSITIVITY;
+    yoffset *= CURSOR_YAW_PITCH_SENSITIVITY;
 
-    yaw += xoffset;
+    yaw -= xoffset;
     pitch += yoffset;
 
     // make sure that when pitch is out of bounds, screen doesn't get flipped
@@ -45,11 +44,14 @@ void SampleApp::handleMouse(double xpos, double ypos)
 
     glm::vec3 front;
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.z = sin(glm::radians(pitch)); 
     camera.setFront(glm::normalize(front));
+
+    
 }
 
+static const float CURSOR_MOVE_SPEED = 0.005f;
 void SampleApp::processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -62,21 +64,23 @@ void SampleApp::processInput(GLFWwindow* window)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        camera.moveForward(0.01f);
+        camera.moveForward(CURSOR_MOVE_SPEED);
     }
     else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        camera.moveBackward(0.01f);
+        camera.moveBackward(CURSOR_MOVE_SPEED);
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        camera.moveLeft(0.01f);
+        camera.moveLeft(CURSOR_MOVE_SPEED);
     }
     else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        camera.moveRight(0.01f);
+        camera.moveRight(CURSOR_MOVE_SPEED);
     }
 
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
     handleMouse(xpos, ypos);
+    //glfwSetCursorPos(window, windowSize.x / 2, windowSize.y / 2);
+
 
 }
 
@@ -113,6 +117,10 @@ int SampleApp::initializeWindow(int windowX, int windowY) {
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    glfwSetCursorPos(window, windowSize.x /2, windowSize.y / 2);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+
     glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
     glEnable(GL_DEPTH_TEST);
     return 0;
@@ -120,19 +128,22 @@ int SampleApp::initializeWindow(int windowX, int windowY) {
 
 int SampleApp::prepareScene() {
 
+    rlgl::primitive_mesh::plane_textureX10.initialize();
     rlgl::primitive_mesh::plane.initialize();
     rlgl::primitive_mesh::cube.initialize();
 
-    uint64_t mesh1 = scene.addMesh(&rlgl::primitive_mesh::plane);
-    uint64_t mesh2 = scene.addMesh(&rlgl::primitive_mesh::cube);
+    uint64_t meshWorld = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
+    uint64_t meshCube = scene.addMesh(&rlgl::primitive_mesh::cube);
+    uint64_t meshPlane = scene.addMesh(&rlgl::primitive_mesh::plane);
+
 
     rlgl::Material material1;
-    material1.initialize("..\\data\\checker.jpg");
+    material1.initialize("..\\data\\checker_grey.jpg", true);
     uint64_t material1ID = scene.addMaterial(material1);
 
     rlgl::Material material2;
-    material2.initialize("..\\data\\a.jpg");
-    uint64_t material2ID = scene.addMaterial(material2);
+    material2.initialize("..\\data\\box-texture.png", false);
+    uint64_t material2ID = scene.addMaterial(material2); 
 
 
     rlgl::Shader shader1;
@@ -141,19 +152,19 @@ int SampleApp::prepareScene() {
     uint64_t shader1ID = scene.addShader(shader1);
 
 
-    objects.worldPlane = new rlgl::Object(mesh1, shader1ID, material1ID);
+    objects.worldPlane = new rlgl::Object(meshWorld, shader1ID, material1ID);
     
-    objects.worldPlane->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, -1.f));
-    objects.worldPlane->modelMatrix = glm::scale(objects.worldPlane->modelMatrix, glm::vec3(25.0f)); 
+    objects.worldPlane->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
+    objects.worldPlane->modelMatrix = glm::scale(objects.worldPlane->modelMatrix, glm::vec3(100.0f)); 
     scene.addObject(objects.worldPlane);
 
 
     for (int i = 0; i < 4; i++) {
-        objects.squares.push_back(new rlgl::Object(mesh1, shader1ID, material2ID));
+        objects.squares.push_back(new rlgl::Object(meshPlane, shader1ID, material2ID));
         scene.addObject(objects.squares[i]);
     }
     for (int i = 0; i < 4; i++) {
-        objects.cubes.push_back(new rlgl::Object(mesh2, shader1ID, material2ID));
+        objects.cubes.push_back(new rlgl::Object(meshCube, shader1ID, material2ID));
         scene.addObject(objects.cubes[i]);
     }
 
@@ -173,24 +184,24 @@ int SampleApp::updateScene() {
 
     float d = 2.5f;
     glm::vec3 positions[4] = {
-        d * glm::vec3(-1.f, -1.f, 0.1f),
-        d * glm::vec3(1.f, -1.f, 0.1f),
-        d * glm::vec3(1.f, 1.f, 0.1f),
-        d * glm::vec3(-1.f, 1.f, 0.1f)
+        glm::vec3(-d, -d, 0.0f),
+        glm::vec3( d, -d, 0.0f),
+        glm::vec3( d,  d, 0.0f),
+        glm::vec3(-d,  d, 0.0f)
     }; 
 
     glm::mat4 T, R, S;
     for (int i = 0; i < objects.squares.size(); i++) {
 
-        T = glm::translate(glm::mat4(1.0f), positions[i]);
+        T = glm::translate(glm::mat4(1.0f), positions[i] + glm::vec3(0.f, 0.f, 1.5f));
         R = glm::rotate(glm::mat4(1.f), curTime, glm::vec3(0.f, 0.f, 1.f));
-        S = glm::scale(glm::mat4(1.0), glm::vec3(2.0f));
+        S = glm::scale(glm::mat4(1.0), glm::vec3(1.0f));
     
         objects.squares[i]->modelMatrix = T * R * S;
 
-        T = glm::translate(glm::mat4(1.0f), positions[i]);
-        R = glm::rotate(glm::mat4(1.f), curTime, glm::vec3(0.f, 0.f, 2.f));
-        S = glm::scale(glm::mat4(1.0), glm::vec3(2.0f));
+        T = glm::translate(glm::mat4(1.0f), positions[i] + glm::vec3(0.f, 0.f, 0.7f));
+        R = glm::rotate(glm::mat4(1.f), curTime, glm::vec3(0.f, 0.f, 1.f));
+        S = glm::scale(glm::mat4(1.0), glm::vec3(1.0f));
 
         objects.cubes[i]->modelMatrix = T * R * S;
     }

@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(GLFW)\include;$(GLAD)\include;$(GLM_DIR);$(STB_IMAGE)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GLFW)\include;$(GLAD)\include;$(GLM_DIR);$(STB_IMAGE);$(SolutionDir)\rlgl</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(GLFW)\include;$(GLAD)\include;$(GLM_DIR);$(STB_IMAGE)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GLFW)\include;$(GLAD)\include;$(GLM_DIR);$(STB_IMAGE);$(SolutionDir)\rlgl</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,30 +145,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="glad.c" />
     <ClCompile Include="OpenGL_rela.cpp" />
-    <ClCompile Include="rlglCamera.cpp" />
-    <ClCompile Include="rlglMaterial.cpp" />
-    <ClCompile Include="rlglMesh.cpp" />
-    <ClCompile Include="rlglObject.cpp" />
-    <ClCompile Include="rlglRenderer.cpp" />
-    <ClCompile Include="rlglScene.cpp" />
-    <ClCompile Include="rlglShader.cpp" />
-    <ClCompile Include="SampleApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShaderSimple.fs" />
     <None Include="vertexShaderSimple.vs" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="rlglCamera.h" />
-    <ClInclude Include="rlglMaterial.h" />
-    <ClInclude Include="rlglMesh.h" />
-    <ClInclude Include="rlglObject.h" />
-    <ClInclude Include="rlglRenderer.h" />
-    <ClInclude Include="rlglScene.h" />
-    <ClInclude Include="rlglShader.h" />
-    <ClInclude Include="SampleApp.h" />
+    <ProjectReference Include="..\rlgl\rlgl.vcxproj">
+      <Project>{0b812b93-f444-4e42-acf4-5f4a4e09c8c2}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -30,13 +30,16 @@
     <ClInclude Include="rlglShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SampleApp.h">
+    <ClInclude Include="rlglBaseApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rlglCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rlglMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rlglErrors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,7 +56,7 @@
     <ClCompile Include="rlglShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SampleApp.cpp">
+    <ClCompile Include="rlglBaseApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">

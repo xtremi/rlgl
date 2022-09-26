@@ -1,36 +1,20 @@
 #include <iostream>
-#include "SampleApp.h"
+#include "rlglBaseApp.h"
 
 
 int main(int argc, char* argv[]) {
 
     glm::ivec2 windowSize(800, 600);
 
-	SampleApp app;
-	app.renderer = rlgl::Renderer();
-    app.camera.aspectRatio = (float)windowSize.x / (float)windowSize.y;
+	rlgl::BaseApp app;
+    if (int err = app.init(windowSize.x, windowSize.y)) {
+        return err;
+    }
 
-	if (int err = app.initializeWindow(windowSize.x, windowSize.y)) {
-		return err;
-	}
-    
-	if (int err = app.prepareScene()) {
-		return err;
-	}
-
-    while (!glfwWindowShouldClose(app.getWindow()))
-    {
-        app.processInput(app.getWindow());       
-		app.updateScene();
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		if (int err = app.renderScene()) {
-			return err;
-		}
-
-        glfwSwapBuffers(app.getWindow());
-        glfwPollEvents();
+    while (!app.windowClosed()){
+        if (int err = app.loopIteration()) {
+            return err;
+        }
     }
 
 	app.cleanUp();

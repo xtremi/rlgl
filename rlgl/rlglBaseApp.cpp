@@ -1,16 +1,57 @@
-#include "SampleApp.h"
+#include "rlglBaseApp.h"
+
+using namespace rlgl;
 
 
-SampleApp::SampleApp() {
-    //glfwSetCursorPosCallback(window, SampleApp::mouse_callback);
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void rlgl::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
+BaseApp::BaseApp() {}
+
+
+/*!*/
+int BaseApp::init(int windowSizeX, int windowSizeY) {
+    windowParams().size = glm::ivec2(windowSizeX, windowSizeY);
+    camera.aspectRatio = windowParams().aspect();
+
+    if (int err = initializeWindow()) {
+        return err;
+    }
+
+    if (int err = prepareScene()) {
+        return err;
+    }
+
+    return 0;
+}
+
+/*!*/
+int BaseApp::loopIteration() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    processInput(_window);
+
+    if (int err = updateScene()) {
+        return err;
+    }
+    if (int err = renderScene()) {
+        return err;
+    }
+
+    glfwSwapBuffers(_window);
+    glfwPollEvents();
+    return 0;
+}
+
+bool BaseApp::windowClosed() {
+    return glfwWindowShouldClose(_window);
+}
+
+
+
 static const float CURSOR_YAW_PITCH_SENSITIVITY = 0.25f;
-void SampleApp::handleMouse(double xpos, double ypos)
+void BaseApp::handleMouse(double xpos, double ypos)
 {
     static bool firstMouse = true;
     static float lastX = 0.f;
@@ -50,7 +91,7 @@ void SampleApp::handleMouse(double xpos, double ypos)
 }
 
 static const float CURSOR_MOVE_SPEED = 0.005f;
-void SampleApp::processInput(GLFWwindow* window)
+void BaseApp::processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
@@ -83,48 +124,45 @@ void SampleApp::processInput(GLFWwindow* window)
 }
 
 
-void SampleApp::cleanUp() {
+void BaseApp::cleanUp() {
     scene.cleanUp();
 }
 
 
-int SampleApp::initializeWindow(int windowX, int windowY) {
-
-    windowSize = glm::ivec2(windowX, windowY);
+int BaseApp::initializeWindow() {
 
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glfwParams().glVersionMajor);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glfwParams().glVersionMinor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE)
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
-    window = glfwCreateWindow(windowSize.x, windowSize.y, appLabel.c_str(), NULL, NULL);
-    if (window == NULL)
+    _window = glfwCreateWindow(windowParams().size.x, windowParams().size.y, windowParams().label.c_str(), NULL, NULL);
+    if (_window == NULL)
     {
         glfwTerminate();
         errmsg = "glfwCreateWindow() - Failed to create GLFW window";
-        return -1;
+        return (int)error_code::GLFW_CREATE_WINDOW;
     }
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(_window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         errmsg = "gladLoadGLLoader() - Failed to initialize GLAD";
-        return -2;
+        return (int)error_code::GLAD_LOAD_GL_LOADER;
     }
 
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
+    glfwSetCursorPos(_window, windowParams().size.x /2, windowParams().size.y / 2);
+    glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    glfwSetCursorPos(window, windowSize.x /2, windowSize.y / 2);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-
-    glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
+    glClearColor(windowParams().backgroundColor.r, windowParams().backgroundColor.g, windowParams().backgroundColor.b, 1.0f);
     glEnable(GL_DEPTH_TEST);
     return 0;
 }
 
-int SampleApp::prepareScene() {
+int BaseApp::prepareScene() {
 
     rlgl::primitive_mesh::plane_textureX10.initialize();
     rlgl::primitive_mesh::plane.initialize();
@@ -169,14 +207,14 @@ int SampleApp::prepareScene() {
     return 0;
 }
 
-int SampleApp::renderScene() {
+int BaseApp::renderScene() {
 
     renderer.render(scene, camera);
 
     return 0;
 }
 
-int SampleApp::updateScene() {
+int BaseApp::updateScene() {
 
     float curTime = glfwGetTime();
 

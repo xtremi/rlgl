@@ -20,13 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rlglCamera.h" />
+    <ClInclude Include="rlglErrors.h" />
     <ClInclude Include="rlglMaterial.h" />
     <ClInclude Include="rlglMesh.h" />
     <ClInclude Include="rlglObject.h" />
     <ClInclude Include="rlglRenderer.h" />
     <ClInclude Include="rlglScene.h" />
     <ClInclude Include="rlglShader.h" />
-    <ClInclude Include="SampleApp.h" />
+    <ClInclude Include="rlglBaseApp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
@@ -37,7 +38,7 @@
     <ClCompile Include="rlglRenderer.cpp" />
     <ClCompile Include="rlglScene.cpp" />
     <ClCompile Include="rlglShader.cpp" />
-    <ClCompile Include="SampleApp.cpp" />
+    <ClCompile Include="rlglBaseApp.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

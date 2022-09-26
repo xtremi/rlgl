@@ -18,11 +18,9 @@ int main(int argc, char* argv[]) {
 		return err;
 	}
 
-
     while (!glfwWindowShouldClose(app.getWindow()))
     {
-        app.processInput(app.getWindow());
-        
+        app.processInput(app.getWindow());       
 		app.updateScene();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

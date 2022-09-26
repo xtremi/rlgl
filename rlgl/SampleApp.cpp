@@ -46,9 +46,7 @@ void SampleApp::handleMouse(double xpos, double ypos)
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.z = sin(glm::radians(pitch)); 
-    camera.setFront(glm::normalize(front));
-
-    
+    camera.setFront(glm::normalize(front));    
 }
 
 static const float CURSOR_MOVE_SPEED = 0.005f;
@@ -138,16 +136,16 @@ int SampleApp::prepareScene() {
 
 
     rlgl::Material material1;
-    material1.initialize("..\\data\\checker_grey.jpg", true);
+    material1.initialize("..\\data\\textures\\checker_grey.jpg", true);
     uint64_t material1ID = scene.addMaterial(material1);
 
     rlgl::Material material2;
-    material2.initialize("..\\data\\box-texture.png", false);
+    material2.initialize("..\\data\\textures\\box-texture.png", false);
     uint64_t material2ID = scene.addMaterial(material2); 
 
 
     rlgl::Shader shader1;
-    shader1.initialize("vertexShaderSimple.vs", "fragmentShaderSimple.fs");
+    shader1.initialize("..\\data\\shaders\\vertexShaderSimple.vs", "..\\data\\shaders\\fragmentShaderSimple.fs");
     shader1.setInt("textureID", material1.glID);
     uint64_t shader1ID = scene.addShader(shader1);
 

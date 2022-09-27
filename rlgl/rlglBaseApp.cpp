@@ -166,11 +166,13 @@ int BaseApp::prepareScene() {
 
     rlgl::primitive_mesh::plane_textureX10.initialize();
     rlgl::primitive_mesh::plane.initialize();
+    rlgl::primitive_mesh::cube_tex.initialize();
     rlgl::primitive_mesh::cube.initialize();
 
     uint64_t meshWorld = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
-    uint64_t meshCube = scene.addMesh(&rlgl::primitive_mesh::cube);
+    uint64_t meshCubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
     uint64_t meshPlane = scene.addMesh(&rlgl::primitive_mesh::plane);
+    uint64_t meshCube = scene.addMesh(&rlgl::primitive_mesh::cube);
 
 
     rlgl::Material material1;
@@ -183,9 +185,15 @@ int BaseApp::prepareScene() {
 
 
     rlgl::Shader shader1;
-    shader1.initialize("..\\data\\shaders\\vertexShaderSimple.vs", "..\\data\\shaders\\fragmentShaderSimple.fs");
+    shader1.initialize("..\\data\\shaders\\object.vs", "..\\data\\shaders\\object.fs");
     shader1.setInt("textureID", material1.glID);
     uint64_t shader1ID = scene.addShader(shader1);
+
+
+	rlgl::Shader shader2;
+	shader1.initialize("..\\data\\shaders\\object_col.vs", "..\\data\\shaders\\object_col.fs");
+	uint64_t shader2ID = scene.addShader(shader1);
+
 
 
     objects.worldPlane = new rlgl::Object(meshWorld, shader1ID, material1ID);
@@ -200,7 +208,7 @@ int BaseApp::prepareScene() {
         scene.addObject(objects.squares[i]);
     }
     for (int i = 0; i < 4; i++) {
-        objects.cubes.push_back(new rlgl::Object(meshCube, shader1ID, material2ID));
+        objects.cubes.push_back(new rlgl::Object(meshCubeTex, shader1ID, material2ID));
         scene.addObject(objects.cubes[i]);
     }
 

@@ -1,7 +1,5 @@
 /.vs
-/x64
-/OpenGL_rela/x64
-/rlgl/x64
+/output
 
 # Prerequisites
 *.d

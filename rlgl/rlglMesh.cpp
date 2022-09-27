@@ -98,7 +98,7 @@ Mesh rlgl::primitive_mesh::plane = {
 
 };
 
-extern Mesh rlgl::primitive_mesh::cube{
+Mesh rlgl::primitive_mesh::cube_tex{
      rlgl::GLBuffer<float>({
         -0.5f, -0.5f, -0.5f,   1.0f, 0.f, 0.f,   0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,   1.0f, 0.f, 0.f,   1.0f, 0.0f,
@@ -144,4 +144,53 @@ extern Mesh rlgl::primitive_mesh::cube{
      }),
     rlgl::GLBuffer<GLuint>({}),
 	0, false, false, true, true, 36, 12
+};
+
+
+Mesh rlgl::primitive_mesh::cube{
+	 rlgl::GLBuffer<float>({
+		-0.5f, -0.5f, -0.5f,   0.f, 0.f, -1.f,
+		 0.5f, -0.5f, -0.5f,   0.f, 0.f, -1.f,
+		 0.5f,  0.5f, -0.5f,   0.f, 0.f, -1.f,
+		 0.5f,  0.5f, -0.5f,   0.f, 0.f, -1.f,
+		-0.5f,  0.5f, -0.5f,   0.f, 0.f, -1.f,
+		-0.5f, -0.5f, -0.5f,   0.f, 0.f, -1.f,
+
+		-0.5f, -0.5f,  0.5f,   0.f, 0.f, 1.f,
+		 0.5f, -0.5f,  0.5f,   0.f, 0.f, 1.f,
+		 0.5f,  0.5f,  0.5f,   0.f, 0.f, 1.f,
+		 0.5f,  0.5f,  0.5f,   0.f, 0.f, 1.f,
+		-0.5f,  0.5f,  0.5f,   0.f, 0.f, 1.f,
+		-0.5f, -0.5f,  0.5f,   0.f, 0.f, 1.f,
+
+		-0.5f,  0.5f,  0.5f,   -1.f, 0.f, 0.f,
+		-0.5f,  0.5f, -0.5f,   -1.f, 0.f, 0.f,
+		-0.5f, -0.5f, -0.5f,   -1.f, 0.f, 0.f,
+		-0.5f, -0.5f, -0.5f,   -1.f, 0.f, 0.f,
+		-0.5f, -0.5f,  0.5f,   -1.f, 0.f, 0.f,
+		-0.5f,  0.5f,  0.5f,   -1.f, 0.f, 0.f,
+
+		 0.5f,  0.5f,  0.5f,   1.f, 0.f, 0.f,
+		 0.5f,  0.5f, -0.5f,   1.f, 0.f, 0.f,
+		 0.5f, -0.5f, -0.5f,   1.f, 0.f, 0.f,
+		 0.5f, -0.5f, -0.5f,   1.f, 0.f, 0.f,
+		 0.5f, -0.5f,  0.5f,   1.f, 0.f, 0.f,
+		 0.5f,  0.5f,  0.5f,   1.f, 0.f, 0.f,
+
+		-0.5f, -0.5f, -0.5f,   0.f, -1.f, 0.f,
+		 0.5f, -0.5f, -0.5f,   0.f, -1.f, 0.f,
+		 0.5f, -0.5f,  0.5f,   0.f, -1.f, 0.f,
+		 0.5f, -0.5f,  0.5f,   0.f, -1.f, 0.f,
+		-0.5f, -0.5f,  0.5f,   0.f, -1.f, 0.f,
+		-0.5f, -0.5f, -0.5f,   0.f, -1.f, 0.f,
+
+		-0.5f,  0.5f, -0.5f,   0.f, 1.f, 0.f,
+		 0.5f,  0.5f, -0.5f,   0.f, 1.f, 0.f,
+		 0.5f,  0.5f,  0.5f,   0.f, 1.f, 0.f,
+		 0.5f,  0.5f,  0.5f,   0.f, 1.f, 0.f,
+		-0.5f,  0.5f,  0.5f,   0.f, 1.f, 0.f,
+		-0.5f,  0.5f, -0.5f,   0.f, 1.f, 0.f,
+	 }),
+	rlgl::GLBuffer<GLuint>({}),
+	0, false, true, false, false, 36, 12
 };

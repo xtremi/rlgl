@@ -43,9 +43,9 @@ bool triangleTest02_init(rlglContext& ctxt) {
     glGenVertexArrays(1, &ctxt.VAO);
     glBindVertexArray(ctxt.VAO);
 
-    rlgl::cube.vertices.genBuffer();
-    rlgl::cube.vertices.bindBuffer(GL_ARRAY_BUFFER);
-    rlgl::cube.vertices.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    rlgl::cube_tex.vertices.genBuffer();
+    rlgl::cube_tex.vertices.bindBuffer(GL_ARRAY_BUFFER);
+    rlgl::cube_tex.vertices.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 
     //position:
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);

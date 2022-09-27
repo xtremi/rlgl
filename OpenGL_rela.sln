@@ -1,11 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1705
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGL_rela", "OpenGL_rela\OpenGL_rela.vcxproj", "{29728E66-EE5F-4A51-B5E6-0D6D68D19C8D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rlgl", "rlgl\rlgl.vcxproj", "{0B812B93-F444-4E42-ACF4-5F4A4E09C8C2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shaders", "shaders", "{B87C269B-0439-4D5E-9A1C-1627D3469556}"
+	ProjectSection(SolutionItems) = preProject
+		data\shaders\object.fs = data\shaders\object.fs
+		data\shaders\object.vs = data\shaders\object.vs
+		data\shaders\object_col.fs = data\shaders\object_col.fs
+		data\shaders\object_col.vs = data\shaders\object_col.vs
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rlTest_rlOctStruct", "rlTest_rlOctStruct\rlTest_rlOctStruct.vcxproj", "{812B0454-3CC4-4235-97C1-F99ABD70D3F6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rlOctStruct", "rlOctStruct\rlOctStruct.vcxproj", "{23DA1266-99AA-484F-959B-BF28BD78320D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +43,22 @@ Global
 		{0B812B93-F444-4E42-ACF4-5F4A4E09C8C2}.Release|x64.Build.0 = Release|x64
 		{0B812B93-F444-4E42-ACF4-5F4A4E09C8C2}.Release|x86.ActiveCfg = Release|Win32
 		{0B812B93-F444-4E42-ACF4-5F4A4E09C8C2}.Release|x86.Build.0 = Release|Win32
+		{812B0454-3CC4-4235-97C1-F99ABD70D3F6}.Debug|x64.ActiveCfg = Debug|x64
+		{812B0454-3CC4-4235-97C1-F99ABD70D3F6}.Debug|x64.Build.0 = Debug|x64
+		{812B0454-3CC4-4235-97C1-F99ABD70D3F6}.Debug|x86.ActiveCfg = Debug|Win32
+		{812B0454-3CC4-4235-97C1-F99ABD70D3F6}.Debug|x86.Build.0 = Debug|Win32
+		{812B0454-3CC4-4235-97C1-F99ABD70D3F6}.Release|x64.ActiveCfg = Release|x64
+		{812B0454-3CC4-4235-97C1-F99ABD70D3F6}.Release|x64.Build.0 = Release|x64
+		{812B0454-3CC4-4235-97C1-F99ABD70D3F6}.Release|x86.ActiveCfg = Release|Win32
+		{812B0454-3CC4-4235-97C1-F99ABD70D3F6}.Release|x86.Build.0 = Release|Win32
+		{23DA1266-99AA-484F-959B-BF28BD78320D}.Debug|x64.ActiveCfg = Debug|x64
+		{23DA1266-99AA-484F-959B-BF28BD78320D}.Debug|x64.Build.0 = Debug|x64
+		{23DA1266-99AA-484F-959B-BF28BD78320D}.Debug|x86.ActiveCfg = Debug|Win32
+		{23DA1266-99AA-484F-959B-BF28BD78320D}.Debug|x86.Build.0 = Debug|Win32
+		{23DA1266-99AA-484F-959B-BF28BD78320D}.Release|x64.ActiveCfg = Release|x64
+		{23DA1266-99AA-484F-959B-BF28BD78320D}.Release|x64.Build.0 = Release|x64
+		{23DA1266-99AA-484F-959B-BF28BD78320D}.Release|x86.ActiveCfg = Release|Win32
+		{23DA1266-99AA-484F-959B-BF28BD78320D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

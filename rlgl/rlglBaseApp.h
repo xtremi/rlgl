@@ -81,6 +81,8 @@ private:
 		rlgl::Object* worldPlane;
 		std::vector<rlgl::Object*> squares;
 		std::vector<rlgl::Object*> cubes;
+
+		std::vector<rlgl::Object*> axes;
 	};
 	WorldObjects objects;
 

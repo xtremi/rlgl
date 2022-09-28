@@ -164,9 +164,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="rlOctStruct.cpp" />
+    <ClCompile Include="rlOctStructTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rlOctStruct.h" />
+    <ClInclude Include="rlOctStructTree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

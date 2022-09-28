@@ -18,9 +18,15 @@
     <ClCompile Include="rlOctStruct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rlOctStructTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rlOctStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rlOctStructTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

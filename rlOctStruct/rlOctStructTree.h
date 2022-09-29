@@ -13,9 +13,11 @@ public:
 	OctStructTreeItem(
 		OctStructTreeItem* _parent,
 		const std::string& _address, 
-		void* object = nullptr) : address{ _address } 
+		void* object = nullptr) : address{ _address }, parent{_parent}
 	{
 		if (object) objects.insert(object);
+		if (parent) parent->children[address] = this;
+
 	}
 	std::set<void*>    objects;
 	std::string		   address;
@@ -34,7 +36,7 @@ public:
 class OctStructTree {
 public:
 	OctStructTree() {
-		root = new OctStructTreeItem("0", nullptr);
+		root = new OctStructTreeItem(nullptr, "0", nullptr);
 	}
 	//std::unordered_map<void*, std::string> octStructAddressMap;
 	std::unordered_map<void*, OctStructTreeItem*> octStructTreeItemMap;

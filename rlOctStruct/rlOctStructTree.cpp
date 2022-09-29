@@ -51,24 +51,20 @@ OctStructTreeItem* OctStructTreeItem::insertObject(void* object, const std::stri
 
 			//If the common address is already the address of this item, just add it as child here:
 			if (commonAddress == address) {
-				OctStructTreeItem* newItem = new OctStructTreeItem(objAddress, object);
-				this->children[objAddress] = newItem;
-				return newItem;
+				return new OctStructTreeItem(this, objAddress, object);
 			}
 
 			//Make new parent and move existing child under it:
-			OctStructTreeItem* newCommonParent = new OctStructTreeItem(commonAddress);
-			children[commonAddress] = newCommonParent;
+			OctStructTreeItem* newCommonParent = new OctStructTreeItem(this, commonAddress);
 
 			OctStructTreeItem* existingItem = it->second;
 			children.erase(existingItem->address);		  //remove from child
 			newCommonParent->children[existingItem->address] = existingItem;
+			existingItem->parent = newCommonParent;
 
 			//Create new item (unless the address of the new object is the same as the "common address")
 			if(commonAddress != objAddress){
-				OctStructTreeItem* newItem = new OctStructTreeItem(objAddress, object);
-				newCommonParent->children[objAddress] = newItem;
-				return newItem;
+				return new OctStructTreeItem(newCommonParent, objAddress, object);
 			}
 			else {
 				newCommonParent->objects.insert(object);
@@ -77,9 +73,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(void* object, const std::stri
 		}
 	}
 
-	OctStructTreeItem* newItem = new OctStructTreeItem(objAddress, object);
-	children[objAddress] = newItem;
-	return newItem;
+	return new OctStructTreeItem(this, objAddress, object);
 }
 
 std::string OctStructTreeItem::toStr(std::string& str, int& level) {
@@ -131,13 +125,44 @@ void OctStructTree::removeObject(void* obj) {
 	if (it != octStructTreeItemMap.end()) {
 		OctStructTreeItem* item = it->second;
 		item->objects.erase(obj);
-		if (item->children.size() == 0 && item->objects.size() == 0) {
 
+		octStructTreeItemMap.erase(obj);
+
+		//Recursively delete parents if parent no children or objects (but not sure if a parent of a parent will ever be empty?)
+		while (item->objects.size() == 0 && item->children.size() == 0){
+			OctStructTreeItem* parent = item->parent;
+			parent->children.erase(item->address);
+			delete item;
+			item = parent;
 		}
+
+		/*
+			Clean up so no uncessary item in tree branch
+			Example:
+				    root
+			[11] (1 obj)  [22]
+         [111] (1 obj)
+
+		 Remove obj in [11]
+					root                      root
+			[11]         [22] ---->   [111] (1 obj)  [22]
+		 [111] (1 obj)
+
+
+			*/
+		if (item->objects.size() == 0 && item->children.size() == 1) {
+			OctStructTreeItem* parent    = item->parent;
+			parent->children.erase(item->address);
+
+			OctStructTreeItem* onlyChild = item->children.begin()->second;
+			onlyChild->parent = parent;
+
+			delete item;
+
+			parent->children[onlyChild->address] = onlyChild;
+		}
+
 	}
-	std::string address = octStructAddressMap[obj];
-	octStructAddressMap.erase(obj);
-	//more clean up
 }
 
 /*TODO*/

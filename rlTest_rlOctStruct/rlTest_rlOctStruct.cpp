@@ -43,13 +43,27 @@ int main()
 	octTree.addObject((void*)&data[1], { 90.f, 90.f, 90.f }, { 92.f, 92.f, 92.f }); //111
 	octTree.addObject((void*)&data[2], { 91.f, 91.f, 91.f }, { 93.f, 93.f, 93.f }); //111
 	octTree.addObject((void*)&data[3], { 71.2f, 71.2f, 71.2f }, { 73.f, 73.f, 73.f }); //11711
-	octTree.addObject((void*)&data[3], { 91.f, 91.f, 50.f }, { 100.f, 100.f, 51.f }); //115
-	octTree.addObject((void*)&data[4], { -91.f, -91.f, -91.f }, { -93.f, -93.f, -93.f }); //777
-	octTree.addObject((void*)&data[5], { -51.f, -91.f, -91.f }, { -93.f, -93.f, -93.f }); //77
-	octTree.addObject((void*)&data[6], { 1.f, 1.f, 1.f }, { 2.f, 2.f, 2.f }); //17771
+	octTree.addObject((void*)&data[4], { 91.f, 91.f, 50.f }, { 100.f, 100.f, 51.f }); //115
+	octTree.addObject((void*)&data[5], { -91.f, -91.f, -91.f }, { -93.f, -93.f, -93.f }); //777
+	octTree.addObject((void*)&data[6], { -51.f, -91.f, -91.f }, { -93.f, -93.f, -93.f }); //77
+	octTree.addObject((void*)&data[7], { 1.f, 1.f, 1.f }, { 2.f, 2.f, 2.f }); //17771
 	std::cout << octTree.toStr() << "\n";
 
-	
+	octTree.removeObject((void*)&data[4]);
+	std::cout << octTree.toStr() << "\n";
+
+	octTree.removeObject((void*)&data[2]);
+	std::cout << octTree.toStr() << "\n";
+
+	octTree.removeObject((void*)&data[3]);
+	std::cout << octTree.toStr() << "\n";
+	octTree.removeObject((void*)&data[7]);
+	octTree.removeObject((void*)&data[6]);
+	std::cout << octTree.toStr() << "\n";
+
+	octTree.removeObject((void*)&data[7]);
+	std::cout << octTree.toStr() << "\n";
+
 	int maxPoints = 1e2;
 	float* tempdata = new float[maxPoints];
 	rl::OctCoord bboxMin, bboxMax;

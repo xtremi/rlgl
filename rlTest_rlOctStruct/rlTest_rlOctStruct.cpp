@@ -4,7 +4,11 @@
 
 #include "rlOctStructTree.h"
 
-
+namespace rl{
+float rand(float min, float max) {
+	return min + static_cast <float> (std::rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+}
+}
 
 int main()
 {
@@ -32,16 +36,36 @@ int main()
 		std::cout << c.x << ", " << c.y << ", " << c.z << ": " << addr << std::endl;
 	}
 
-	float data1[2] = { 99.f, 99.f };
-	float data2[2] = { 99.f, 99.f };
-	float data3[2] = { 99.f, 99.f };
+	float data[1000] = { 99.f, 99.f };
 
 	rl::OctStructTree octTree;
 	octTree.octStruct = octStruct;
-	octTree.addObject((void*)data1, { 90.f, 90.f, 90.f }, { 92.f, 92.f, 99.f });
-	octTree.addObject((void*)data1, { 90.f, 90.f, 90.f }, { 92.f, 92.f, 99.f });
+	octTree.addObject((void*)&data[1], { 90.f, 90.f, 90.f }, { 92.f, 92.f, 92.f }); //111
+	octTree.addObject((void*)&data[2], { 91.f, 91.f, 91.f }, { 93.f, 93.f, 93.f }); //111
+	octTree.addObject((void*)&data[3], { 71.2f, 71.2f, 71.2f }, { 73.f, 73.f, 73.f }); //11711
+	octTree.addObject((void*)&data[3], { 91.f, 91.f, 50.f }, { 100.f, 100.f, 51.f }); //115
+	octTree.addObject((void*)&data[4], { -91.f, -91.f, -91.f }, { -93.f, -93.f, -93.f }); //777
+	octTree.addObject((void*)&data[5], { -51.f, -91.f, -91.f }, { -93.f, -93.f, -93.f }); //77
+	octTree.addObject((void*)&data[6], { 1.f, 1.f, 1.f }, { 2.f, 2.f, 2.f }); //17771
+	std::cout << octTree.toStr() << "\n";
 
+	
+	int maxPoints = 1e2;
+	float* tempdata = new float[maxPoints];
+	rl::OctCoord bboxMin, bboxMax;
+	for (int i = 0; i < maxPoints; i++) {
+		bboxMin.x = rl::rand(-100.f, 100.f);
+		bboxMin.y = rl::rand(-100.f, 100.f);
+		bboxMin.z = rl::rand(-100.f, 100.f);
+		bboxMax.x = bboxMin.x + 0.5f;
+		bboxMax.y = bboxMin.y + 0.5f;
+		bboxMax.z = bboxMin.z + 0.5f; 
 
+		octTree.addObject((void*)&tempdata[i], bboxMin, bboxMax); //17771
+	}
+	//std::cout << octTree.toStr() << "\n";
+	
 
+	delete[] tempdata;
 }
 

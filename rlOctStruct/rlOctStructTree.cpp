@@ -3,18 +3,73 @@
 using namespace rl;
 
 /*
-	
+------------------------------------------------------------------------------
+	1. This item has a child with the exact same address
+------------------------------------------------------------------------------
+Ex1:	[root]       insert [1234]  ---> 	  [root]     
+	[1234]* [3455]*  				   	 [1234]**   [3455]*
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+	2. An OctStructTreeItem with matching start of address exist (recursive):
+------------------------------------------------------------------------------
+Ex2.1	[root]       insert [12345]  --->  match [1234](5) with [1234] 
+	[1234]* [3455]*  				   	   call insertObject on [1234]  --> go to (4.)
+
+Ex2.2
+		  [root]       insert [12345]  --->  match [12](345) with [12]
+	  [12]     [3455]*  				   	   call insertObject on [12]
+  [123]*[124]*                               match [123](45) with [123]
+[1234]*                                        call insertObject on [123]
+                                             match [1234](5) with [1234]
+											   call insertObject on [123]  --> go to (4.)
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+	3a. Make new parent and move existing child under it:
+------------------------------------------------------------------------------
+Ex3a 	[root]       insert [1133]  --->  Common address [11] of [1123] and [1133]
+	[1123]* [2341]*  				   	  Create new item/node [11] as child of [1123]
+	                                      Set [1123] and [1133] as children of [11]
+	     [root] 
+	  [11]   [2341]*
+ [1123]* [1133]*
+
+
+ ------------------------------------------------------------------------------
+	3b. Make new parent and move existing child under it:
+------------------------------------------------------------------------------
+Ex3b 	[root]       insert [11]  --->    Common address [11] of [1123] and [11]
+	[1123]* [2341]*  				   	  Create new item/node [11] (with inserted object) as child of [1123]
+										  Set [1123] as children of [11]
+		 [root]
+	  [11]*  [2341]*
+ [1123]* 
+
+
+------------------------------------------------------------------------------
+	4. If the common address is already the address of this item, just add it as child here:
+	Check if changes need to made to tree
+------------------------------------------------------------------------------
+
+	//Create new item (unless the address of the new object is the same as the "common address")
+
+
 */
 OctStructTreeItem* OctStructTreeItem::insertObject(void* object, const std::string& objAddress) {
 
-	//This item has a child with the exact same address 
+	/*
+		1. This item has a child with the exact same address
+	*/
 	auto it = children.find(objAddress);
 	if (it != children.end()) {
 		it->second->objects.insert(object);
 		return it->second;
 	}
 
-	//An OctStructTreeItem with matching start of address exist (recursive):
+	/*
+		2. An OctStructTreeItem with matching start of address exist (recursive):
+	*/
 	std::string subAddress;	
 	for (char c : objAddress) {
 		subAddress += c;
@@ -49,12 +104,12 @@ OctStructTreeItem* OctStructTreeItem::insertObject(void* object, const std::stri
 		std::string commonAddress = getCommonAddress(objAddress, it->second->address);
 		if (!commonAddress.empty()) {
 
-			//If the common address is already the address of this item, just add it as child here:
+			//4.  If the common address is already the address of this item, just add it as child here:
 			if (commonAddress == address) {
 				return new OctStructTreeItem(this, objAddress, object);
 			}
 
-			//Make new parent and move existing child under it:
+			//3a/3b Make new parent and move existing child under it:
 			OctStructTreeItem* newCommonParent = new OctStructTreeItem(this, commonAddress);
 
 			OctStructTreeItem* existingItem = it->second;

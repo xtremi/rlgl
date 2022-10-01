@@ -61,7 +61,10 @@ int main()
 	octTree.removeObject((void*)&data[6]);
 	std::cout << octTree.toStr() << "\n";
 
-	octTree.removeObject((void*)&data[7]);
+	octTree.removeObject((void*)&data[1]);
+	std::cout << octTree.toStr() << "\n";
+
+	octTree.removeObject((void*)&data[5]);
 	std::cout << octTree.toStr() << "\n";
 
 	int maxPoints = 1e2;

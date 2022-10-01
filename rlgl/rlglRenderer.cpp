@@ -26,17 +26,18 @@ void Renderer::render(const Scene& scene, const Camera& cam, const Object* obj) 
 
 
 	const Shader* currentShader = scene.shader(obj->shaderID);
-	const Material* currentMaterial = scene.material(obj->materialID);
+	const Material* currentMaterial =scene.material(obj->materialID);
 
 	currentShader->use();
 	currentShader->setMat4x4("projection", cam.projectionMatrix());
 	currentShader->setMat4x4("view", cam.viewMatrix());
 	currentShader->setMat4x4("model", obj->modelMatrix);
 
-	glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
-	glBindTexture(GL_TEXTURE_2D, currentMaterial->glID);
-	//currentShader->setInt("textureID", currentMaterial->glID);
-
+	if(currentMaterial){
+		glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
+		glBindTexture(GL_TEXTURE_2D, currentMaterial->glID);
+		//currentShader->setInt("textureID", currentMaterial->glID);
+	}
 
 
 	const Mesh* currentMesh = scene.mesh(obj->meshID);

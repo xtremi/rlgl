@@ -35,8 +35,8 @@ int MyApp::prepareScene() {
 
 
     rlgl::Shader shader2;
-    shader1.initialize("..\\data\\shaders\\object_col.vs", "..\\data\\shaders\\object_col.fs");
-    uint64_t shader2ID = scene.addShader(shader1);
+    shader2.initialize("..\\data\\shaders\\object_col.vs", "..\\data\\shaders\\object_col.fs");
+    uint64_t shader2ID = scene.addShader(shader2);
 
 
     //World plane:
@@ -77,6 +77,13 @@ int MyApp::prepareScene() {
         scene.addObject(objects.cubes[i]);
     }
 
+    objects.axes.push_back(new rlgl::Object(meshCube, shader2ID, material2ID));
+    objects.axes[0]->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.5f));
+    objects.axes[0]->modelMatrix = glm::scale(objects.axes[0]->modelMatrix, glm::vec3(3.0f, 0.2f, 0.2f));
+    scene.addObject(objects.axes[0]);
+    
+    shader2.use();
+    shader2.setVec3("color", glm::vec3(1.f, 0.1f, 0.1f));
 
     return 0;
 }
@@ -102,6 +109,17 @@ int MyApp::updateScene() {
     //
     //    objects.cubes[i]->modelMatrix = T * R * S;
     //}
+
+    objects.axes[0]->modelMatrix = glm::translate(glm::mat4(1.f), camera.position + 4.f*glm::vec3(camera.front));
+
+    glm::vec3 direction = camera.front;
+    glm::vec3 sideVec = camera.sideVec();
+
+    glm::quat orientationQuat = rlgl::fromToRotation(glm::vec3(1.0f, 0.f, 0.f), camera.front);
+    objects.axes[0]->modelMatrix *= glm::toMat4(orientationQuat);
+
+    objects.axes[0]->modelMatrix = glm::scale(objects.axes[0]->modelMatrix, glm::vec3(3.0f, 0.2f, 0.2f));
+    
 
 
     return 0;

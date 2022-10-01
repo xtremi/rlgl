@@ -14,8 +14,6 @@
 #include "rlglObject.h"
 #include "rlglErrors.h"
 
-
-
 namespace rlgl{
 
 	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -56,7 +54,7 @@ public:
 		return _windowParams;
 	}
 
-private:	
+protected:	
 	GLFWparams	   _glfwParams;
 	WindowParams   _windowParams;
 	GLFWwindow*	   _window = nullptr;
@@ -69,13 +67,19 @@ private:
 	int initializeWindow();
 	int renderScene();
 
+	virtual int prepareScene() = 0;
+	virtual int updateScene() = 0;
+	virtual void processInput(GLFWwindow* window);
+};
+
+
+class DemoApp : public BaseApp {
+public:
 	virtual int prepareScene();
 	virtual int updateScene();
 	virtual void processInput(GLFWwindow* window);
-
-
-private:
-
+	
+protected:
 	class WorldObjects {
 	public:
 		rlgl::Object* worldPlane;
@@ -87,5 +91,6 @@ private:
 	WorldObjects objects;
 
 };
+
 
 }

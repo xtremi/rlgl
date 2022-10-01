@@ -114,13 +114,14 @@ void BaseApp::processInput(GLFWwindow* window)
     else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         camera.moveRight(CURSOR_MOVE_SPEED);
     }
+    else if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
+        
+    }
 
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
     handleMouse(xpos, ypos);
     //glfwSetCursorPos(window, windowSize.x / 2, windowSize.y / 2);
-
-
 }
 
 
@@ -162,7 +163,22 @@ int BaseApp::initializeWindow() {
     return 0;
 }
 
-int BaseApp::prepareScene() {
+
+
+int BaseApp::renderScene() {
+
+    renderer.render(scene, camera);
+
+    return 0;
+}
+
+
+void DemoApp::processInput(GLFWwindow* window) {
+    BaseApp::processInput(window);
+}
+
+
+int DemoApp::prepareScene() {
 
     rlgl::primitive_mesh::plane_textureX10.initialize();
     rlgl::primitive_mesh::plane.initialize();
@@ -181,7 +197,7 @@ int BaseApp::prepareScene() {
 
     rlgl::Material material2;
     material2.initialize("..\\data\\textures\\box-texture.png", false);
-    uint64_t material2ID = scene.addMaterial(material2); 
+    uint64_t material2ID = scene.addMaterial(material2);
 
 
     rlgl::Shader shader1;
@@ -190,16 +206,16 @@ int BaseApp::prepareScene() {
     uint64_t shader1ID = scene.addShader(shader1);
 
 
-	rlgl::Shader shader2;
-	shader1.initialize("..\\data\\shaders\\object_col.vs", "..\\data\\shaders\\object_col.fs");
-	uint64_t shader2ID = scene.addShader(shader1);
+    rlgl::Shader shader2;
+    shader1.initialize("..\\data\\shaders\\object_col.vs", "..\\data\\shaders\\object_col.fs");
+    uint64_t shader2ID = scene.addShader(shader1);
 
 
 
     objects.worldPlane = new rlgl::Object(meshWorld, shader1ID, material1ID);
-    
+
     objects.worldPlane->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
-    objects.worldPlane->modelMatrix = glm::scale(objects.worldPlane->modelMatrix, glm::vec3(100.0f)); 
+    objects.worldPlane->modelMatrix = glm::scale(objects.worldPlane->modelMatrix, glm::vec3(100.0f));
     scene.addObject(objects.worldPlane);
 
 
@@ -215,14 +231,7 @@ int BaseApp::prepareScene() {
     return 0;
 }
 
-int BaseApp::renderScene() {
-
-    renderer.render(scene, camera);
-
-    return 0;
-}
-
-int BaseApp::updateScene() {
+int DemoApp::updateScene() {
 
     float curTime = glfwGetTime();
 

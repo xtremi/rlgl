@@ -130,7 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(GLFW)\include;$(GLAD)\include;$(GLM_DIR);$(STB_IMAGE);$(SolutionDir)\rlgl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GLFW)\include;$(GLAD)\include;$(GLM_DIR);$(STB_IMAGE);$(SolutionDir)\rlgl;$(SolutionDir)\rlOctStruct</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +147,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(GLFW)\include;$(GLAD)\include;$(GLM_DIR);$(STB_IMAGE);$(SolutionDir)\rlgl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GLFW)\include;$(GLAD)\include;$(GLM_DIR);$(STB_IMAGE);$(SolutionDir)\rlgl;$(SolutionDir)\rlOctStruct</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MyApp.cpp" />
     <ClCompile Include="OpenGL_rela.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,9 @@
     <ProjectReference Include="..\rlgl\rlgl.vcxproj">
       <Project>{0b812b93-f444-4e42-acf4-5f4a4e09c8c2}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MyApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

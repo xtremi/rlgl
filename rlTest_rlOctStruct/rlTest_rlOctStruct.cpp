@@ -50,26 +50,19 @@ int main()
 	std::cout << octTree.toStr() << "\n";
 
 	octTree.removeObject((void*)&data[4]);
-	std::cout << octTree.toStr() << "\n";
-
 	octTree.removeObject((void*)&data[2]);
-	std::cout << octTree.toStr() << "\n";
-
 	octTree.removeObject((void*)&data[3]);
-	std::cout << octTree.toStr() << "\n";
 	octTree.removeObject((void*)&data[7]);
 	octTree.removeObject((void*)&data[6]);
-	std::cout << octTree.toStr() << "\n";
-
 	octTree.removeObject((void*)&data[1]);
-	std::cout << octTree.toStr() << "\n";
-
 	octTree.removeObject((void*)&data[5]);
-	std::cout << octTree.toStr() << "\n";
+
+
 
 	int maxPoints = 1e2;
 	float* tempdata = new float[maxPoints];
 	rl::OctCoord bboxMin, bboxMax;
+	std::vector<void*> allAddedObjects;
 	for (int i = 0; i < maxPoints; i++) {
 		bboxMin.x = rl::rand(-100.f, 100.f);
 		bboxMin.y = rl::rand(-100.f, 100.f);
@@ -79,8 +72,13 @@ int main()
 		bboxMax.z = bboxMin.z + 0.5f; 
 
 		octTree.addObject((void*)&tempdata[i], bboxMin, bboxMax); //17771
+		allAddedObjects.push_back((void*)&tempdata[i]);
 	}
-	//std::cout << octTree.toStr() << "\n";
+	for (void* obj : allAddedObjects) {
+		octTree.removeObject(obj);
+	}
+
+	std::cout << octTree.toStr() << "\n";
 	
 
 	delete[] tempdata;

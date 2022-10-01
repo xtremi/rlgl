@@ -1,12 +1,13 @@
 #include <iostream>
-#include "rlglBaseApp.h"
+#include "MyApp.h"
 
 
 int main(int argc, char* argv[]) {
 
     glm::ivec2 windowSize(800, 600);
 
-	rlgl::BaseApp app;
+	//rlgl::DemoApp app;
+	MyApp app;
     if (int err = app.init(windowSize.x, windowSize.y)) {
         return err;
     }

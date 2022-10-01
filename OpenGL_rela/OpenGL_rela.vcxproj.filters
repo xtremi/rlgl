@@ -18,9 +18,17 @@
     <ClCompile Include="OpenGL_rela.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MyApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="vertexShaderSimple.vs" />
     <None Include="fragmentShaderSimple.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MyApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

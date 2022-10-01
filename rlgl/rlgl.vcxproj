@@ -28,6 +28,7 @@
     <ClInclude Include="rlglScene.h" />
     <ClInclude Include="rlglShader.h" />
     <ClInclude Include="rlglBaseApp.h" />
+    <ClInclude Include="rlglMath.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
@@ -39,6 +40,7 @@
     <ClCompile Include="rlglScene.cpp" />
     <ClCompile Include="rlglShader.cpp" />
     <ClCompile Include="rlglBaseApp.cpp" />
+    <ClCompile Include="rlglMath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\rlOctStruct\rlOctStruct.vcxproj">

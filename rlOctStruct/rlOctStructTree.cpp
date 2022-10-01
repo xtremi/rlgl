@@ -110,6 +110,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(void* object, const std::stri
 				return new OctStructTreeItem(this, objAddress, object);
 			}
 
+
 			//4a/4b Make new parent and move existing child under it:
 			OctStructTreeItem* newCommonParent = new OctStructTreeItem(this, commonAddress);
 

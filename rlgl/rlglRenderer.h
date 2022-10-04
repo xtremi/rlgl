@@ -14,6 +14,7 @@ public:
 
 protected:
 	void render(const Scene& scene, const Camera& cam, const Object* obj);
+	uint64_t lastUsedShader = UINT64_MAX;
 };
 
 

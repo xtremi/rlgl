@@ -24,11 +24,13 @@ void Renderer::render(const Scene& scene, const Camera& cam) {
 
 void Renderer::render(const Scene& scene, const Camera& cam, const Object* obj) {
 
-
 	const Shader* currentShader = scene.shader(obj->shaderID);
 	const Material* currentMaterial =scene.material(obj->materialID);
 
-	currentShader->use();
+	if(obj->shaderID != lastUsedShader){
+		currentShader->use();
+	}
+	currentShader->setVec3("color", obj->color);
 	currentShader->setMat4x4("projection", cam.projectionMatrix());
 	currentShader->setMat4x4("view", cam.viewMatrix());
 	currentShader->setMat4x4("model", obj->modelMatrix);

@@ -81,15 +81,17 @@ int MyApp::prepareScene() {
     float axesW = 0.2f;
     std::vector<glm::vec3> axesDir({ glm::vec3(1.f, 0.f, 0.f),glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f , 0.f, 1.f) });
     std::vector<glm::vec3> axesScales({ glm::vec3(axesL, axesW, axesW),glm::vec3(axesW, axesL, axesW), glm::vec3(axesW, axesW, axesL) });
+    std::vector<glm::vec3> axesColor({ glm::vec3(1.f, 0.f, 0.f),glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 1.f) });
     for (int i = 0; i < axesDir.size(); i++) {
         objects.axes.push_back(new rlgl::Object(meshCube, shader2ID, material2ID));
+        objects.axes[i]->color = axesColor[i];
         objects.axes[i]->modelMatrix = glm::translate(glm::mat4(1.f), axesDir[i] * axesL / 2.f);  
         objects.axes[i]->modelMatrix = glm::scale(objects.axes[i]->modelMatrix, axesScales[i]);
         scene.addObject(objects.axes[i]);
     }
     
-    shader2.use();
-    shader2.setVec3("color", glm::vec3(1.f, 0.1f, 0.1f));
+    //shader2.use();
+    //shader2.setVec3("color", glm::vec3(1.f, 0.1f, 0.1f));
 
     return 0;
 }

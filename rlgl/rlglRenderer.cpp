@@ -24,10 +24,11 @@ void Renderer::render(const Scene& scene, const Camera& cam) {
 
 void Renderer::render(const Scene& scene, const Camera& cam, const Object* obj) {
 
-	const Shader* currentShader = scene.shader(obj->shaderID);
-	const Material* currentMaterial =scene.material(obj->materialID);
-
-	if(obj->shaderID != lastUsedShader){
+	const Shader*	currentShader	= scene.shader(obj->shaderID);
+	const Material* currentMaterial = scene.material(obj->materialID);
+	const Mesh*		currentMesh		= scene.mesh(obj->meshID);
+	
+	if(obj->shaderID != lastUsedShaderID){
 		currentShader->use();
 	}
 	currentShader->setVec3("color", obj->color);
@@ -35,15 +36,23 @@ void Renderer::render(const Scene& scene, const Camera& cam, const Object* obj) 
 	currentShader->setMat4x4("view", cam.viewMatrix());
 	currentShader->setMat4x4("model", obj->modelMatrix);
 
-	if(currentMaterial){
-		glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
-		glBindTexture(GL_TEXTURE_2D, currentMaterial->glID);
-		//currentShader->setInt("textureID", currentMaterial->glID);
+	if(obj->materialID != lastUsedMaterialID){
+		if(currentMaterial){
+			glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
+			glBindTexture(GL_TEXTURE_2D, currentMaterial->glID);
+			//currentShader->setInt("textureID", currentMaterial->glID);
+		}
 	}
 
 
-	const Mesh* currentMesh = scene.mesh(obj->meshID);
-	currentMesh->bind();
+	if(obj->meshID != lastUsedMeshID){
+		currentMesh->bind();
+	}
 	currentMesh->draw();
+
+
+	lastUsedShaderID = obj->shaderID;
+	lastUsedMaterialID= obj->materialID;
+	lastUsedMeshID = obj->meshID;
 
 }

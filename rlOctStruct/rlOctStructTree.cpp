@@ -75,7 +75,7 @@ Ex5
 
 
 */
-OctStructTreeItem* OctStructTreeItem::insertObject(void* object, const std::string& objAddress) {
+OctStructTreeItem* OctStructTreeItem::insertObject(const OctStructObject& object, const std::string& objAddress) {
 
 	/*
 		1. This item has a child with the exact same address
@@ -107,7 +107,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(void* object, const std::stri
 
 			//3.  If the common address is already the address of this item, just add it as child here:
 			if (commonAddress == address) {
-				return new OctStructTreeItem(this, objAddress, object);
+				return new OctStructTreeItem(this, objAddress, &object);
 			}
 
 
@@ -122,7 +122,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(void* object, const std::stri
 			//Create new item (unless the address of the new object is the same as the "common address")
 			/*4a*/
 			if(commonAddress != objAddress){
-				return new OctStructTreeItem(newCommonParent, objAddress, object);
+				return new OctStructTreeItem(newCommonParent, objAddress, &object);
 			}
 			/*4b*/
 			else {
@@ -135,7 +135,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(void* object, const std::stri
 	/*
 		5. Just add as child of current item
 	*/
-	return new OctStructTreeItem(this, objAddress, object);
+	return new OctStructTreeItem(this, objAddress, &object);
 }
 
 std::string OctStructTreeItem::toStr(std::string& str, int& level) {
@@ -158,8 +158,8 @@ std::string OctStructTreeItem::toStr(std::string& str, int& level) {
 std::string OctStructTreeItem::toStr() {
 	std::string str = "";
 	str += "[" + address + "] - ";
-	for(void* obj : objects){
-		str += std::to_string((uint64_t)obj) + ", ";
+	for(const OctStructObject& obj : objects){
+		str += std::to_string((uint64_t)obj.data) + ", ";
 	}
 	if(!objects.empty()){
 		str.pop_back(); str.pop_back();
@@ -176,7 +176,7 @@ std::string OctStructTree::getBoundingBoxAddress(const OctCoord& bboxMin, const 
 
 void OctStructTree::addObject(void* obj, const OctCoord& bboxMin, const OctCoord& bboxMax) {
 	std::string address = getBoundingBoxAddress(bboxMin, bboxMax);
-	OctStructTreeItem* item = root->insertObject(obj, address);
+	OctStructTreeItem* item = root->insertObject({obj, bboxMin, bboxMax}, address);
 	this->octStructTreeItemMap[obj] = item;
 }
 

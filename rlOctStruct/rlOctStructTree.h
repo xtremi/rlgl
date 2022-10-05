@@ -7,24 +7,29 @@
 
 namespace rl{
 
+	class OctStructObject {
+	public:
+		void* data = nullptr;
+		OctCoord bboxMin, bboxMax;
+	};
 
 class OctStructTreeItem {
 public:
 	OctStructTreeItem(
 		OctStructTreeItem* _parent,
 		const std::string& _address, 
-		void* object = nullptr) : address{ _address }, parent{_parent}
+		const OctStructObject* object = nullptr) : address{ _address }, parent{_parent}
 	{
-		if (object) objects.insert(object);
+		if(object) objects.insert(*object);
 		if (parent) parent->children[address] = this;
 
 	}
-	std::set<void*>    objects;
+	std::set<OctStructObject>    objects;
 	std::string		   address;
 	OctStructTreeItem* parent;
 	std::unordered_map<std::string, OctStructTreeItem*> children;
 
-	OctStructTreeItem* insertObject(void* object, const std::string& addr);
+	OctStructTreeItem* insertObject(const OctStructObject& object, const std::string& addr);
 
 	std::string toStr(std::string& str, int& level);
 	std::string toStr();

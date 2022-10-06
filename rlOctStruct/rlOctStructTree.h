@@ -11,6 +11,14 @@ namespace rl{
 	public:
 		void* data = nullptr;
 		OctCoord bboxMin, bboxMax;
+
+		bool operator<(const OctStructObject& rhs) const {
+			return data < rhs.data;
+		}
+		bool operator==(const OctStructObject& rhs) const {
+			return data == rhs.data;
+		}
+
 	};
 
 class OctStructTreeItem {
@@ -20,13 +28,13 @@ public:
 		const std::string& _address, 
 		const OctStructObject* object = nullptr) : address{ _address }, parent{_parent}
 	{
-		if(object) objects.insert(*object);
+		if (object) objects.insert(*object);
 		if (parent) parent->children[address] = this;
 
 	}
-	std::set<OctStructObject>    objects;
-	std::string		   address;
-	OctStructTreeItem* parent;
+	std::set<OctStructObject> objects;
+	std::string				  address;
+	OctStructTreeItem*		  parent;
 	std::unordered_map<std::string, OctStructTreeItem*> children;
 
 	OctStructTreeItem* insertObject(const OctStructObject& object, const std::string& addr);

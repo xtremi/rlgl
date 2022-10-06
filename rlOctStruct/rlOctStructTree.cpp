@@ -181,12 +181,17 @@ void OctStructTree::addObject(void* obj, const OctCoord& bboxMin, const OctCoord
 }
 
 
-/*TODO*/
 void OctStructTree::removeObject(void* obj) {
+
 	auto it = octStructTreeItemMap.find(obj);
 	if (it != octStructTreeItemMap.end()) {
 		OctStructTreeItem* item = it->second;
-		item->objects.erase(obj);
+		for (const OctStructObject& osObj : item->objects) {
+			if (osObj.data == obj) {
+				item->objects.erase(osObj);
+				break;
+			}
+		}	
 
 		octStructTreeItemMap.erase(obj);
 

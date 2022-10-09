@@ -98,6 +98,22 @@ Mesh rlgl::primitive_mesh::plane = {
 
 };
 
+Mesh rlgl::primitive_mesh::square_hud = {
+
+	rlgl::GLBuffer<float>({
+		 0.5f,  0.5f, 0.0f, // top right
+		 0.5f, -0.5f, 0.0f, // bottom right
+		-0.5f, -0.5f, 0.0f, // bottom left
+		-0.5f,  0.5f, 0.0f  // top left 
+	}),
+	rlgl::GLBuffer<GLuint>({
+		0, 1, 3,   // first triangle
+		1, 2, 3    // second triangle
+	}),
+	0, true, false, false, false, 4, 6
+
+};
+
 Mesh rlgl::primitive_mesh::cube_tex{
      rlgl::GLBuffer<float>({
         -0.5f, -0.5f, -0.5f,   1.0f, 0.f, 0.f,   0.0f, 0.0f,

@@ -24,6 +24,8 @@ public:
 	float far  = 100.f;
 	float aspectRatio = 800.f / 600.f;
 
+	bool isOrthoGraphic = false;
+
 };
 
 }

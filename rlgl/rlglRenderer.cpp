@@ -31,7 +31,7 @@ void Renderer::render(const Scene& scene, const Camera& cam, const Object* obj) 
 	if(obj->shaderID != lastUsedShaderID){
 		currentShader->use();
 	}
-	currentShader->setVec3("color", obj->color);
+	currentShader->setVec4("color", obj->color);
 	currentShader->setMat4x4("projection", cam.projectionMatrix());
 	currentShader->setMat4x4("view", cam.viewMatrix());
 	currentShader->setMat4x4("model", obj->modelMatrix);

@@ -15,6 +15,9 @@ int BaseApp::init(int windowSizeX, int windowSizeY) {
     windowParams().size = glm::ivec2(windowSizeX, windowSizeY);
     camera.aspectRatio = windowParams().aspect();
 
+    cameraHUD.aspectRatio = windowParams().aspect();
+    cameraHUD.isOrthoGraphic = true;
+
     if (int err = initializeWindow()) {
         return err;
     }
@@ -160,6 +163,12 @@ int BaseApp::initializeWindow() {
 
     glClearColor(windowParams().backgroundColor.r, windowParams().backgroundColor.g, windowParams().backgroundColor.b, 1.0f);
     glEnable(GL_DEPTH_TEST);
+    
+    //For transperancy:
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     return 0;
 }
 

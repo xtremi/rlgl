@@ -13,7 +13,7 @@ public:
 	uint64_t shaderID;
 	uint64_t materialID;
 
-	glm::vec3 color;
+	glm::vec4 color;
 	glm::mat4 modelMatrix;
 };
 

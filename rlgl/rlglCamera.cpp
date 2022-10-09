@@ -4,7 +4,12 @@
 using namespace rlgl;
 
 glm::mat4 Camera::projectionMatrix() const {
-	return glm::perspective(glm::radians(fov), aspectRatio, near, far);
+	if(!isOrthoGraphic){
+		return glm::perspective(glm::radians(fov), aspectRatio, near, far);
+	}
+	else {
+		return glm::ortho(0.f, 1.f, 0.f, 1.f);
+	}
 }
 
 glm::mat4 Camera::viewMatrix() const {

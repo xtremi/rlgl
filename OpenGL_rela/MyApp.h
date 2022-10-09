@@ -17,6 +17,8 @@ protected:
 		rlgl::Object* worldPlane;
 		std::vector<rlgl::Object*> cubes;
 		std::vector<rlgl::Object*> axes;
+
+		std::vector<rlgl::Object*> boundingBoxes;
 	};
 	WorldObjects objects;
 

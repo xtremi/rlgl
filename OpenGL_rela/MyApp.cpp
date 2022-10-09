@@ -17,7 +17,8 @@ int MyApp::prepareScene() {
     uint64_t meshWorld = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
     uint64_t meshCubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
     uint64_t meshCube = scene.addMesh(&rlgl::primitive_mesh::cube);
-
+    uint64_t meshSquare = scene.addMesh(&rlgl::primitive_mesh::plane);
+    
 
     rlgl::Material material1;
     material1.initialize("..\\data\\textures\\checker_grey.jpg", true);
@@ -77,11 +78,32 @@ int MyApp::prepareScene() {
         scene.addObject(objects.cubes[i]);
     }
 
+    int bi = 0;
+    auto it = octTree.octStructTreeItemMap.begin();
+    for (it; it != octTree.octStructTreeItemMap.end(); it++) {
+        auto it2 = it->second->objects.begin();
+        for (it2; it2 != it->second->objects.end(); it2++) {
+
+            rl::OctCoord bbMin = it2->bboxMin;
+            rl::OctCoord bbMax = it2->bboxMax;
+            //a + (b - a)/2 = a + b/2 - a/2 = a/2 + b/2 = (a+b)/2 
+            glm::vec3 center((bbMax.x + bbMin.x) / 2.f, (bbMax.y + bbMin.y) / 2.f, (bbMax.z + bbMin.z) / 2.f);
+            glm::vec3 size(bbMax.x - bbMin.x, bbMax.y - bbMin.y, bbMax.z - bbMin.z);
+
+            objects.boundingBoxes.push_back(new rlgl::Object(meshCube, shader2ID, material2ID));
+            objects.boundingBoxes[bi]->color = glm::vec4(0.9f, 0.9f, 0.9f, 0.7f);
+            objects.boundingBoxes[bi]->modelMatrix = glm::translate(glm::mat4(1.f), center);
+            objects.boundingBoxes[bi]->modelMatrix = glm::scale(objects.boundingBoxes[bi]->modelMatrix, size*1.25f);
+            scene.addObject(objects.boundingBoxes[bi++]);
+        }
+    }
+
+
     float axesL = 5.f;
     float axesW = 0.2f;
     std::vector<glm::vec3> axesDir({ glm::vec3(1.f, 0.f, 0.f),glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f , 0.f, 1.f) });
     std::vector<glm::vec3> axesScales({ glm::vec3(axesL, axesW, axesW),glm::vec3(axesW, axesL, axesW), glm::vec3(axesW, axesW, axesL) });
-    std::vector<glm::vec3> axesColor({ glm::vec3(1.f, 0.f, 0.f),glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 1.f) });
+    std::vector<glm::vec4> axesColor({ glm::vec4(1.f, 0.f, 0.f, 1.f),glm::vec4(0.f, 1.f, 0.f, 1.f), glm::vec4(0.f, 0.f, 1.f, 1.f) });
     for (int i = 0; i < axesDir.size(); i++) {
         objects.axes.push_back(new rlgl::Object(meshCube, shader2ID, material2ID));
         objects.axes[i]->color = axesColor[i];
@@ -99,6 +121,8 @@ int MyApp::prepareScene() {
 int MyApp::updateScene() {
 
     float curTime = glfwGetTime();
+
+
 
     //float d = 2.5f;
     //glm::vec3 positions[4] = {

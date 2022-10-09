@@ -60,6 +60,7 @@ protected:
 	GLFWwindow*	   _window = nullptr;
 	rlgl::Renderer renderer;
 	rlgl::Camera   camera;
+	rlgl::Camera   cameraHUD;
 	rlgl::Scene	   scene;
 	std::string    errmsg = "";
 

@@ -9,9 +9,7 @@ namespace rlgl{
 
 	class Mesh;
 	class Object;
-	//class Shader;
 	class Renderer;
-	//class Material;
 
 	typedef std::vector<Object*>::const_iterator cObjectIt;
 

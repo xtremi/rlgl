@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="MyApp.cpp" />
     <ClCompile Include="OpenGL_rela.cpp" />
+    <ClCompile Include="rlglUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShaderSimple.fs" />
@@ -173,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyApp.h" />
+    <ClInclude Include="rlglUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

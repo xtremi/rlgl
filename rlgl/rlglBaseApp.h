@@ -62,6 +62,7 @@ protected:
 	rlgl::Camera   camera;
 	rlgl::Camera   cameraHUD;
 	rlgl::Scene	   scene;
+	rlgl::Scene	   uiScene;
 	std::string    errmsg = "";
 
 	void handleMouse(double xposIn, double yposIn);

@@ -11,6 +11,7 @@ public:
 
 protected:
 	rl::OctStructTree octTree;
+	rlgl::Scene uiScene;
 
 	class WorldObjects {
 	public:
@@ -20,7 +21,12 @@ protected:
 
 		std::vector<rlgl::Object*> boundingBoxes;
 	};
+	class UIobjects {
+	public:
+		std::vector<rlgl::Object*> aimCross;
+	};
 	WorldObjects objects;
+	UIobjects uiObjects;
 
 };
 

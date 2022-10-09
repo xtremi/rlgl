@@ -14,7 +14,6 @@ BaseApp::BaseApp() {}
 int BaseApp::init(int windowSizeX, int windowSizeY) {
     windowParams().size = glm::ivec2(windowSizeX, windowSizeY);
     camera.aspectRatio = windowParams().aspect();
-
     cameraHUD.aspectRatio = windowParams().aspect();
     cameraHUD.isOrthoGraphic = true;
 

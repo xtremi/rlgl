@@ -17,8 +17,10 @@ int MyApp::prepareScene() {
     uint64_t meshWorld = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
     uint64_t meshCubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
     uint64_t meshCube = scene.addMesh(&rlgl::primitive_mesh::cube);
-    uint64_t meshSquare = scene.addMesh(&rlgl::primitive_mesh::plane);
     
+    uint64_t meshSquare = uiScene.addMesh(&rlgl::primitive_mesh::square_hud);
+    
+
 
     rlgl::Material material1;
     material1.initialize("..\\data\\textures\\checker_grey.jpg", true);
@@ -46,6 +48,12 @@ int MyApp::prepareScene() {
     objects.worldPlane->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
     objects.worldPlane->modelMatrix = glm::scale(objects.worldPlane->modelMatrix, glm::vec3(100.0f));
     scene.addObject(objects.worldPlane);
+
+    //UI:
+    uiObjects.aimCross.push_back(new rlgl::Object(meshSquare, shader2ID, material2ID));
+    uiObjects.aimCross.push_back(new rlgl::Object(meshSquare, shader2ID, material2ID));
+    uiObjects.aimCross[0]->modelMatrix = glm::translate(glm::mat4(1.f), boxPos);
+    uiObjects.aimCross[1]->modelMatrix = glm::scale(objects.cubes[i]->modelMatrix, glm::vec3(boxSize));
 
     //Boxes:
     rl::OctStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);

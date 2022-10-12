@@ -13,14 +13,14 @@ int MyApp::prepareScene() {
     rlgl::primitive_mesh::plane.initialize();
     rlgl::primitive_mesh::cube_tex.initialize();
     rlgl::primitive_mesh::cube.initialize();
+    rlgl::primitive_mesh::square.initialize();
 
     uint64_t meshWorld = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
     uint64_t meshCubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
     uint64_t meshCube = scene.addMesh(&rlgl::primitive_mesh::cube);
     
-    uint64_t meshSquare = uiScene.addMesh(&rlgl::primitive_mesh::square_hud);
+	
     
-
 
     rlgl::Material material1;
     material1.initialize("..\\data\\textures\\checker_grey.jpg", true);
@@ -49,11 +49,24 @@ int MyApp::prepareScene() {
     objects.worldPlane->modelMatrix = glm::scale(objects.worldPlane->modelMatrix, glm::vec3(100.0f));
     scene.addObject(objects.worldPlane);
 
-    //UI:
-    uiObjects.aimCross.push_back(new rlgl::Object(meshSquare, shader2ID, material2ID));
-    uiObjects.aimCross.push_back(new rlgl::Object(meshSquare, shader2ID, material2ID));
-    uiObjects.aimCross[0]->modelMatrix = glm::translate(glm::mat4(1.f), boxPos);
-    uiObjects.aimCross[1]->modelMatrix = glm::scale(objects.cubes[i]->modelMatrix, glm::vec3(boxSize));
+	//UI:
+	uint64_t uiSquareMesh = uiScene.addMesh(&rlgl::primitive_mesh::square);
+
+	rlgl::Shader shader3_ui;
+	shader3_ui.initialize("..\\data\\shaders\\ui_element.vs", "..\\data\\shaders\\ui_element.fs");
+	uint64_t shader3ID_ui = uiScene.addShader(shader3_ui);
+
+    uiObjects.aimCross.push_back(new rlgl::Object(uiSquareMesh, shader3ID_ui, INT64_MAX));
+    uiObjects.aimCross.push_back(new rlgl::Object(uiSquareMesh, shader3ID_ui, INT64_MAX));
+    uiObjects.aimCross[0]->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.5f, 0.5f, 0.2f));
+    uiObjects.aimCross[0]->modelMatrix = glm::scale(uiObjects.aimCross[0]->modelMatrix, glm::vec3(0.5f, 0.1f, 1.f));
+	uiObjects.aimCross[1]->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.1f, 0.1f, 0.2f));
+	uiObjects.aimCross[1]->modelMatrix = glm::scale(uiObjects.aimCross[1]->modelMatrix, glm::vec3(0.1f, 0.5f, 1.f));
+	uiObjects.aimCross[0]->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
+	uiObjects.aimCross[1]->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
+	uiScene.addObject(uiObjects.aimCross[0]);
+	uiScene.addObject(uiObjects.aimCross[1]);
+
 
     //Boxes:
     rl::OctStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);
@@ -99,7 +112,7 @@ int MyApp::prepareScene() {
             glm::vec3 size(bbMax.x - bbMin.x, bbMax.y - bbMin.y, bbMax.z - bbMin.z);
 
             objects.boundingBoxes.push_back(new rlgl::Object(meshCube, shader2ID, material2ID));
-            objects.boundingBoxes[bi]->color = glm::vec4(0.9f, 0.9f, 0.9f, 0.7f);
+            objects.boundingBoxes[bi]->setColor(glm::vec4(0.9f, 0.9f, 0.9f, 0.7f));
             objects.boundingBoxes[bi]->modelMatrix = glm::translate(glm::mat4(1.f), center);
             objects.boundingBoxes[bi]->modelMatrix = glm::scale(objects.boundingBoxes[bi]->modelMatrix, size*1.25f);
             scene.addObject(objects.boundingBoxes[bi++]);
@@ -114,7 +127,7 @@ int MyApp::prepareScene() {
     std::vector<glm::vec4> axesColor({ glm::vec4(1.f, 0.f, 0.f, 1.f),glm::vec4(0.f, 1.f, 0.f, 1.f), glm::vec4(0.f, 0.f, 1.f, 1.f) });
     for (int i = 0; i < axesDir.size(); i++) {
         objects.axes.push_back(new rlgl::Object(meshCube, shader2ID, material2ID));
-        objects.axes[i]->color = axesColor[i];
+        objects.axes[i]->setColor(axesColor[i]);
         objects.axes[i]->modelMatrix = glm::translate(glm::mat4(1.f), axesDir[i] * axesL / 2.f);  
         objects.axes[i]->modelMatrix = glm::scale(objects.axes[i]->modelMatrix, axesScales[i]);
         scene.addObject(objects.axes[i]);

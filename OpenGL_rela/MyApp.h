@@ -11,7 +11,6 @@ public:
 
 protected:
 	rl::OctStructTree octTree;
-	rlgl::Scene uiScene;
 
 	class WorldObjects {
 	public:

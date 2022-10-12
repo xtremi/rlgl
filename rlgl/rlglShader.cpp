@@ -22,16 +22,16 @@ bool Shader::initialize(const std::string& vertexPath, const std::string& fragme
     }
 
 
-    ID = glCreateProgram();
-    glAttachShader(ID, vShader);
-    glAttachShader(ID, fShader);
-    glLinkProgram(ID);
+    glID = glCreateProgram();
+    glAttachShader(glID, vShader);
+    glAttachShader(glID, fShader);
+    glLinkProgram(glID);
 
     GLint success;
     errmsg.resize(512);
-    glGetProgramiv(ID, GL_LINK_STATUS, &success);
+    glGetProgramiv(glID, GL_LINK_STATUS, &success);
     if (!success) {
-        glGetProgramInfoLog(ID, 512, NULL, &errmsg[0]);
+        glGetProgramInfoLog(glID, 512, NULL, &errmsg[0]);
         std::cout << errmsg;
         return false;
     }
@@ -66,29 +66,29 @@ GLuint Shader::compileShader(const std::string& filePath, GLenum shaderType, std
 }
 
 void Shader::use() const {
-    glUseProgram(ID);
+    glUseProgram(glID);
 }
 
 void Shader::setBool(const std::string& name, bool value) const {
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+    glUniform1i(glGetUniformLocation(glID, name.c_str()), (int)value);
 }
 void Shader::setFloat(const std::string& name, float value) const {
-    glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    glUniform1f(glGetUniformLocation(glID, name.c_str()), value);
 }
 void Shader::setMat4x4(const std::string& name, const glm::mat4x4& value) const {
-    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+    glUniformMatrix4fv(glGetUniformLocation(glID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 void Shader::setVec3(const std::string& name, const glm::vec3& value) const {
-    glUniform3f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z);
+    glUniform3f(glGetUniformLocation(glID, name.c_str()), value.x, value.y, value.z);
 }
 void Shader::setVec4(const std::string& name, const glm::vec4& value) const {
-    glUniform4f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z, value.w);
+    glUniform4f(glGetUniformLocation(glID, name.c_str()), value.x, value.y, value.z, value.w);
 }
 void Shader::setUint(const std::string& name, GLuint value) const {
-    glUniform1ui(glGetUniformLocation(ID, name.c_str()), value);
+    glUniform1ui(glGetUniformLocation(glID, name.c_str()), value);
 }
 void Shader::setInt(const std::string& name, GLint value) const {
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+    glUniform1i(glGetUniformLocation(glID, name.c_str()), value);
 }
 
 

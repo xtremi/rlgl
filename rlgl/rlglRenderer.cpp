@@ -27,17 +27,25 @@ void Renderer::render(const Scene& scene, const Camera& cam, const Object* obj) 
 	const Shader*	currentShader	= scene.shader(obj->shaderID);
 	const Material* currentMaterial = scene.material(obj->materialID);
 	const Mesh*		currentMesh		= scene.mesh(obj->meshID);
-	
-	if(obj->shaderID != lastUsedShaderID){
+	if (!currentMesh) {
+		throw("Renderer::render - Mesh does not exist");
+	}
+	if (!currentShader) {
+		throw("Renderer::render - Shader does not exist");
+	}
+
+	if(currentShader->glID != lastUsedShaderID){
 		currentShader->use();
 	}
-	currentShader->setVec4("color", obj->color);
+	if(obj->hasColor()){
+		currentShader->setVec4("color", obj->getColor());
+	}
 	currentShader->setMat4x4("projection", cam.projectionMatrix());
-	currentShader->setMat4x4("view", cam.viewMatrix());
+	currentShader->setMat4x4("view",  cam.viewMatrix());
 	currentShader->setMat4x4("model", obj->modelMatrix);
 
-	if(obj->materialID != lastUsedMaterialID){
-		if(currentMaterial){
+	if (currentMaterial) {
+		if(currentMaterial->glID != lastUsedMaterialID){
 			glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
 			glBindTexture(GL_TEXTURE_2D, currentMaterial->glID);
 			//currentShader->setInt("textureID", currentMaterial->glID);
@@ -45,14 +53,15 @@ void Renderer::render(const Scene& scene, const Camera& cam, const Object* obj) 
 	}
 
 
-	if(obj->meshID != lastUsedMeshID){
+	if(currentMesh->VAO != lastUsedMeshID){
 		currentMesh->bind();
 	}
 	currentMesh->draw();
 
 
-	lastUsedShaderID = obj->shaderID;
-	lastUsedMaterialID= obj->materialID;
-	lastUsedMeshID = obj->meshID;
-
+	lastUsedShaderID = currentShader->glID;
+	lastUsedMeshID   = currentMesh->VAO;
+	if(currentMaterial){
+		lastUsedMaterialID = currentMaterial->glID;
+	}
 }

@@ -14,8 +14,12 @@ BaseApp::BaseApp() {}
 int BaseApp::init(int windowSizeX, int windowSizeY) {
     windowParams().size = glm::ivec2(windowSizeX, windowSizeY);
     camera.aspectRatio = windowParams().aspect();
-    cameraHUD.aspectRatio = windowParams().aspect();
-    cameraHUD.isOrthoGraphic = true;
+    
+	uiCamera.position = glm::vec3(0.f);
+	uiCamera.front  = glm::vec3(0.f, 0.f, 1.f);
+	uiCamera.upVector = glm::vec3(0.f, 1.f, 0.f);
+	uiCamera.aspectRatio = windowParams().aspect();
+    uiCamera.isOrthoGraphic = true;
 
     if (int err = initializeWindow()) {
         return err;
@@ -176,6 +180,7 @@ int BaseApp::initializeWindow() {
 int BaseApp::renderScene() {
 
     renderer.render(scene, camera);
+    renderer.render(uiScene, uiCamera);
 
     return 0;
 }

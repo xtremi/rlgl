@@ -98,7 +98,7 @@ Mesh rlgl::primitive_mesh::plane = {
 
 };
 
-Mesh rlgl::primitive_mesh::square_hud = {
+Mesh rlgl::primitive_mesh::square = {
 
 	rlgl::GLBuffer<float>({
 		 0.5f,  0.5f, 0.0f, // top right

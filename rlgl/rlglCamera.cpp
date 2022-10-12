@@ -8,7 +8,7 @@ glm::mat4 Camera::projectionMatrix() const {
 		return glm::perspective(glm::radians(fov), aspectRatio, near, far);
 	}
 	else {
-		return glm::ortho(0.f, 1.f, 0.f, 1.f);
+		return glm::ortho(-1.f, 1.f, -1.f, 1.f);
 	}
 }
 

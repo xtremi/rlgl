@@ -23,7 +23,12 @@ public:
 
 	const Shader*   shader(uint64_t id) const { return &shaders[id]; }
 	const Mesh*     mesh(uint64_t id) const { return meshes[id]; }
-	const Material* material(uint64_t id) const { return &materials[id]; }
+	const Material* material(uint64_t id) const { 
+		if(id < materials.size()){
+			return &materials[id];
+		}
+		return nullptr;
+	}
 	const Object*   object(uint64_t id) const { return objects[id]; }
 
 	Object* object(uint64_t id) { return objects[id]; }

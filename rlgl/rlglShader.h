@@ -13,7 +13,7 @@ std::string readFile(const std::string& filePath);
 class Shader
 {
 public:
-    unsigned int ID;
+    GLuint glID;
 
     Shader();
     bool initialize(const std::string& vertexPath, const std::string& fragmentPath);

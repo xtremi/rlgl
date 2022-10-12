@@ -14,9 +14,9 @@ public:
 
 protected:
 	void render(const Scene& scene, const Camera& cam, const Object* obj);
-	uint64_t lastUsedShaderID = UINT64_MAX;
-	uint64_t lastUsedMaterialID = UINT64_MAX;
-	uint64_t lastUsedMeshID = UINT64_MAX;
+	uint32_t lastUsedShaderID = UINT32_MAX;
+	uint32_t lastUsedMaterialID = UINT32_MAX;
+	uint32_t lastUsedMeshID = UINT32_MAX;
 };
 
 

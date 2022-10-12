@@ -58,10 +58,10 @@ int MyApp::prepareScene() {
 
     uiObjects.aimCross.push_back(new rlgl::Object(uiSquareMesh, shader3ID_ui, INT64_MAX));
     uiObjects.aimCross.push_back(new rlgl::Object(uiSquareMesh, shader3ID_ui, INT64_MAX));
-    uiObjects.aimCross[0]->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.5f, 0.5f, 0.2f));
-    uiObjects.aimCross[0]->modelMatrix = glm::scale(uiObjects.aimCross[0]->modelMatrix, glm::vec3(0.5f, 0.1f, 1.f));
-	uiObjects.aimCross[1]->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.1f, 0.1f, 0.2f));
-	uiObjects.aimCross[1]->modelMatrix = glm::scale(uiObjects.aimCross[1]->modelMatrix, glm::vec3(0.1f, 0.5f, 1.f));
+    uiObjects.aimCross[0]->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.2f));
+    uiObjects.aimCross[0]->modelMatrix = glm::scale(uiObjects.aimCross[0]->modelMatrix, glm::vec3(0.2f, 0.01f, 1.f));
+	uiObjects.aimCross[1]->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, 0.0f, 0.2f));
+	uiObjects.aimCross[1]->modelMatrix = glm::scale(uiObjects.aimCross[1]->modelMatrix, glm::vec3(0.01f, 0.2f, 1.f));
 	uiObjects.aimCross[0]->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
 	uiObjects.aimCross[1]->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
 	uiScene.addObject(uiObjects.aimCross[0]);

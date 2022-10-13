@@ -21,12 +21,18 @@
     <ClCompile Include="rlMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rlRayIntersection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rlMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rlGeometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rlRayIntersection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

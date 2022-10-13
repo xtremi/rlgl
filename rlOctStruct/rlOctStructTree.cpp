@@ -167,16 +167,16 @@ std::string OctStructTreeItem::toStr() {
 	return str;
 }
 
-std::string OctStructTree::getBoundingBoxAddress(const OctCoord& bboxMin, const OctCoord& bboxMax) {
-	std::string addrMin = octStruct.getOctAddress(bboxMin);
-	std::string addrMax = octStruct.getOctAddress(bboxMax);
+std::string OctStructTree::getBoundingBoxAddress(const BoundingBox& bbox) {
+	std::string addrMin = octStruct.getOctAddress(bbox.minC);
+	std::string addrMax = octStruct.getOctAddress(bbox.maxC);
 	return getCommonAddress(addrMin, addrMax);
 }
 
 
-void OctStructTree::addObject(void* obj, const OctCoord& bboxMin, const OctCoord& bboxMax) {
-	std::string address = getBoundingBoxAddress(bboxMin, bboxMax);
-	OctStructTreeItem* item = root->insertObject({obj, bboxMin, bboxMax}, address);
+void OctStructTree::addObject(void* obj, const BoundingBox& bbox) {
+	std::string address = getBoundingBoxAddress(bbox);
+	OctStructTreeItem* item = root->insertObject({obj, bbox}, address);
 	this->octStructTreeItemMap[obj] = item;
 }
 
@@ -236,12 +236,12 @@ void OctStructTree::removeObject(void* obj) {
 }
 
 /*TODO*/
-void OctStructTree::moveObject(void* obj, const OctCoord& bboxMin, const OctCoord& bboxMax) {
+void OctStructTree::moveObject(void* obj, const BoundingBox& bbox) {
 
 }
 
 /*TODO*/
-std::vector<void*> OctStructTree::getObjects(const OctCoord& bboxMin, const OctCoord& bboxMax) {
+std::vector<void*> OctStructTree::getObjects(const BoundingBox& bbox) {
 	std::vector<void*> objects;
 	return objects;
 }
@@ -256,4 +256,15 @@ std::string OctStructTree::toStr() {
 	std::string str;
 	int level = 0;
 	return root->toStr(str, level);
+}
+
+bool OctStructTree::hitTest(const rl::Ray& ray, void* data) {
+
+	auto it = root->children.begin();
+	for (it; it != root->children.end(); it++) {
+
+
+
+	}
+
 }

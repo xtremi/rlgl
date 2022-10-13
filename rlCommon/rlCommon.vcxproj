@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClCompile Include="rlGeometry.cpp" />
     <ClCompile Include="rlMath.cpp" />
+    <ClCompile Include="rlRayIntersection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rlGeometry.h" />
     <ClInclude Include="rlMath.h" />
+    <ClInclude Include="rlRayIntersection.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

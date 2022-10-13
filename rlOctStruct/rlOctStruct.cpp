@@ -6,7 +6,7 @@ float OctStruct::halfSize(int level) {
 	return size / ((float)level * 2.f);
 }
 
-void OctStruct::setXYZhalfSize(int level, bool posX, bool posY, bool posZ, OctCoord& c) {
+void OctStruct::setXYZhalfSize(int level, bool posX, bool posY, bool posZ, glm::vec3& c) {
 	float hs = halfSize(level);
 	c.x = posX ? hs : -hs;
 	c.y = posY ? hs : -hs;
@@ -14,7 +14,7 @@ void OctStruct::setXYZhalfSize(int level, bool posX, bool posY, bool posZ, OctCo
 }
 
 //Local center at a specific level (center is center of cube a addr in level)
-void OctStruct::localLevelCenter(char addr, int level, OctCoord& c) {
+void OctStruct::localLevelCenter(char addr, int level, glm::vec3& c) {
 	switch (addr)
 	{
 	case '1': setXYZhalfSize(level, true, true, true,	 c); break;
@@ -32,29 +32,35 @@ void OctStruct::localLevelCenter(char addr, int level, OctCoord& c) {
 }
 
 //Local center of address (center is at 0., 0., 0.)
-void OctStruct::localCenter(const std::string& addr, OctCoord& coord) {
+void OctStruct::localCenter(const std::string& addr, glm::vec3& coord) {
 	if (addr.size() == 0) {
 		return;
 	}
 	
-	OctCoord lc;
-	coord = OctCoord();
+	glm::vec3 lc;
+	coord = glm::vec3(0.f);
 	int level = 1;
 	for (char c : addr) {
 		localLevelCenter(c, level++, lc);
-		coord.x += lc.x;
-		coord.y += lc.y;
-		coord.z += lc.z;
+		coord += lc;
 	}
 
 }
 
-std::string OctStruct::getOctAddress(const OctCoord& coord) {
+void OctStruct::localBoundingBox(const std::string& addr, rl::BoundingBox& bbox) {
+	int level = addr.size();
+	glm::vec3 center;
+	localCenter(addr, center);
+
+	float bbWidth = size / glm::pow(2.f, (level - 1));
+	bbox.minC = center - glm::vec3(bbWidth / 2.0);
+	bbox.maxC = center + glm::vec3(bbWidth / 2.0);
+}
+
+std::string OctStruct::getOctAddress(const glm::vec3& coord) {
 	std::string addr = "";
-	OctCoord lc, c;
-	c.x = coord.x - center.x;
-	c.y = coord.y - center.y;
-	c.z = coord.z - center.z;
+	glm::vec3 lc, c;
+	c = coord - center;
 
 	for (int level = 1; level < (depth + 1); level++) {
 		char cell = '0';
@@ -68,9 +74,7 @@ std::string OctStruct::getOctAddress(const OctCoord& coord) {
 		else if (c.x >= 0.f && c.y <  0.f && c.z <  0.f) cell = '8';
 		addr.push_back(cell);
 		localLevelCenter(cell, level, lc);
-		c.x -= lc.x;
-		c.y -= lc.y;
-		c.z -= lc.z;
+		c -= lc;
 	}
 	return addr;
 }

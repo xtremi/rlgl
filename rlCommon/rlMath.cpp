@@ -1,11 +1,11 @@
-#include "rlglMath.h"
+#include "rlMath.h"
 #include  <cstdlib>
 
-float rlgl::rand(float min, float max) {
+float rl::rand(float min, float max) {
 	return min + static_cast <float> (std::rand()) / (static_cast <float> (RAND_MAX / (max - min)));
 }
 
-glm::quat rlgl::fromToRotation(const glm::vec3& startDirection, const glm::vec3& endDirection) {
+glm::quat rl::fromToRotation(const glm::vec3& startDirection, const glm::vec3& endDirection) {
 
     const glm::vec3& crossProduct = glm::cross(startDirection, endDirection);
 

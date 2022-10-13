@@ -1,5 +1,5 @@
 #include "MyApp.h"
-#include "rlglMath.h"
+#include "rlMath.h"
 
 
 void MyApp::processInput(GLFWwindow* window) {
@@ -80,7 +80,7 @@ int MyApp::prepareScene() {
     std::vector<void*> allAddedObjects;
     for (int i = 0; i < maxPoints; i++) {
 
-        boxPos  = glm::vec3(rlgl::rand(-50.f, 50.f), rlgl::rand(-50.f, 50.f), rlgl::rand(-50.f, 50.f));
+        boxPos  = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
 
         bboxMin.x = boxPos.x - boxSize / 2.f;
         bboxMin.y = boxPos.y - boxSize / 2.f;

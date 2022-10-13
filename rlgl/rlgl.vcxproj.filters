@@ -42,9 +42,6 @@
     <ClInclude Include="rlglErrors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rlglMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="rlglObject.cpp">
@@ -72,9 +69,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="rlglMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="rlglMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

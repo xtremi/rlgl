@@ -1,4 +1,5 @@
 #include "rlOctStructTree.h"
+#include "rlRayIntersection.h"
 
 using namespace rl;
 
@@ -75,7 +76,10 @@ Ex5
 
 
 */
-OctStructTreeItem* OctStructTreeItem::insertObject(const OctStructObject& object, const std::string& objAddress) {
+OctStructTreeItem* OctStructTreeItem::insertObject(
+	const OctStructObject&	object,
+	const std::string&		objAddress,
+	const rl::BoundingBox& _boundingBox) {
 
 	/*
 		1. This item has a child with the exact same address
@@ -94,7 +98,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(const OctStructObject& object
 		subAddress += c;
 		it = children.find(subAddress);
 		if (it != children.end()) {
-			return it->second->insertObject(object, objAddress);
+			return it->second->insertObject(object, objAddress, _boundingBox);
 		}
 	}
 
@@ -107,12 +111,12 @@ OctStructTreeItem* OctStructTreeItem::insertObject(const OctStructObject& object
 
 			//3.  If the common address is already the address of this item, just add it as child here:
 			if (commonAddress == address) {
-				return new OctStructTreeItem(this, objAddress, &object);
+				return new OctStructTreeItem(this, objAddress, _boundingBox, &object);
 			}
 
 
 			//4a/4b Make new parent and move existing child under it:
-			OctStructTreeItem* newCommonParent = new OctStructTreeItem(this, commonAddress);
+			OctStructTreeItem* newCommonParent = new OctStructTreeItem(this, commonAddress, _boundingBox);
 
 			OctStructTreeItem* existingItem = it->second;
 			children.erase(existingItem->address);		  //remove from child
@@ -122,7 +126,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(const OctStructObject& object
 			//Create new item (unless the address of the new object is the same as the "common address")
 			/*4a*/
 			if(commonAddress != objAddress){
-				return new OctStructTreeItem(newCommonParent, objAddress, &object);
+				return new OctStructTreeItem(newCommonParent, objAddress, _boundingBox, &object);
 			}
 			/*4b*/
 			else {
@@ -135,7 +139,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(const OctStructObject& object
 	/*
 		5. Just add as child of current item
 	*/
-	return new OctStructTreeItem(this, objAddress, &object);
+	return new OctStructTreeItem(this, objAddress, _boundingBox, &object);
 }
 
 std::string OctStructTreeItem::toStr(std::string& str, int& level) {
@@ -173,13 +177,13 @@ std::string OctStructTree::getBoundingBoxAddress(const BoundingBox& bbox) {
 	return getCommonAddress(addrMin, addrMax);
 }
 
-
 void OctStructTree::addObject(void* obj, const BoundingBox& bbox) {
 	std::string address = getBoundingBoxAddress(bbox);
-	OctStructTreeItem* item = root->insertObject({obj, bbox}, address);
+	BoundingBox treeItemBbox;
+	octStruct.localBoundingBox(address, treeItemBbox);
+	OctStructTreeItem* item = root->insertObject({obj, bbox}, address, treeItemBbox);
 	this->octStructTreeItemMap[obj] = item;
 }
-
 
 void OctStructTree::removeObject(void* obj) {
 
@@ -235,9 +239,10 @@ void OctStructTree::removeObject(void* obj) {
 	}
 }
 
-/*TODO*/
+/*TODO: more effective*/
 void OctStructTree::moveObject(void* obj, const BoundingBox& bbox) {
-
+	removeObject(obj);
+	addObject(obj, bbox);
 }
 
 /*TODO*/
@@ -258,13 +263,32 @@ std::string OctStructTree::toStr() {
 	return root->toStr(str, level);
 }
 
-bool OctStructTree::hitTest(const rl::Ray& ray, void* data) {
+bool OctStructTree::hitTest(const OctStructTreeItem* item, const rl::Ray& ray, void* data) {
 
-	auto it = root->children.begin();
+	auto it = item->children.begin();
 	for (it; it != root->children.end(); it++) {
 
+		if (rl::rayIntersection(ray, it->second->boundingBox)) {
 
+			//Objects owned by item				
+			auto itObj = it->second->objects.begin();
+			for (itObj; itObj != it->second->objects.end(); itObj++) {
 
+				if (rl::rayIntersection(ray, itObj->bbox)) {
+					data = itObj->data;
+					return true;
+				}
+
+			}
+
+			return hitTest(it->second, ray, data);
+		}
 	}
+	return false;
 
+}
+
+
+bool OctStructTree::hitTest(const rl::Ray& ray, void* data) {
+	return hitTest(root, ray, data);
 }

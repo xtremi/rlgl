@@ -1,10 +1,15 @@
+#pragma once
 #include "glm/glm.hpp"
 
 namespace rl {
 
 	class BoundingBox {
 	public:
+		BoundingBox(const glm::vec3& minCoords, const glm::vec3& maxCoords);
+		BoundingBox(){}
 		glm::vec3 minC, maxC;
+
+		static BoundingBox createCubeBoundingBox(const glm::vec3& center, float width);
 	};
 
 	class Ray {

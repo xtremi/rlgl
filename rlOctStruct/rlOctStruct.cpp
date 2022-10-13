@@ -1,13 +1,26 @@
 #include "rlOctStruct.h"
 using namespace rl;
 
+/*!
+*                |-| half size level 2
+x------------------x
+|         |    |-|-|
+|         |--------|
+|		  |    |   |
+x---------x--------x ---> x
+|         |        |
+|	      |		   |
+x------------------x
+  size        |----| halfSize level 1          
+|---------| 
 
-float OctStruct::halfSize(int level) {
+*/
+float OctStruct::halfSizeAtLevel(int level) {
 	return size / ((float)level * 2.f);
 }
 
 void OctStruct::setXYZhalfSize(int level, bool posX, bool posY, bool posZ, glm::vec3& c) {
-	float hs = halfSize(level);
+	float hs = halfSizeAtLevel(level);
 	c.x = posX ? hs : -hs;
 	c.y = posY ? hs : -hs;
 	c.z = posZ ? hs : -hs;
@@ -53,8 +66,7 @@ void OctStruct::localBoundingBox(const std::string& addr, rl::BoundingBox& bbox)
 	localCenter(addr, center);
 
 	float bbWidth = size / glm::pow(2.f, (level - 1));
-	bbox.minC = center - glm::vec3(bbWidth / 2.0);
-	bbox.maxC = center + glm::vec3(bbWidth / 2.0);
+	bbox = BoundingBox::createCubeBoundingBox(center, bbWidth);
 }
 
 std::string OctStruct::getOctAddress(const glm::vec3& coord) {

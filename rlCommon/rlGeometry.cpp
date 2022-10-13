@@ -1,6 +1,15 @@
 #include "rlGeometry.h"
 using namespace rl;
 
+BoundingBox::BoundingBox(const glm::vec3& minCoords, const glm::vec3& maxCoords) 
+	: minC{minCoords}, maxC{maxCoords}{}
+
+
+BoundingBox BoundingBox::createCubeBoundingBox(const glm::vec3& center, float width) {
+	return BoundingBox(center - glm::vec3(width / 2.f), center + glm::vec3(width / 2.f));
+}
+
+
 Ray::Ray(
 	const glm::vec3& direction,
 	const glm::vec3& origin) :

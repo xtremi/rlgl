@@ -41,7 +41,10 @@ public:
 	rl::BoundingBox			  boundingBox;
 	std::unordered_map<std::string, OctStructTreeItem*> children;
 
-	OctStructTreeItem* insertObject(const OctStructObject& object, const std::string& addr);
+	OctStructTreeItem* insertObject(
+		const OctStructObject& object, 
+		const std::string&     addr,
+		const rl::BoundingBox& _boundingBox);
 
 	std::string toStr(std::string& str, int& level);
 	std::string toStr();
@@ -52,24 +55,31 @@ public:
 
 class OctStructTree {
 public:
-	OctStructTree() {
-		root = new OctStructTreeItem(nullptr, "0", nullptr);
+	OctStructTree(
+		const glm::vec3& center,
+		float size,
+		int   nLevels)
+	{
+		octStruct = OctStruct(center, size, nLevels);
+		root = new OctStructTreeItem(nullptr, "0", BoundingBox::createCubeBoundingBox(center, size*2.f), nullptr);
 	}
 	std::unordered_map<void*, OctStructTreeItem*> octStructTreeItemMap;
 	OctStruct		   octStruct;
 	OctStructTreeItem* root;
 
-	void addObject(void* obj, const BoundingBox& bbox);
-	void moveObject(void* obj, const BoundingBox& bbox);
+	void			   addObject(void* obj, const BoundingBox& bbox);
+	void			   moveObject(void* obj, const BoundingBox& bbox);
 	std::vector<void*> getObjects(const BoundingBox& bbox);
 	std::vector<void*> getObjects(const std::string& address);
-	void removeObject(void* obj);
-
-	std::string getBoundingBoxAddress(const BoundingBox& bbox);
-
-	bool hitTest(const rl::Ray& ray, void* data);
+	void               removeObject(void* obj);
+	bool               hitTest(const rl::Ray& ray, void* data);
+	std::string        getBoundingBoxAddress(const BoundingBox& bbox);
 
 	std::string toStr();
+
+private:
+	bool hitTest(const OctStructTreeItem* item, const rl::Ray& ray, void* data);
+
 };
 
 

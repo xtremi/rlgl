@@ -5,6 +5,4 @@ namespace rl {
 
 	bool rayIntersection(const Ray& ray, const BoundingBox& bbox);
 
-
-
 }

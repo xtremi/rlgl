@@ -41,7 +41,7 @@
     <ClCompile Include="rlglBaseApp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\rlOctStruct\rlOctStruct.vcxproj">
+    <ProjectReference Include="..\rlOctree\rlOctree.vcxproj">
       <Project>{23da1266-99aa-484f-959b-bf28bd78320d}</Project>
     </ProjectReference>
   </ItemGroup>

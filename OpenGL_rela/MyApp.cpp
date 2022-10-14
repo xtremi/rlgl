@@ -103,7 +103,7 @@ int MyApp::prepareScene() {
 static rlgl::Object* lastHitObj = nullptr;
 int MyApp::updateScene() {
 
-    float curTime = glfwGetTime();
+    double curTime = glfwGetTime();
 
 	rl::Ray hitRay(camera.lookVec(), camera.position);
 	 

@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 
-#include "rlOctStructTree.h"
+#include "rlOctree.h"
 
 namespace rl{
 float rand(float min, float max) {

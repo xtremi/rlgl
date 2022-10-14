@@ -32,9 +32,27 @@ int BaseApp::init(int windowSizeX, int windowSizeY) {
     return 0;
 }
 
+#include <iostream>
+bool FPScontrol::process() {
+	currentTime = glfwGetTime();
+	deltaTime = currentTime - lastTime;
+	if (deltaTime >= maxPeriod){
+		std::cout << deltaTime << " | " << 1.0 / deltaTime << std::endl;
+		lastTime = currentTime;
+		return true;
+	}
+	
+}
+
 /*!*/
 int BaseApp::loopIteration() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  
+	if (!fpsControl.process()) {
+		return 0;
+	}
+
+	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     processInput(_window);
 
@@ -47,6 +65,9 @@ int BaseApp::loopIteration() {
 
     glfwSwapBuffers(_window);
     glfwPollEvents();
+
+
+
     return 0;
 }
 

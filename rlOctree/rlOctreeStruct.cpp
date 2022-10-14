@@ -71,7 +71,7 @@ glm::vec3 OctreeStruct::addressCenter(const std::string& addr) const {
 	for (char c : addr) {
 		coord += localLevelCenter(c, level++);
 	}
-
+	return coord;
 }
 
 /*!

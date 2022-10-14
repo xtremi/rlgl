@@ -11,7 +11,7 @@ namespace rl {
 
 		glm::vec3 center() const;
 		glm::vec3 size() const;
-		glm::vec3 translate(const glm::vec3& translation);
+		void translate(const glm::vec3& translation);
 
 		static BoundingBox createCubeBoundingBox(const glm::vec3& center, float width);
 	};

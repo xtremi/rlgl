@@ -18,7 +18,7 @@ glm::vec3 BoundingBox::center() const {
 	return (minC + maxC) / 2.f;
 }
 
-glm::vec3 BoundingBox::translate(const glm::vec3& translation) {
+void BoundingBox::translate(const glm::vec3& translation) {
 	minC += translation;
 	maxC += translation;
 }

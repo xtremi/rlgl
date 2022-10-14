@@ -74,7 +74,7 @@ int MyApp::prepareScene() {
     rl::OctStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);
 	octTree = rl::OctStructTree(octStruct);
 
-	rl::BoundingBox bboxes[4]; glm::vec4 bboxesColors[4];
+	/*rl::BoundingBox bboxes[4]; glm::vec4 bboxesColors[4];
 	octStruct.localBoundingBox("642", bboxes[0]);  bboxesColors[0] = glm::vec4(1.f, 0.f, 0.f, 0.2f);
 	octStruct.localBoundingBox("643", bboxes[1]);  bboxesColors[1] = glm::vec4(0.f, 1.f, 0.f, 0.2f);
 	octStruct.localBoundingBox("644", bboxes[2]);	 bboxesColors[2] = glm::vec4(0.f, 0.f, 1.f, 0.2f);
@@ -86,7 +86,7 @@ int MyApp::prepareScene() {
 		octTreeItemObj->setColor(bboxesColors[i]);
 
 		scene.addObject(octTreeItemObj);
-	}
+	}*/
 
     int maxPoints = 100;
     glm::vec3 boxPos;

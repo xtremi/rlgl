@@ -96,7 +96,7 @@ void BaseApp::handleMouse(double xpos, double ypos)
     camera.setFront(glm::normalize(front));    
 }
 
-static const float CURSOR_MOVE_SPEED = 0.015f;
+static const float CURSOR_MOVE_SPEED = 0.05f;
 void BaseApp::processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {

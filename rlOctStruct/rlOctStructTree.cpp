@@ -77,9 +77,10 @@ Ex5
 
 */
 OctStructTreeItem* OctStructTreeItem::insertObject(
-	const OctStructObject&	object,
-	const std::string&		objAddress,
-	const rl::BoundingBox& _boundingBox) {
+	const OctStructObject& object,
+	const std::string&     objAddress,
+	const rl::OctStruct&   octStruct)
+{
 
 	/*
 		1. This item has a child with the exact same address
@@ -98,9 +99,12 @@ OctStructTreeItem* OctStructTreeItem::insertObject(
 		subAddress += c;
 		it = children.find(subAddress);
 		if (it != children.end()) {
-			return it->second->insertObject(object, objAddress, _boundingBox);
+			return it->second->insertObject(object, objAddress, octStruct);
 		}
 	}
+
+	BoundingBox itemBbox;
+	octStruct.localBoundingBox(objAddress, itemBbox);
 
 	/*
 		Check common part of address with children
@@ -111,12 +115,14 @@ OctStructTreeItem* OctStructTreeItem::insertObject(
 
 			//3.  If the common address is already the address of this item, just add it as child here:
 			if (commonAddress == address) {
-				return new OctStructTreeItem(this, objAddress, _boundingBox, &object);
+				return new OctStructTreeItem(this, objAddress, itemBbox, &object);
 			}
 
 
 			//4a/4b Make new parent and move existing child under it:
-			OctStructTreeItem* newCommonParent = new OctStructTreeItem(this, commonAddress, _boundingBox);
+			BoundingBox commonItemBbox;
+			octStruct.localBoundingBox(commonAddress, commonItemBbox);
+			OctStructTreeItem* newCommonParent = new OctStructTreeItem(this, commonAddress, commonItemBbox);
 
 			OctStructTreeItem* existingItem = it->second;
 			children.erase(existingItem->address);		  //remove from child
@@ -126,7 +132,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(
 			//Create new item (unless the address of the new object is the same as the "common address")
 			/*4a*/
 			if(commonAddress != objAddress){
-				return new OctStructTreeItem(newCommonParent, objAddress, _boundingBox, &object);
+				return new OctStructTreeItem(newCommonParent, objAddress, itemBbox, &object);
 			}
 			/*4b*/
 			else {
@@ -139,7 +145,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(
 	/*
 		5. Just add as child of current item
 	*/
-	return new OctStructTreeItem(this, objAddress, _boundingBox, &object);
+	return new OctStructTreeItem(this, objAddress, itemBbox, &object);
 }
 
 std::string OctStructTreeItem::toStr(std::string& str, int& level) {
@@ -181,7 +187,7 @@ OctStructTreeItem* OctStructTree::addObject(void* obj, const BoundingBox& bbox) 
 	std::string address = getBoundingBoxAddress(bbox);
 	BoundingBox treeItemBbox;
 	octStruct.localBoundingBox(address, treeItemBbox);
-	OctStructTreeItem* item = root->insertObject({obj, bbox}, address, treeItemBbox);
+	OctStructTreeItem* item = root->insertObject({obj, bbox}, address, this->octStruct);
 	this->octStructTreeItemMap[obj] = item;
 	return item;
 }
@@ -268,7 +274,7 @@ bool OctStructTree::hitTest(const OctStructTreeItem* item, const rl::Ray& ray, v
 
 	auto it = item->children.begin();
 	for (it; it != item->children.end(); it++) {
-
+		
 		if (rl::rayIntersection(ray, it->second->boundingBox)) {
 
 			//Objects owned by item				

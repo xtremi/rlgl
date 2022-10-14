@@ -24,16 +24,14 @@ namespace rl{
 class OctStructTreeItem {
 public:
 	OctStructTreeItem(
-		OctStructTreeItem* _parent,
-		const std::string& _address, 
+		OctStructTreeItem*	   _parent,
+		const std::string&	   _address, 
 		const rl::BoundingBox& _boundingBox,
 		const OctStructObject* object = nullptr)
 		: address{ _address }, parent{_parent}, boundingBox{ _boundingBox }
 	{
 		if (object) objects.insert(*object);
 		if (parent) parent->children[address] = this;
-		
-
 	}
 	std::set<OctStructObject> objects;
 	std::string				  address;
@@ -44,7 +42,7 @@ public:
 	OctStructTreeItem* insertObject(
 		const OctStructObject& object, 
 		const std::string&     addr,
-		const rl::BoundingBox& _boundingBox);
+		const rl::OctStruct&   octStruct);
 
 	std::string toStr(std::string& str, int& level);
 	std::string toStr();

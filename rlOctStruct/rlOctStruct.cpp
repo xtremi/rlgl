@@ -15,11 +15,11 @@ x------------------x
 |---------| 
 
 */
-float OctStruct::halfSizeAtLevel(int level) {
+float OctStruct::halfSizeAtLevel(int level) const {
 	return size / glm::pow(2.f, level);
 }
 
-void OctStruct::setXYZhalfSize(int level, bool posX, bool posY, bool posZ, glm::vec3& c) {
+void OctStruct::setXYZhalfSize(int level, bool posX, bool posY, bool posZ, glm::vec3& c) const {
 	float hs = halfSizeAtLevel(level);
 	c.x = posX ? hs : -hs;
 	c.y = posY ? hs : -hs;
@@ -27,7 +27,7 @@ void OctStruct::setXYZhalfSize(int level, bool posX, bool posY, bool posZ, glm::
 }
 
 //Local center at a specific level (center is center of cube a addr in level)
-void OctStruct::localLevelCenter(char addr, int level, glm::vec3& c) {
+void OctStruct::localLevelCenter(char addr, int level, glm::vec3& c) const {
 	switch (addr)
 	{
 	case '1': setXYZhalfSize(level, true, true, true,	 c); break;
@@ -45,7 +45,7 @@ void OctStruct::localLevelCenter(char addr, int level, glm::vec3& c) {
 }
 
 //Local center of address (center is at 0., 0., 0.)
-void OctStruct::localCenter(const std::string& addr, glm::vec3& coord) {
+void OctStruct::localCenter(const std::string& addr, glm::vec3& coord) const {
 	if (addr.size() == 0) {
 		return;
 	}
@@ -60,7 +60,7 @@ void OctStruct::localCenter(const std::string& addr, glm::vec3& coord) {
 
 }
 
-void OctStruct::localBoundingBox(const std::string& addr, rl::BoundingBox& bbox) {
+void OctStruct::localBoundingBox(const std::string& addr, rl::BoundingBox& bbox) const {
 	//Special case for root (for now):
 	if (addr == "0") {
 		bbox = BoundingBox::createCubeBoundingBox(glm::vec3(0.f), size * 2.f);

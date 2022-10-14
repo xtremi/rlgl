@@ -33,11 +33,15 @@ int BaseApp::init(int windowSizeX, int windowSizeY) {
 }
 
 #include <iostream>
+static int fps_cout_counter = 0;
 bool FPScontrol::process() {
 	currentTime = glfwGetTime();
 	deltaTime = currentTime - lastTime;
 	if (deltaTime >= maxPeriod){
-		std::cout << deltaTime << " | " << 1.0 / deltaTime << std::endl;
+		if(fps_cout_counter++ > 20){
+			std::cout << deltaTime << " | " << 1.0 / deltaTime << std::endl;
+			fps_cout_counter = 0;
+		}
 		lastTime = currentTime;
 		return true;
 	}

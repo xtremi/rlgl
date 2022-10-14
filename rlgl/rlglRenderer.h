@@ -13,7 +13,7 @@ public:
 	void render(const Scene& scene, const Camera& cam);
 
 protected:
-	void render(const Scene& scene, const Camera& cam, const Object* obj);
+	void render(const Scene& scene, const glm::mat4& projViewMat, const Object* obj);
 	uint32_t lastUsedShaderID = UINT32_MAX;
 	uint32_t lastUsedMaterialID = UINT32_MAX;
 	uint32_t lastUsedMeshID = UINT32_MAX;

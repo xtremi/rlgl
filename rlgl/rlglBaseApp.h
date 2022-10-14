@@ -38,7 +38,7 @@ public:
 	bool process();
 	
 private:
-	const double maxFPS = 60.0;
+	const double maxFPS = 120.0;
 	const double maxPeriod = 1.0 / maxFPS;
 	double lastTime = 0.0, currentTime, deltaTime;
 };

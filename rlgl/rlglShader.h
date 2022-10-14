@@ -27,6 +27,7 @@ public:
     void setVec4(const std::string& name, const glm::vec4& value) const;
     void setUint(const std::string& name, GLuint value) const;
     void setInt(const std::string& name, GLint value) const;
+    void setBool(const std::string& name, GLboolean value) const;
 };
 
 }

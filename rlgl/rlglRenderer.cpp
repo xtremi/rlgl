@@ -15,14 +15,16 @@ void Renderer::render(const Scene& scene, const Camera& cam) {
 	
 	rlgl::cObjectIt it = scene.cbeginObject();
 
+	glm::mat4 PVmat = cam.projectionMatrix() * cam.viewMatrix();
+
 	for (rlgl::cObjectIt it = scene.cbeginObject(); it != scene.cendObject(); it++) {
-		render(scene, cam, *it);
+		render(scene, PVmat, *it);
 	}
 
 }
 
 
-void Renderer::render(const Scene& scene, const Camera& cam, const Object* obj) {
+void Renderer::render(const Scene& scene, const glm::mat4& projViewMat, const Object* obj) {
 
 	const Shader*	currentShader	= scene.shader(obj->shaderID);
 	const Material* currentMaterial = scene.material(obj->materialID);
@@ -40,8 +42,8 @@ void Renderer::render(const Scene& scene, const Camera& cam, const Object* obj) 
 	if(obj->hasColor()){
 		currentShader->setVec4("color", obj->getColor());
 	}
-	currentShader->setMat4x4("projection", cam.projectionMatrix());
-	currentShader->setMat4x4("view",  cam.viewMatrix());
+	currentShader->setBool("highlight", obj->hasHighlight());
+	currentShader->setMat4x4("projView", projViewMat);
 	currentShader->setMat4x4("model", obj->modelMatrix);
 
 	if (currentMaterial) {

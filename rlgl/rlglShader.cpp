@@ -90,6 +90,10 @@ void Shader::setUint(const std::string& name, GLuint value) const {
 void Shader::setInt(const std::string& name, GLint value) const {
     glUniform1i(glGetUniformLocation(glID, name.c_str()), value);
 }
+void Shader::setBool(const std::string& name, GLboolean value) const {
+	glUniform1i(glGetUniformLocation(glID, name.c_str()), value);
+}
+
 
 
 

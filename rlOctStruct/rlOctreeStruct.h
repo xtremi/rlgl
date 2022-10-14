@@ -22,16 +22,16 @@ x-----------------x
 |--------|--------|
 
 */
-class OctStruct {
+class OctreeStruct {
 public:
-	OctStruct(){}
-	OctStruct(const glm::vec3& _center, float _size, int _depth) 
+	OctreeStruct(){}
+	OctreeStruct(const glm::vec3& _center, float _size, int _depth) 
 		: center{_center}, size{_size}, depth{_depth}{}
 
-	void localLevelCenter(char addr, int level, glm::vec3& coord) const;				  //Local center at a specific level (center is center of cube a addr in level)
-	void localCenter(const std::string& addr, glm::vec3& coord) const;			  //Local center of address (center is at 0., 0., 0.)
-	void localBoundingBox(const std::string& addr, rl::BoundingBox& coord) const;
-	std::string getOctAddress(const glm::vec3& coord);
+	glm::vec3		localLevelCenter(char addr, int level) const;
+	glm::vec3		addressCenter(const std::string& addr) const;
+	rl::BoundingBox addressBoundingBox(const std::string& addr) const;
+	std::string		getOctAddress(const glm::vec3& coord);
 
 	glm::vec3 center;
 	float size = 100.f;

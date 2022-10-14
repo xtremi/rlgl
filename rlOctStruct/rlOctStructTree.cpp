@@ -79,7 +79,7 @@ Ex5
 OctStructTreeItem* OctStructTreeItem::insertObject(
 	const OctStructObject& object,
 	const std::string&     objAddress,
-	const rl::OctStruct&   octStruct)
+	const rl::OctreeStruct&   octStruct)
 {
 
 	/*
@@ -103,8 +103,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(
 		}
 	}
 
-	BoundingBox itemBbox;
-	octStruct.localBoundingBox(objAddress, itemBbox);
+	BoundingBox itemBbox = octStruct.addressBoundingBox(objAddress);
 
 	/*
 		Check common part of address with children
@@ -120,8 +119,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(
 
 
 			//4a/4b Make new parent and move existing child under it:
-			BoundingBox commonItemBbox;
-			octStruct.localBoundingBox(commonAddress, commonItemBbox);
+			BoundingBox commonItemBbox = octStruct.addressBoundingBox(commonAddress);
 			OctStructTreeItem* newCommonParent = new OctStructTreeItem(this, commonAddress, commonItemBbox);
 
 			OctStructTreeItem* existingItem = it->second;
@@ -185,8 +183,7 @@ std::string OctStructTree::getBoundingBoxAddress(const BoundingBox& bbox) {
 
 OctStructTreeItem* OctStructTree::addObject(void* obj, const BoundingBox& bbox) {
 	std::string address = getBoundingBoxAddress(bbox);
-	BoundingBox treeItemBbox;
-	octStruct.localBoundingBox(address, treeItemBbox);
+	BoundingBox treeItemBbox = octStruct.addressBoundingBox(address);
 	OctStructTreeItem* item = root->insertObject({obj, bbox}, address, this->octStruct);
 	this->octStructTreeItemMap[obj] = item;
 	return item;

@@ -1,5 +1,5 @@
 #pragma once
-#include "rlOctStruct.h"
+#include "rlOctreeStruct.h"
 #include <vector>
 #include <unordered_map>
 #include <map>
@@ -42,7 +42,7 @@ public:
 	OctStructTreeItem* insertObject(
 		const OctStructObject& object, 
 		const std::string&     addr,
-		const rl::OctStruct&   octStruct);
+		const rl::OctreeStruct&   octStruct);
 
 	std::string toStr(std::string& str, int& level);
 	std::string toStr();
@@ -54,7 +54,7 @@ public:
 class OctStructTree {
 public:
 	OctStructTree(){}
-	OctStructTree(const OctStruct& _octStruct) : octStruct{_octStruct}
+	OctStructTree(const OctreeStruct& _octStruct) : octStruct{_octStruct}
 	{
 		if (root) delete root;
 
@@ -62,7 +62,7 @@ public:
 			BoundingBox::createCubeBoundingBox(octStruct.center, octStruct.size * 2.f), nullptr);
 	}
 	std::unordered_map<void*, OctStructTreeItem*> octStructTreeItemMap;
-	OctStruct		   octStruct;
+	OctreeStruct		   octStruct;
 	OctStructTreeItem* root = nullptr;
 
 	OctStructTreeItem* addObject(void* obj, const BoundingBox& bbox);

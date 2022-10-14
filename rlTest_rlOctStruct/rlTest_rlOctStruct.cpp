@@ -12,16 +12,16 @@ float rand(float min, float max) {
 
 int main()
 {
-	rl::OctStruct octStruct(glm::vec3(0.f), 100.f, 5);
+	rl::OctreeStruct octStruct(glm::vec3(0.f), 100.f, 5);
 
 	std::vector<std::string> addresses({
 		"123", "223", "323", "823"
 	});
 
-	glm::vec3 localCenter;
+	glm::vec3 addressCenter;
 	for (std::string addr : addresses) {
-		octStruct.localCenter(addr, localCenter);
-		std::cout << addr << ": " << localCenter.x << ", " << localCenter.y << ", " << localCenter.z << std::endl;
+		addressCenter = octStruct.addressCenter(addr);
+		std::cout << addr << ": " << addressCenter.x << ", " << addressCenter.y << ", " << addressCenter.z << std::endl;
 	}
 
 	std::vector<glm::vec3> coords({

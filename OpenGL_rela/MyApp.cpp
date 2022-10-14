@@ -65,7 +65,7 @@ int MyApp::prepareScene() {
 
 
     //Boxes:
-    rl::OctStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);
+    rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);
 	octTree = rl::OctStructTree(octStruct);
 
     int nBoxes = 500;

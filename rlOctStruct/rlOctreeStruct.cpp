@@ -1,4 +1,4 @@
-#include "rlOctStruct.h"
+#include "rlOctreeStruct.h"
 using namespace rl;
 
 /*!
@@ -15,19 +15,28 @@ x------------------x
 |---------| 
 
 */
-float OctStruct::halfSizeAtLevel(int level) const {
+float OctreeStruct::halfSizeAtLevel(int level) const {
 	return size / glm::pow(2.f, level);
 }
 
-void OctStruct::setXYZhalfSize(int level, bool posX, bool posY, bool posZ, glm::vec3& c) const {
+void OctreeStruct::setXYZhalfSize(int level, bool posX, bool posY, bool posZ, glm::vec3& c) const {
 	float hs = halfSizeAtLevel(level);
 	c.x = posX ? hs : -hs;
 	c.y = posY ? hs : -hs;
 	c.z = posZ ? hs : -hs;
 }
 
-//Local center at a specific level (center is center of cube a addr in level)
-void OctStruct::localLevelCenter(char addr, int level, glm::vec3& c) const {
+/*
+	Returns coords of center of an octree item (1-8)
+	where origo is its parent.
+
+	Example:
+	- addr = 1 and level = 1 returns  50.,50.,50.
+	- addr = 2 and level = 1 returns -50.,50.,50.
+	- addr = 2 and level = 2 returns -25.,25.,25.
+*/
+glm::vec3 OctreeStruct::localLevelCenter(char addr, int level) const {
+	glm::vec3 c;
 	switch (addr)
 	{
 	case '1': setXYZhalfSize(level, true, true, true,	 c); break;
@@ -42,40 +51,52 @@ void OctStruct::localLevelCenter(char addr, int level, glm::vec3& c) const {
 		throw("rl::OctStruct - Invalid address");
 		break;
 	}
+	return c;
 }
 
-//Local center of address (center is at 0., 0., 0.)
-void OctStruct::localCenter(const std::string& addr, glm::vec3& coord) const {
-	if (addr.size() == 0) {
-		return;
-	}
+/*!
+	Given an address, returns the center of its octree item,
+	origo is the center of the octree
+*/
+glm::vec3 OctreeStruct::addressCenter(const std::string& addr) const {	
+	glm::vec3 coord = center;
 	
+	if (addr.size() == 0) {
+		return coord;
+	}
+
 	glm::vec3 lc;
-	coord = glm::vec3(0.f);
+	
 	int level = 1;
 	for (char c : addr) {
-		localLevelCenter(c, level++, lc);
-		coord += lc;
+		coord += localLevelCenter(c, level++);
 	}
 
 }
 
-void OctStruct::localBoundingBox(const std::string& addr, rl::BoundingBox& bbox) const {
+/*!
+	Returns the bounding box of a given address.
+	Origo is as center octree.
+*/
+rl::BoundingBox OctreeStruct::addressBoundingBox(const std::string& addr) const {
+	rl::BoundingBox bbox;
+
 	//Special case for root (for now):
 	if (addr == "0") {
-		bbox = BoundingBox::createCubeBoundingBox(glm::vec3(0.f), size * 2.f);
-		return;
+		return BoundingBox::createCubeBoundingBox(center, size * 2.f);
 	}
 	
 	int level = addr.size();
-	glm::vec3 center;
-	localCenter(addr, center);
+	glm::vec3 center = addressCenter(addr);
 
 	float bbWidth = size / glm::pow(2.f, (level - 1));
-	bbox = BoundingBox::createCubeBoundingBox(center, bbWidth);
+	return BoundingBox::createCubeBoundingBox(center, bbWidth);
 }
 
-std::string OctStruct::getOctAddress(const glm::vec3& coord) {
+/*!
+	Returns the address in the octree of the given coord.
+*/
+std::string OctreeStruct::getOctAddress(const glm::vec3& coord) {
 	std::string addr = "";
 	glm::vec3 lc, c;
 	c = coord - center;
@@ -91,14 +112,17 @@ std::string OctStruct::getOctAddress(const glm::vec3& coord) {
 		else if (c.x <  0.f && c.y <  0.f && c.z <  0.f) cell = '7';
 		else if (c.x >= 0.f && c.y <  0.f && c.z <  0.f) cell = '8';
 		addr.push_back(cell);
-		localLevelCenter(cell, level, lc);
-		c -= lc;
+		c -= localLevelCenter(cell, level);;
 	}
 	return addr;
 }
 
 
+/*!
+	Given two addresses, returns the common part of them (starting from the beginning)
 
+	Example: addr1=11236 and addr2=11286 returns 112
+*/
 std::string rl::getCommonAddress(const std::string& addr1, const std::string& addr2) {
 	std::string commonAddr;
 	int i = 0;

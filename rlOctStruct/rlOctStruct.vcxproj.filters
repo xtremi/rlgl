@@ -15,18 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="rlOctStruct.cpp">
+    <ClCompile Include="rlOctStructTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rlOctStructTree.cpp">
+    <ClCompile Include="rlOctreeStruct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="rlOctStruct.h">
+    <ClInclude Include="rlOctStructTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rlOctStructTree.h">
+    <ClInclude Include="rlOctreeStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

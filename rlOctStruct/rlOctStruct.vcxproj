@@ -163,11 +163,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="rlOctStruct.cpp" />
+    <ClCompile Include="rlOctreeStruct.cpp" />
     <ClCompile Include="rlOctStructTree.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="rlOctStruct.h" />
+    <ClInclude Include="rlOctreeStruct.h" />
     <ClInclude Include="rlOctStructTree.h" />
   </ItemGroup>
   <ItemGroup>

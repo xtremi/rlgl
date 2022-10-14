@@ -9,6 +9,9 @@ namespace rl {
 		BoundingBox(){}
 		glm::vec3 minC, maxC;
 
+		glm::vec3 center() const;
+		glm::vec3 size() const;
+
 		static BoundingBox createCubeBoundingBox(const glm::vec3& center, float width);
 	};
 

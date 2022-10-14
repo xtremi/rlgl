@@ -61,6 +61,12 @@ void OctStruct::localCenter(const std::string& addr, glm::vec3& coord) {
 }
 
 void OctStruct::localBoundingBox(const std::string& addr, rl::BoundingBox& bbox) {
+	//Special case for root (for now):
+	if (addr == "0") {
+		bbox = BoundingBox::createCubeBoundingBox(glm::vec3(0.f), size * 2.f);
+		return;
+	}
+	
 	int level = addr.size();
 	glm::vec3 center;
 	localCenter(addr, center);

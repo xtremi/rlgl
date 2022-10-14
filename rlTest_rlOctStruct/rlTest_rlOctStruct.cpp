@@ -38,8 +38,7 @@ int main()
 
 	float data[1000] = { 99.f, 99.f };
 
-	rl::OctStructTree octTree;
-	octTree.octStruct = octStruct;
+	rl::OctStructTree octTree(octStruct);
 	octTree.addObject((void*)&data[1], { { 90.f, 90.f, 90.f }, { 92.f, 92.f, 92.f } });	  //111
 	octTree.addObject((void*)&data[2], {{ 91.f, 91.f, 91.f }, { 93.f, 93.f, 93.f } });	  //111
 	octTree.addObject((void*)&data[3], {{ 71.2f, 71.2f, 71.2f }, { 73.f, 73.f, 73.f } }); //11711
@@ -47,6 +46,7 @@ int main()
 	octTree.addObject((void*)&data[5], {{ -91.f, -91.f, -91.f }, { -93.f, -93.f, -93.f } }); //777
 	octTree.addObject((void*)&data[6], {{ -51.f, -91.f, -91.f }, { -93.f, -93.f, -93.f } }); //77
 	octTree.addObject((void*)&data[7], {{ 1.f, 1.f, 1.f }, { 2.f, 2.f, 2.f } });			//17771
+	std::cout << "Should be 7 objects totally" << std::endl;
 	std::cout << octTree.toStr() << "\n";
 
 	octTree.removeObject((void*)&data[4]);
@@ -56,6 +56,9 @@ int main()
 	octTree.removeObject((void*)&data[6]);
 	octTree.removeObject((void*)&data[1]);
 	octTree.removeObject((void*)&data[5]);
+	std::cout << "Should be no children" << std::endl;
+	std::cout << octTree.toStr() << "\n";
+
 
 	int maxPoints = 1e2;
 	float* tempdata = new float[maxPoints];
@@ -76,6 +79,7 @@ int main()
 		octTree.removeObject(obj);
 	}
 
+	std::cout << "Should be no children" << std::endl;
 	std::cout << octTree.toStr() << "\n";
 	
 

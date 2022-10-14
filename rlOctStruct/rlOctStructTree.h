@@ -26,9 +26,9 @@ public:
 	OctStructTreeItem(
 		OctStructTreeItem* _parent,
 		const std::string& _address, 
-		const rl::BoundingBox& bbox,
+		const rl::BoundingBox& _boundingBox,
 		const OctStructObject* object = nullptr)
-		: address{ _address }, parent{_parent}
+		: address{ _address }, parent{_parent}, boundingBox{ _boundingBox }
 	{
 		if (object) objects.insert(*object);
 		if (parent) parent->children[address] = this;
@@ -55,19 +55,19 @@ public:
 
 class OctStructTree {
 public:
-	OctStructTree(
-		const glm::vec3& center,
-		float size,
-		int   nLevels)
+	OctStructTree(){}
+	OctStructTree(const OctStruct& _octStruct) : octStruct{_octStruct}
 	{
-		octStruct = OctStruct(center, size, nLevels);
-		root = new OctStructTreeItem(nullptr, "0", BoundingBox::createCubeBoundingBox(center, size*2.f), nullptr);
+		if (root) delete root;
+
+		root = new OctStructTreeItem(nullptr, "0", 
+			BoundingBox::createCubeBoundingBox(octStruct.center, octStruct.size * 2.f), nullptr);
 	}
 	std::unordered_map<void*, OctStructTreeItem*> octStructTreeItemMap;
 	OctStruct		   octStruct;
-	OctStructTreeItem* root;
+	OctStructTreeItem* root = nullptr;
 
-	void			   addObject(void* obj, const BoundingBox& bbox);
+	OctStructTreeItem* addObject(void* obj, const BoundingBox& bbox);
 	void			   moveObject(void* obj, const BoundingBox& bbox);
 	std::vector<void*> getObjects(const BoundingBox& bbox);
 	std::vector<void*> getObjects(const std::string& address);

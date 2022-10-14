@@ -1,12 +1,14 @@
 #include "MyApp.h"
 #include "rlMath.h"
-
+#include <iostream>
 
 void MyApp::processInput(GLFWwindow* window) {
     BaseApp::processInput(window);
 }
 
-
+static std::string OBJ_ADDRESS_TO_DEBUG = "";
+static rlgl::Object* OBJ_TO_DEBUG = nullptr;
+static rl::OctStructTreeItem* OCT_TREE_ITEM_TO_DEBUG = nullptr;
 int MyApp::prepareScene() {
 
     rlgl::primitive_mesh::plane_textureX10.initialize();
@@ -43,11 +45,11 @@ int MyApp::prepareScene() {
 
 
     //World plane:
-    objects.worldPlane = new rlgl::Object(meshWorld, shader1ID, material1ID);
-
-    objects.worldPlane->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
-    objects.worldPlane->modelMatrix = glm::scale(objects.worldPlane->modelMatrix, glm::vec3(100.0f));
-    scene.addObject(objects.worldPlane);
+    //objects.worldPlane = new rlgl::Object(meshWorld, shader1ID, material1ID);
+	//
+    //objects.worldPlane->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
+    //objects.worldPlane->modelMatrix = glm::scale(objects.worldPlane->modelMatrix, glm::vec3(100.0f));
+    //scene.addObject(objects.worldPlane);
 
 	//UI:
 	uint64_t uiSquareMesh = uiScene.addMesh(&rlgl::primitive_mesh::square);
@@ -70,31 +72,30 @@ int MyApp::prepareScene() {
 
     //Boxes:
     rl::OctStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);
-    octTree.octStruct = octStruct;
-
+	octTree = rl::OctStructTree(octStruct);
 
     int maxPoints = 100;
     glm::vec3 boxPos;
-    rl::OctCoord bboxMin, bboxMax; 
+	rl::BoundingBox bbox;
     float boxSize = 1.f;
     std::vector<void*> allAddedObjects;
+	int objectToDebug = 34;
     for (int i = 0; i < maxPoints; i++) {
 
         boxPos  = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
-
-        bboxMin.x = boxPos.x - boxSize / 2.f;
-        bboxMin.y = boxPos.y - boxSize / 2.f;
-        bboxMin.z = boxPos.z - boxSize / 2.f;
-
-        bboxMax.x = boxPos.x + boxSize / 2.f;
-        bboxMax.y = boxPos.y + boxSize / 2.f;
-        bboxMax.z = boxPos.z + boxSize / 2.f;
+		bbox = rl::BoundingBox::createCubeBoundingBox(boxPos, boxSize);
 
         objects.cubes.push_back(new rlgl::Object(meshCubeTex, shader1ID, material2ID));
         objects.cubes[i]->modelMatrix = glm::translate(glm::mat4(1.f), boxPos);
         objects.cubes[i]->modelMatrix = glm::scale(objects.cubes[i]->modelMatrix, glm::vec3(boxSize));
 
-        octTree.addObject((void*)objects.cubes[i], bboxMin, bboxMax); 
+        rl::OctStructTreeItem* item = octTree.addObject((void*)objects.cubes[i], bbox);
+		if (i == objectToDebug) {
+			OBJ_ADDRESS_TO_DEBUG = item->address;
+			OBJ_TO_DEBUG = objects.cubes[i];
+			OCT_TREE_ITEM_TO_DEBUG = item;
+			std::cout << "OBJ_ADDRESS_DEBUG: " + item->address << std::endl;
+		}
 
         scene.addObject(objects.cubes[i]);
     }
@@ -102,17 +103,29 @@ int MyApp::prepareScene() {
     int bi = 0;
     auto it = octTree.octStructTreeItemMap.begin();
     for (it; it != octTree.octStructTreeItemMap.end(); it++) {
+
+		rl::BoundingBox octTreeItemBB = it->second->boundingBox;
+		rlgl::Object* octTreeItemObj = new rlgl::Object(meshCube, shader2ID, material2ID);
+		octTreeItemObj->modelMatrix = glm::translate(glm::mat4(1.f), octTreeItemBB.center());
+		octTreeItemObj->modelMatrix = glm::scale(octTreeItemObj->modelMatrix, octTreeItemBB.size());
+		octTreeItemObj->setColor(glm::vec4(0.0f, 1.0f, 0.0f, 0.2f));
+
+		scene.addObject(octTreeItemObj);
+
         auto it2 = it->second->objects.begin();
         for (it2; it2 != it->second->objects.end(); it2++) {
 
-            rl::OctCoord bbMin = it2->bboxMin;
-            rl::OctCoord bbMax = it2->bboxMax;
-            //a + (b - a)/2 = a + b/2 - a/2 = a/2 + b/2 = (a+b)/2 
-            glm::vec3 center((bbMax.x + bbMin.x) / 2.f, (bbMax.y + bbMin.y) / 2.f, (bbMax.z + bbMin.z) / 2.f);
-            glm::vec3 size(bbMax.x - bbMin.x, bbMax.y - bbMin.y, bbMax.z - bbMin.z);
+			rl::BoundingBox bb = it2->bbox;        
+			glm::vec3 center = bb.center();
+            glm::vec3 size = bb.size();
 
             objects.boundingBoxes.push_back(new rlgl::Object(meshCube, shader2ID, material2ID));
-            objects.boundingBoxes[bi]->setColor(glm::vec4(0.9f, 0.9f, 0.9f, 0.7f));
+			if (it->second == OCT_TREE_ITEM_TO_DEBUG){
+				objects.boundingBoxes[bi]->setColor(glm::vec4(0.9f, 0.0f, 0.0f, 0.6f));				
+			}
+			else {
+				objects.boundingBoxes[bi]->setColor(glm::vec4(0.9f, 0.9f, 0.9f, 0.6f));
+			}
             objects.boundingBoxes[bi]->modelMatrix = glm::translate(glm::mat4(1.f), center);
             objects.boundingBoxes[bi]->modelMatrix = glm::scale(objects.boundingBoxes[bi]->modelMatrix, size*1.25f);
             scene.addObject(objects.boundingBoxes[bi++]);
@@ -143,7 +156,13 @@ int MyApp::updateScene() {
 
     float curTime = glfwGetTime();
 
-
+	rl::Ray hitRay(camera.lookVec(), camera.position);
+	 
+	rlgl::Object* hitObj = nullptr;
+	if (octTree.hitTest(hitRay, hitObj)) {
+		int temp = 1;
+		std::cout << "hit" << std::endl;
+	}
 
     //float d = 2.5f;
     //glm::vec3 positions[4] = {

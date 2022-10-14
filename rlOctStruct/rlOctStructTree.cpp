@@ -177,12 +177,13 @@ std::string OctStructTree::getBoundingBoxAddress(const BoundingBox& bbox) {
 	return getCommonAddress(addrMin, addrMax);
 }
 
-void OctStructTree::addObject(void* obj, const BoundingBox& bbox) {
+OctStructTreeItem* OctStructTree::addObject(void* obj, const BoundingBox& bbox) {
 	std::string address = getBoundingBoxAddress(bbox);
 	BoundingBox treeItemBbox;
 	octStruct.localBoundingBox(address, treeItemBbox);
 	OctStructTreeItem* item = root->insertObject({obj, bbox}, address, treeItemBbox);
 	this->octStructTreeItemMap[obj] = item;
+	return item;
 }
 
 void OctStructTree::removeObject(void* obj) {
@@ -266,7 +267,7 @@ std::string OctStructTree::toStr() {
 bool OctStructTree::hitTest(const OctStructTreeItem* item, const rl::Ray& ray, void* data) {
 
 	auto it = item->children.begin();
-	for (it; it != root->children.end(); it++) {
+	for (it; it != item->children.end(); it++) {
 
 		if (rl::rayIntersection(ray, it->second->boundingBox)) {
 

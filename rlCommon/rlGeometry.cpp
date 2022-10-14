@@ -9,6 +9,15 @@ BoundingBox BoundingBox::createCubeBoundingBox(const glm::vec3& center, float wi
 	return BoundingBox(center - glm::vec3(width / 2.f), center + glm::vec3(width / 2.f));
 }
 
+glm::vec3 BoundingBox::size() const {
+	return maxC - minC;
+}
+
+glm::vec3 BoundingBox::center() const {
+	//a + (b - a)/2 = a + b/2 - a/2 = a/2 + b/2 = (a+b)/2 
+	return (minC + maxC) / 2.f;
+}
+
 
 Ray::Ray(
 	const glm::vec3& direction,

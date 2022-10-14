@@ -15,7 +15,7 @@ bool rl::rayIntersection(const Ray& ray, const BoundingBox& bbox) {
 
 	float t;
 	// if tmax < 0, ray (line) is intersecting box, but the whole box is behind us
-	if (tmax < 0){
+	if (tmax < 0.f){
 		t = tmax;
 		return false;
 	}

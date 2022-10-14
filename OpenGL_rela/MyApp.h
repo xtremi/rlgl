@@ -1,6 +1,6 @@
 #pragma once
 #include "rlglBaseApp.h"
-#include "rlOctStructTree.h"
+#include "rlOctree.h"
 
 class MyApp : public rlgl::BaseApp
 {

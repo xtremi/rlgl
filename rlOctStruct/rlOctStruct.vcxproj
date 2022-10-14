@@ -163,17 +163,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="rlOctreeStruct.cpp" />
-    <ClCompile Include="rlOctStructTree.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="rlOctreeStruct.h" />
-    <ClInclude Include="rlOctStructTree.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\rlCommon\rlCommon.vcxproj">
       <Project>{f818c4c0-1167-4c46-be95-016c85f023ef}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="rlOctree.cpp" />
+    <ClCompile Include="rlOctreeStruct.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="rlOctree.h" />
+    <ClInclude Include="rlOctreeStruct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

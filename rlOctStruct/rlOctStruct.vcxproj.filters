@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="rlOctStructTree.cpp">
+    <ClCompile Include="rlOctree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="rlOctreeStruct.cpp">
@@ -23,7 +23,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="rlOctStructTree.h">
+    <ClInclude Include="rlOctree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rlOctreeStruct.h">

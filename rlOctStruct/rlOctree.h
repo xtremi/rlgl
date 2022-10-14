@@ -12,7 +12,7 @@ Ex1:	[root]       insert [1234]  ---> 	  [root]
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
-	2. An OctStructTreeItem with matching start of address exist (recursive):
+	2. An OctreeItem with matching start of address exist (recursive):
 ------------------------------------------------------------------------------
 Ex2.1	[root]       insert [12345]  --->  match [1234](5) with [1234] 
 	[1234]* [3455]*  				   	   call insertObject on [1234]  --> go to (5.)
@@ -76,8 +76,8 @@ Ex5
 
 
 */
-OctStructTreeItem* OctStructTreeItem::insertObject(
-	const OctStructObject& object,
+OctreeItem* OctreeItem::insertObject(
+	const OctreeObject& object,
 	const std::string&     objAddress,
 	const rl::OctreeStruct&   octStruct)
 {
@@ -92,7 +92,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(
 	}
 
 	/*
-		2. An OctStructTreeItem with matching start of address exist (recursive):
+		2. An OctreeItem with matching start of address exist (recursive):
 	*/
 	std::string subAddress;	
 	for (char c : objAddress) {
@@ -114,15 +114,15 @@ OctStructTreeItem* OctStructTreeItem::insertObject(
 
 			//3.  If the common address is already the address of this item, just add it as child here:
 			if (commonAddress == address) {
-				return new OctStructTreeItem(this, objAddress, itemBbox, &object);
+				return new OctreeItem(this, objAddress, itemBbox, &object);
 			}
 
 
 			//4a/4b Make new parent and move existing child under it:
 			BoundingBox commonItemBbox = octStruct.addressBoundingBox(commonAddress);
-			OctStructTreeItem* newCommonParent = new OctStructTreeItem(this, commonAddress, commonItemBbox);
+			OctreeItem* newCommonParent = new OctreeItem(this, commonAddress, commonItemBbox);
 
-			OctStructTreeItem* existingItem = it->second;
+			OctreeItem* existingItem = it->second;
 			children.erase(existingItem->address);		  //remove from child
 			newCommonParent->children[existingItem->address] = existingItem;
 			existingItem->parent = newCommonParent;
@@ -130,7 +130,7 @@ OctStructTreeItem* OctStructTreeItem::insertObject(
 			//Create new item (unless the address of the new object is the same as the "common address")
 			/*4a*/
 			if(commonAddress != objAddress){
-				return new OctStructTreeItem(newCommonParent, objAddress, itemBbox, &object);
+				return new OctreeItem(newCommonParent, objAddress, itemBbox, &object);
 			}
 			/*4b*/
 			else {
@@ -143,10 +143,10 @@ OctStructTreeItem* OctStructTreeItem::insertObject(
 	/*
 		5. Just add as child of current item
 	*/
-	return new OctStructTreeItem(this, objAddress, itemBbox, &object);
+	return new OctreeItem(this, objAddress, itemBbox, &object);
 }
 
-std::string OctStructTreeItem::toStr(std::string& str, int& level) {
+std::string OctreeItem::toStr(std::string& str, int& level) {
 	
 	for (int i = 0; i < level; i++) {
 		str += "  ";
@@ -163,10 +163,10 @@ std::string OctStructTreeItem::toStr(std::string& str, int& level) {
 	return str;
 }
 
-std::string OctStructTreeItem::toStr() {
+std::string OctreeItem::toStr() {
 	std::string str = "";
 	str += "[" + address + "] - ";
-	for(const OctStructObject& obj : objects){
+	for(const OctreeObject& obj : objects){
 		str += std::to_string((uint64_t)obj.data) + ", ";
 	}
 	if(!objects.empty()){
@@ -175,26 +175,26 @@ std::string OctStructTreeItem::toStr() {
 	return str;
 }
 
-std::string OctStructTree::getBoundingBoxAddress(const BoundingBox& bbox) {
+std::string Octree::getBoundingBoxAddress(const BoundingBox& bbox) {
 	std::string addrMin = octStruct.getOctAddress(bbox.minC);
 	std::string addrMax = octStruct.getOctAddress(bbox.maxC);
 	return getCommonAddress(addrMin, addrMax);
 }
 
-OctStructTreeItem* OctStructTree::addObject(void* obj, const BoundingBox& bbox) {
+OctreeItem* Octree::addObject(void* obj, const BoundingBox& bbox) {
 	std::string address = getBoundingBoxAddress(bbox);
 	BoundingBox treeItemBbox = octStruct.addressBoundingBox(address);
-	OctStructTreeItem* item = root->insertObject({obj, bbox}, address, this->octStruct);
+	OctreeItem* item = root->insertObject({obj, bbox}, address, this->octStruct);
 	this->octStructTreeItemMap[obj] = item;
 	return item;
 }
 
-void OctStructTree::removeObject(void* obj) {
+void Octree::removeObject(void* obj) {
 
 	auto it = octStructTreeItemMap.find(obj);
 	if (it != octStructTreeItemMap.end()) {
-		OctStructTreeItem* item = it->second;
-		for (const OctStructObject& osObj : item->objects) {
+		OctreeItem* item = it->second;
+		for (const OctreeObject& osObj : item->objects) {
 			if (osObj.data == obj) {
 				item->objects.erase(osObj);
 				break;
@@ -205,7 +205,7 @@ void OctStructTree::removeObject(void* obj) {
 
 		//Recursively delete parents if parent no children or objects (but not sure if a parent of a parent will ever be empty?)
 		while (item->objects.size() == 0 && item->children.size() == 0){
-			OctStructTreeItem* parent = item->parent;
+			OctreeItem* parent = item->parent;
 			if (!parent /*its the root*/) return;
 			parent->children.erase(item->address);
 			delete item;
@@ -227,12 +227,12 @@ void OctStructTree::removeObject(void* obj) {
 
 			*/
 		if (item->objects.size() == 0 && item->children.size() == 1) {
-			OctStructTreeItem* parent    = item->parent;
+			OctreeItem* parent    = item->parent;
 			if (!parent /*its the root*/) return;
 
 			parent->children.erase(item->address);
 
-			OctStructTreeItem* onlyChild = item->children.begin()->second;
+			OctreeItem* onlyChild = item->children.begin()->second;
 			onlyChild->parent = parent;
 
 			delete item;
@@ -244,30 +244,30 @@ void OctStructTree::removeObject(void* obj) {
 }
 
 /*TODO: more effective*/
-void OctStructTree::moveObject(void* obj, const BoundingBox& bbox) {
+void Octree::moveObject(void* obj, const BoundingBox& bbox) {
 	removeObject(obj);
 	addObject(obj, bbox);
 }
 
 /*TODO*/
-std::vector<void*> OctStructTree::getObjects(const BoundingBox& bbox) {
+std::vector<void*> Octree::getObjects(const BoundingBox& bbox) {
 	std::vector<void*> objects;
 	return objects;
 }
 
 /*TODO*/
-std::vector<void*> OctStructTree::getObjects(const std::string& address) {
+std::vector<void*> Octree::getObjects(const std::string& address) {
 	std::vector<void*> objects;
 	return objects;
 }
 
-std::string OctStructTree::toStr() {
+std::string Octree::toStr() {
 	std::string str;
 	int level = 0;
 	return root->toStr(str, level);
 }
 
-bool OctStructTree::hitTest(const OctStructTreeItem* item, const rl::Ray& ray, void** data) {
+bool Octree::hitTest(const OctreeItem* item, const rl::Ray& ray, void** data) {
 
 	auto it = item->children.begin();
 	for (it; it != item->children.end(); it++) {
@@ -295,6 +295,6 @@ bool OctStructTree::hitTest(const OctStructTreeItem* item, const rl::Ray& ray, v
 }
 
 
-bool OctStructTree::hitTest(const rl::Ray& ray, void** data) {
+bool Octree::hitTest(const rl::Ray& ray, void** data) {
 	return hitTest(root, ray, data);
 }

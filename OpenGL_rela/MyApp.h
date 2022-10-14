@@ -10,7 +10,7 @@ public:
 	virtual void processInput(GLFWwindow* window);
 
 protected:
-	rl::OctStructTree octTree;
+	rl::Octree octTree;
 
 	class WorldObjects {
 	public:

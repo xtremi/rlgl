@@ -38,7 +38,7 @@ int main()
 
 	float data[1000] = { 99.f, 99.f };
 
-	rl::OctStructTree octTree(octStruct);
+	rl::Octree octTree(octStruct);
 	octTree.addObject((void*)&data[1], { { 90.f, 90.f, 90.f }, { 92.f, 92.f, 92.f } });	  //111
 	octTree.addObject((void*)&data[2], {{ 91.f, 91.f, 91.f }, { 93.f, 93.f, 93.f } });	  //111
 	octTree.addObject((void*)&data[3], {{ 71.2f, 71.2f, 71.2f }, { 73.f, 73.f, 73.f } }); //11711

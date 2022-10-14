@@ -66,7 +66,7 @@ int MyApp::prepareScene() {
 
     //Boxes:
     rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);
-	octTree = rl::OctStructTree(octStruct);
+	octTree = rl::Octree(octStruct);
 
     int nBoxes = 500;
     glm::vec3 boxPos;
@@ -80,7 +80,7 @@ int MyApp::prepareScene() {
         objects.cubes.push_back(new rlgl::Object(meshCubeTex, shader1ID, material2ID));
         objects.cubes[i]->modelMatrix = glm::translate(glm::mat4(1.f), boxPos);
         objects.cubes[i]->modelMatrix = glm::scale(objects.cubes[i]->modelMatrix, glm::vec3(boxSize));
-		rl::OctStructTreeItem* item = octTree.addObject((void*)objects.cubes[i], bbox);
+		rl::OctreeItem* item = octTree.addObject((void*)objects.cubes[i], bbox);
         scene.addObject(objects.cubes[i]);
     }
 

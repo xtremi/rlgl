@@ -16,7 +16,7 @@ x------------------x
 
 */
 float OctStruct::halfSizeAtLevel(int level) {
-	return size / ((float)level * 2.f);
+	return size / glm::pow(2.f, level);
 }
 
 void OctStruct::setXYZhalfSize(int level, bool posX, bool posY, bool posZ, glm::vec3& c) {

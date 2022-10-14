@@ -264,7 +264,7 @@ std::string OctStructTree::toStr() {
 	return root->toStr(str, level);
 }
 
-bool OctStructTree::hitTest(const OctStructTreeItem* item, const rl::Ray& ray, void* data) {
+bool OctStructTree::hitTest(const OctStructTreeItem* item, const rl::Ray& ray, void** data) {
 
 	auto it = item->children.begin();
 	for (it; it != item->children.end(); it++) {
@@ -276,13 +276,15 @@ bool OctStructTree::hitTest(const OctStructTreeItem* item, const rl::Ray& ray, v
 			for (itObj; itObj != it->second->objects.end(); itObj++) {
 
 				if (rl::rayIntersection(ray, itObj->bbox)) {
-					data = itObj->data;
+					*data = itObj->data;
 					return true;
 				}
 
 			}
 
-			return hitTest(it->second, ray, data);
+			if (hitTest(it->second, ray, data)) {
+				return true;
+			}
 		}
 	}
 	return false;
@@ -290,6 +292,6 @@ bool OctStructTree::hitTest(const OctStructTreeItem* item, const rl::Ray& ray, v
 }
 
 
-bool OctStructTree::hitTest(const rl::Ray& ray, void* data) {
+bool OctStructTree::hitTest(const rl::Ray& ray, void** data) {
 	return hitTest(root, ray, data);
 }

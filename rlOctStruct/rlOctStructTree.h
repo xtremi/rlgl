@@ -72,13 +72,13 @@ public:
 	std::vector<void*> getObjects(const BoundingBox& bbox);
 	std::vector<void*> getObjects(const std::string& address);
 	void               removeObject(void* obj);
-	bool               hitTest(const rl::Ray& ray, void* data);
+	bool               hitTest(const rl::Ray& ray, void** data);
 	std::string        getBoundingBoxAddress(const BoundingBox& bbox);
 
 	std::string toStr();
 
 private:
-	bool hitTest(const OctStructTreeItem* item, const rl::Ray& ray, void* data);
+	bool hitTest(const OctStructTreeItem* item, const rl::Ray& ray, void** data);
 
 };
 

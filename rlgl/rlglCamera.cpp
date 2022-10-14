@@ -28,7 +28,7 @@ void Camera::setFront(const glm::vec3& _front) {
 
 void Camera::moveForward(float distance) {
 	position += lookVec() * distance;
-	position.z = 1.f;
+	//position.z = 1.f;
 	//lookAt += lookVec() * distance;
 }
 void Camera::moveBackward(float distance) {
@@ -36,7 +36,7 @@ void Camera::moveBackward(float distance) {
 }
 void Camera::moveLeft(float distance) {
 	position += sideVec() * distance;
-	position.z = 1.f;
+	//position.z = 1.f;
 	//lookAt += sideVec() * distance;
 }
 void Camera::moveRight(float distance) {

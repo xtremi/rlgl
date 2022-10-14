@@ -21,7 +21,7 @@ public:
 	glm::vec3 upVector = glm::vec3(0.f, 0.f, 1.f);
 	float fov  = 45.f;
 	float near = 0.1f;
-	float far  = 100.f;
+	float far  = 300.f;
 	float aspectRatio = 800.f / 600.f;
 
 	bool isOrthoGraphic = false;

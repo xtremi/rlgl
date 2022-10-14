@@ -74,12 +74,26 @@ int MyApp::prepareScene() {
     rl::OctStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);
 	octTree = rl::OctStructTree(octStruct);
 
+	rl::BoundingBox bboxes[4]; glm::vec4 bboxesColors[4];
+	octStruct.localBoundingBox("642", bboxes[0]);  bboxesColors[0] = glm::vec4(1.f, 0.f, 0.f, 0.2f);
+	octStruct.localBoundingBox("643", bboxes[1]);  bboxesColors[1] = glm::vec4(0.f, 1.f, 0.f, 0.2f);
+	octStruct.localBoundingBox("644", bboxes[2]);	 bboxesColors[2] = glm::vec4(0.f, 0.f, 1.f, 0.2f);
+	octStruct.localBoundingBox("645", bboxes[3]);	 bboxesColors[3] = glm::vec4(1.f, 1.f, 0.f, 0.2f);
+	for (int i = 0; i < 4; i++) {
+		rlgl::Object* octTreeItemObj = new rlgl::Object(meshCube, shader2ID, material2ID);
+		octTreeItemObj->modelMatrix = glm::translate(glm::mat4(1.f), bboxes[i].center());
+		octTreeItemObj->modelMatrix = glm::scale(octTreeItemObj->modelMatrix, bboxes[i].size());
+		octTreeItemObj->setColor(bboxesColors[i]);
+
+		scene.addObject(octTreeItemObj);
+	}
+
     int maxPoints = 100;
     glm::vec3 boxPos;
 	rl::BoundingBox bbox;
     float boxSize = 1.f;
     std::vector<void*> allAddedObjects;
-	int objectToDebug = 34;
+	int objectToDebug = 98;
     for (int i = 0; i < maxPoints; i++) {
 
         boxPos  = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
@@ -104,13 +118,15 @@ int MyApp::prepareScene() {
     auto it = octTree.octStructTreeItemMap.begin();
     for (it; it != octTree.octStructTreeItemMap.end(); it++) {
 
-		rl::BoundingBox octTreeItemBB = it->second->boundingBox;
-		rlgl::Object* octTreeItemObj = new rlgl::Object(meshCube, shader2ID, material2ID);
-		octTreeItemObj->modelMatrix = glm::translate(glm::mat4(1.f), octTreeItemBB.center());
-		octTreeItemObj->modelMatrix = glm::scale(octTreeItemObj->modelMatrix, octTreeItemBB.size());
-		octTreeItemObj->setColor(glm::vec4(0.0f, 1.0f, 0.0f, 0.2f));
+		if(false){
+			rl::BoundingBox octTreeItemBB = it->second->boundingBox;
+			rlgl::Object* octTreeItemObj = new rlgl::Object(meshCube, shader2ID, material2ID);
+			octTreeItemObj->modelMatrix = glm::translate(glm::mat4(1.f), octTreeItemBB.center());
+			octTreeItemObj->modelMatrix = glm::scale(octTreeItemObj->modelMatrix, octTreeItemBB.size());
+			octTreeItemObj->setColor(glm::vec4(0.0f, 1.0f, 0.0f, 0.2f));
 
-		scene.addObject(octTreeItemObj);
+			scene.addObject(octTreeItemObj);
+		}
 
         auto it2 = it->second->objects.begin();
         for (it2; it2 != it->second->objects.end(); it2++) {
@@ -152,6 +168,7 @@ int MyApp::prepareScene() {
     return 0;
 }
 
+static int hitCount = 0;
 int MyApp::updateScene() {
 
     float curTime = glfwGetTime();
@@ -159,9 +176,9 @@ int MyApp::updateScene() {
 	rl::Ray hitRay(camera.lookVec(), camera.position);
 	 
 	rlgl::Object* hitObj = nullptr;
-	if (octTree.hitTest(hitRay, hitObj)) {
-		int temp = 1;
-		std::cout << "hit" << std::endl;
+	if (octTree.hitTest(hitRay, (void**)&hitObj)) {
+		std::cout << "hit: " << hitCount++ << std::endl;
+		hitObj->modelMatrix = glm::rotate(hitObj->modelMatrix, 0.01f, glm::vec3(0.f, 0.f, 1.f));
 	}
 
     //float d = 2.5f;

@@ -13,12 +13,6 @@ public:
 
 	bool hasHighlight() const;
 	void setHighlight(bool state);
-
-public:
-	uint64_t meshID;
-	uint64_t shaderID;
-	uint64_t materialID;	
-	
 	const glm::mat4& modelMatrix();
 	void setModelMatrix(const glm::mat4& mat);
 	void setPosition(const glm::vec3& pos);
@@ -30,8 +24,15 @@ public:
 	void setScale(const glm::vec3& scale);
 	void scale(const glm::vec3& scale);
 	void calculateModelMatrix();
+	bool isInView();
+
+public:
+	uint64_t meshID;
+	uint64_t shaderID;
+	uint64_t materialID;	
 
 protected:
+	bool _isInView		   = true;
 	bool _hasColor         = false;
 	bool _hasHighlight     = false;
 	glm::vec4 color		   = glm::vec4(1.f);

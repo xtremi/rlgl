@@ -82,3 +82,6 @@ const glm::mat4& Object::modelMatrix() {
 	}
 	return _modelMatrix;
 }
+bool Object::isInView() {
+	return _isInView;
+}

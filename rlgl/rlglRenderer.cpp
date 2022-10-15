@@ -11,7 +11,7 @@ using namespace rlgl;
 
 Renderer::Renderer() {}
 
-void Renderer::render(const Scene& scene, const Camera& cam) {
+void Renderer::render(Scene& scene, const Camera& cam) {
 	
 	rlgl::cObjectIt it = scene.cbeginObject();
 
@@ -24,7 +24,7 @@ void Renderer::render(const Scene& scene, const Camera& cam) {
 }
 
 
-void Renderer::render(const Scene& scene, const glm::mat4& projViewMat, const Object* obj) {
+void Renderer::render(const Scene& scene, const glm::mat4& projViewMat, Object* obj) {
 
 	const Shader*	currentShader	= scene.shader(obj->shaderID);
 	const Material* currentMaterial = scene.material(obj->materialID);
@@ -44,7 +44,7 @@ void Renderer::render(const Scene& scene, const glm::mat4& projViewMat, const Ob
 	}
 	currentShader->setBool("highlight", obj->hasHighlight());
 	currentShader->setMat4x4("projView", projViewMat);
-	currentShader->setMat4x4("model", obj->modelMatrix);
+	currentShader->setMat4x4("model", obj->modelMatrix());
 
 	if (currentMaterial) {
 		if(currentMaterial->glID != lastUsedMaterialID){

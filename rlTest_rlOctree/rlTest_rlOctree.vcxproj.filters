@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="rlTest_rlOctStruct.cpp">
+    <ClCompile Include="rlTest_rlOctree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

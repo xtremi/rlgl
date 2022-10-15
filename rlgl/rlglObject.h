@@ -18,12 +18,30 @@ public:
 	uint64_t meshID;
 	uint64_t shaderID;
 	uint64_t materialID;	
-	glm::mat4 modelMatrix;
+	
+	const glm::mat4& modelMatrix();
+	void setModelMatrix(const glm::mat4& mat);
+	void setPosition(const glm::vec3& pos);
+	void translate(const glm::vec3& transl);
+	void setRotation(float angle, const glm::vec3& rotAxis);
+	void rotate(float angle, const glm::vec3& rotAxis);
+	void setScale(float scale);
+	void scale(float scale);
+	void setScale(const glm::vec3& scale);
+	void scale(const glm::vec3& scale);
+	void calculateModelMatrix();
 
 protected:
-	bool _hasColor = false;
-	bool _hasHighlight = false;
-	glm::vec4 color;
+	bool _hasColor         = false;
+	bool _hasHighlight     = false;
+	glm::vec4 color		   = glm::vec4(1.f);
+	glm::vec3 scaleVec	   = glm::vec3(1.f);
+	glm::vec3 position	   = glm::vec3(0.f);
+	glm::vec3 rotAxis	   = glm::vec3(1.f, 0.f, 0.f);
+	glm::mat4 _modelMatrix = glm::mat4(1.f);
+	float rotAngle         = 0.f;
+	
+	bool needMatrixRecalculation = true;
 };
 
 

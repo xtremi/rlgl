@@ -41,8 +41,10 @@ int MyApp::prepareScene() {
     //World plane:
     objects.worldPlane = new rlgl::Object(meshWorld, shader1ID, material1ID);
 	
-    objects.worldPlane->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
-    objects.worldPlane->modelMatrix = glm::scale(objects.worldPlane->modelMatrix, glm::vec3(100.0f));
+    //objects.worldPlane->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
+    //objects.worldPlane->modelMatrix = glm::scale(objects.worldPlane->modelMatrix, glm::vec3(100.0f));
+    objects.worldPlane->setPosition(glm::vec3(0.f));
+    objects.worldPlane->setScale(glm::vec3(100.f));
     scene.addObject(objects.worldPlane);
 
 	//UI:
@@ -54,10 +56,14 @@ int MyApp::prepareScene() {
 
     uiObjects.aimCross.push_back(new rlgl::Object(uiSquareMesh, shader3ID_ui, INT64_MAX));
     uiObjects.aimCross.push_back(new rlgl::Object(uiSquareMesh, shader3ID_ui, INT64_MAX));
-    uiObjects.aimCross[0]->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.2f));
-    uiObjects.aimCross[0]->modelMatrix = glm::scale(uiObjects.aimCross[0]->modelMatrix, glm::vec3(0.2f, 0.01f, 1.f));
-	uiObjects.aimCross[1]->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, 0.0f, 0.2f));
-	uiObjects.aimCross[1]->modelMatrix = glm::scale(uiObjects.aimCross[1]->modelMatrix, glm::vec3(0.01f, 0.2f, 1.f));
+    //uiObjects.aimCross[0]->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.2f));
+    //uiObjects.aimCross[0]->modelMatrix = glm::scale(uiObjects.aimCross[0]->modelMatrix, glm::vec3(0.2f, 0.01f, 1.f));
+	//uiObjects.aimCross[1]->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, 0.0f, 0.2f));
+	//uiObjects.aimCross[1]->modelMatrix = glm::scale(uiObjects.aimCross[1]->modelMatrix, glm::vec3(0.01f, 0.2f, 1.f));
+    uiObjects.aimCross[0]->setPosition(glm::vec3(0.f, 0.f, 0.2f));
+    uiObjects.aimCross[0]->setScale(glm::vec3(0.2f, 0.01f, 1.f));
+    uiObjects.aimCross[1]->setPosition(glm::vec3(0.0f, 0.0f, 0.2f));
+    uiObjects.aimCross[1]->setScale(glm::vec3(0.01f, 0.2f, 1.f));
 	uiObjects.aimCross[0]->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
 	uiObjects.aimCross[1]->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
 	uiScene.addObject(uiObjects.aimCross[0]);
@@ -78,8 +84,10 @@ int MyApp::prepareScene() {
 		bbox = rl::BoundingBox::createCubeBoundingBox(boxPos, boxSize);
 
         objects.cubes.push_back(new rlgl::Object(meshCubeTex, shader1ID, material2ID));
-        objects.cubes[i]->modelMatrix = glm::translate(glm::mat4(1.f), boxPos);
-        objects.cubes[i]->modelMatrix = glm::scale(objects.cubes[i]->modelMatrix, glm::vec3(boxSize));
+        //objects.cubes[i]->modelMatrix = glm::translate(glm::mat4(1.f), boxPos);
+        //objects.cubes[i]->modelMatrix = glm::scale(objects.cubes[i]->modelMatrix, glm::vec3(boxSize));
+        objects.cubes[i]->setPosition(boxPos);
+        objects.cubes[i]->setScale(glm::vec3(boxSize));
 		rl::OctreeItem* item = octTree.addObject((void*)objects.cubes[i], bbox);
         scene.addObject(objects.cubes[i]);
     }
@@ -92,8 +100,8 @@ int MyApp::prepareScene() {
     for (int i = 0; i < axesDir.size(); i++) {
         objects.axes.push_back(new rlgl::Object(meshCube, shader2ID, material2ID));
         objects.axes[i]->setColor(axesColor[i]);
-        objects.axes[i]->modelMatrix = glm::translate(glm::mat4(1.f), axesDir[i] * axesL / 2.f);  
-        objects.axes[i]->modelMatrix = glm::scale(objects.axes[i]->modelMatrix, axesScales[i]);
+        objects.axes[i]->setPosition(axesDir[i] * axesL / 2.f);  
+        objects.axes[i]->setScale(axesScales[i]);
         scene.addObject(objects.axes[i]);
     }
     
@@ -111,7 +119,7 @@ int MyApp::updateScene() {
 	if (octTree.hitTest(hitRay, (void**)&hitObj)) {
 		if (lastHitObj && (lastHitObj != hitObj)) lastHitObj->setHighlight(false);
 
-		hitObj->modelMatrix = glm::rotate(hitObj->modelMatrix, 0.01f, glm::vec3(0.f, 0.f, 1.f));
+		hitObj->rotate(0.01f, glm::vec3(0.f, 0.f, 1.f));
 		hitObj->setHighlight(true);	
 		lastHitObj = hitObj;
 	}

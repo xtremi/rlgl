@@ -252,8 +252,8 @@ int DemoApp::prepareScene() {
 
     objects.worldPlane = new rlgl::Object(meshWorld, shader1ID, material1ID);
 
-    objects.worldPlane->modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
-    objects.worldPlane->modelMatrix = glm::scale(objects.worldPlane->modelMatrix, glm::vec3(100.0f));
+    objects.worldPlane->setPosition(glm::vec3(0.f, 0.f, 0.f));
+    objects.worldPlane->setScale(glm::vec3(100.0f));
     scene.addObject(objects.worldPlane);
 
 
@@ -288,13 +288,13 @@ int DemoApp::updateScene() {
         R = glm::rotate(glm::mat4(1.f), curTime, glm::vec3(0.f, 0.f, 1.f));
         S = glm::scale(glm::mat4(1.0), glm::vec3(1.0f));
     
-        objects.squares[i]->modelMatrix = T * R * S;
+        objects.squares[i]->setModelMatrix(T * R * S);
 
         T = glm::translate(glm::mat4(1.0f), positions[i] + glm::vec3(0.f, 0.f, 0.7f));
         R = glm::rotate(glm::mat4(1.f), curTime, glm::vec3(0.f, 0.f, 1.f));
         S = glm::scale(glm::mat4(1.0), glm::vec3(1.0f));
 
-        objects.cubes[i]->modelMatrix = T * R * S;
+        objects.cubes[i]->setModelMatrix(T * R * S);
     }
 
 

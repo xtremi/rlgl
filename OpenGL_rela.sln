@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1705
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGL_rela", "OpenGL_rela\OpenGL_rela.vcxproj", "{29728E66-EE5F-4A51-B5E6-0D6D68D19C8D}"
 EndProject
@@ -24,6 +24,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rlOctree", "rlOctree\rlOctree.vcxproj", "{23DA1266-99AA-484F-959B-BF28BD78320D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rlTest_rlOctree", "rlTest_rlOctree\rlTest_rlOctree.vcxproj", "{812B0454-3CC4-4235-97C1-F99ABD70D3F6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rlTest_rlgl", "rlTest_rlgl\rlTest_rlgl.vcxproj", "{AAFCD8E2-25AE-4E7E-9455-DD259579673F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,12 +75,21 @@ Global
 		{812B0454-3CC4-4235-97C1-F99ABD70D3F6}.Release|x64.Build.0 = Release|x64
 		{812B0454-3CC4-4235-97C1-F99ABD70D3F6}.Release|x86.ActiveCfg = Release|Win32
 		{812B0454-3CC4-4235-97C1-F99ABD70D3F6}.Release|x86.Build.0 = Release|Win32
+		{AAFCD8E2-25AE-4E7E-9455-DD259579673F}.Debug|x64.ActiveCfg = Debug|x64
+		{AAFCD8E2-25AE-4E7E-9455-DD259579673F}.Debug|x64.Build.0 = Debug|x64
+		{AAFCD8E2-25AE-4E7E-9455-DD259579673F}.Debug|x86.ActiveCfg = Debug|Win32
+		{AAFCD8E2-25AE-4E7E-9455-DD259579673F}.Debug|x86.Build.0 = Debug|Win32
+		{AAFCD8E2-25AE-4E7E-9455-DD259579673F}.Release|x64.ActiveCfg = Release|x64
+		{AAFCD8E2-25AE-4E7E-9455-DD259579673F}.Release|x64.Build.0 = Release|x64
+		{AAFCD8E2-25AE-4E7E-9455-DD259579673F}.Release|x86.ActiveCfg = Release|Win32
+		{AAFCD8E2-25AE-4E7E-9455-DD259579673F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{812B0454-3CC4-4235-97C1-F99ABD70D3F6} = {C98244E0-58A1-4BB8-A0FC-D6360469AEAA}
+		{AAFCD8E2-25AE-4E7E-9455-DD259579673F} = {C98244E0-58A1-4BB8-A0FC-D6360469AEAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C2CFBE01-271E-4B6A-B72E-70B7765D3081}

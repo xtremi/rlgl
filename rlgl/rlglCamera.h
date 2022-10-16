@@ -32,6 +32,9 @@ public:
 	void moveRight(float distance);
 
 	void computeFrustum();
+	void computeFrustum_method1();
+	void computeFrustum_method2();
+	void computeFrustum_method3();
 
 	Frustum frustum;
 	glm::vec3 position = glm::vec3(-5.f, -5.f, 1.f);

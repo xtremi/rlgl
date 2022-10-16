@@ -65,13 +65,19 @@ void Camera::moveRight(float distance) {
 	moveLeft(-distance);
 }
 
-/* 
-*        x 
-        /|
-    D /  |
-    /    | near plane
+
+void Camera::computeFrustum() {
+	computeFrustum_method1();
+}
+
+
+/*!
+        x
+		/|
+	D /  |
+	/    | near plane
   / fov  |
-x----N---|-------->  front vec 
+x----N---|-------->  front vec
 pos
 
 N = near distance
@@ -79,11 +85,11 @@ D = distance from pos to intersection of near plane with side planes of frustum
 (same for left, right, top and bottom planes)
 
 */
-void Camera::computeFrustum() {
+void Camera::computeFrustum_method1(){
 
 	frustum.near() = rl::Plane(front, position + front * near);
 	frustum.far() = rl::Plane(-front, position + front * far);
-	
+
 	glm::vec3 side = sideVec();
 	glm::vec3 Lvec = rl::rotateVec3(front, upVector, glm::radians(fov));
 	glm::vec3 Rvec = rl::rotateVec3(front, upVector, -glm::radians(fov));
@@ -91,8 +97,8 @@ void Camera::computeFrustum() {
 	glm::vec3 Bvec = rl::rotateVec3(front, side, -glm::radians(fov));
 
 	float nearDistanceFOV = near / glm::cos(glm::radians(fov));
-	float farDistanceFOV  = far / glm::cos(glm::radians(fov));
-	
+	float farDistanceFOV = far / glm::cos(glm::radians(fov));
+
 	frustum.left() = rl::Plane(
 		position + (Lvec * nearDistanceFOV + Lvec * farDistanceFOV) / 2.f,
 		glm::cross(upVector, -Lvec)
@@ -112,4 +118,9 @@ void Camera::computeFrustum() {
 		position + (Bvec * nearDistanceFOV + Bvec * farDistanceFOV) / 2.f,
 		glm::cross(side, -Bvec)
 	);
+
+}
+void Camera::computeFrustum_method2(){
+}
+void Camera::computeFrustum_method3(){
 }

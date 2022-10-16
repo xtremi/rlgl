@@ -1,6 +1,22 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "rlGeometry.h"
+
 namespace rlgl{
+
+class Frustum {
+public:
+
+	rl::Plane& near();
+	rl::Plane& far();
+	rl::Plane& top();
+	rl::Plane& bottom();
+	rl::Plane& left();
+	rl::Plane& right();
+
+	rl::Plane planes[6];
+};
+
 class Camera
 {
 public:
@@ -15,8 +31,10 @@ public:
 	void moveLeft(float distance);
 	void moveRight(float distance);
 
+	void computeFrustum();
+
+	Frustum frustum;
 	glm::vec3 position = glm::vec3(-5.f, -5.f, 1.f);
-	//glm::vec3 lookAt   = glm::vec3(0.f);
 	glm::vec3 front   = glm::vec3(1.f, 0.f, 0.f);
 	glm::vec3 upVector = glm::vec3(0.f, 0.f, 1.f);
 	float fov  = 45.f;
@@ -25,6 +43,8 @@ public:
 	float aspectRatio = 800.f / 600.f;
 
 	bool isOrthoGraphic = false;
+
+	
 
 };
 

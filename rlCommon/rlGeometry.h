@@ -3,21 +3,45 @@
 
 namespace rl {
 
-	class BoundingBox {
+	class Cube {
 	public:
-		BoundingBox(const glm::vec3& minCoords, const glm::vec3& maxCoords);
-		BoundingBox(){}
-		glm::vec3 minC, maxC;
+		Cube(const glm::vec3& minCoords, const glm::vec3& maxCoords);
+		Cube() {}
+		glm::vec3 minC = glm::vec3(-1.f), maxC = glm::vec3(1.f);
 
 		glm::vec3 center() const;
 		glm::vec3 size() const;
 		void translate(const glm::vec3& translation);
 
+	};
+
+	class BoundingShape {
+
+	};
+	
+	class BoundingBox : public BoundingShape, public Cube {
+	public:
+		BoundingBox(const glm::vec3& minCoords, const glm::vec3& maxCoords);
+		BoundingBox() {}
+
 		static BoundingBox createCubeBoundingBox(const glm::vec3& center, float width);
 	};
 
-	class Ray {
 
+	class Plane {
+	public:
+		Plane(const glm::vec3& norm, const glm::vec3& pos);
+
+		glm::vec3 normal();
+		void setNormal(const glm::vec3& norm){}
+		glm::vec3 position;
+	
+	protected:
+		glm::vec3 _normal;
+	};
+
+
+	class Ray {
 	public:
 		Ray(
 			const glm::vec3& direction = glm::vec3(1.f, 0.f, 0.f),

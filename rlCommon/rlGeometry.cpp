@@ -1,27 +1,50 @@
 #include "rlGeometry.h"
 using namespace rl;
 
-BoundingBox::BoundingBox(const glm::vec3& minCoords, const glm::vec3& maxCoords) 
+Cube::Cube(const glm::vec3& minCoords, const glm::vec3& maxCoords) 
 	: minC{minCoords}, maxC{maxCoords}{}
+
+glm::vec3 Cube::size() const {
+	return maxC - minC;
+}
+
+glm::vec3 Cube::center() const {
+	//a + (b - a)/2 = a + b/2 - a/2 = a/2 + b/2 = (a+b)/2 
+	return (minC + maxC) / 2.f;
+}
+
+void Cube::translate(const glm::vec3& translation) {
+	minC += translation;
+	maxC += translation;
+}
+
+/*************************************************/
+
+
+BoundingBox::BoundingBox(const glm::vec3& minCoords, const glm::vec3& maxCoords) :
+	Cube(minCoords, maxCoords){}
 
 
 BoundingBox BoundingBox::createCubeBoundingBox(const glm::vec3& center, float width) {
 	return BoundingBox(center - glm::vec3(width / 2.f), center + glm::vec3(width / 2.f));
 }
 
-glm::vec3 BoundingBox::size() const {
-	return maxC - minC;
+/**************************************************/
+
+Plane::Plane(const glm::vec3& norm, const glm::vec3& pos) {
+	position = pos;
+	setNormal(norm);
 }
 
-glm::vec3 BoundingBox::center() const {
-	//a + (b - a)/2 = a + b/2 - a/2 = a/2 + b/2 = (a+b)/2 
-	return (minC + maxC) / 2.f;
+glm::vec3 Plane::normal() {
+	return _normal;
+}
+void Plane::setNormal(const glm::vec3& norm) {
+	_normal = glm::normalize(norm);
 }
 
-void BoundingBox::translate(const glm::vec3& translation) {
-	minC += translation;
-	maxC += translation;
-}
+/**************************************************/
+
 
 Ray::Ray(
 	const glm::vec3& direction,

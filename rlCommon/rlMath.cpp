@@ -24,3 +24,9 @@ glm::quat rl::fromToRotation(const glm::vec3& startDirection, const glm::vec3& e
 
     return result;
 }
+
+glm::vec3 rl::rotateVec3(const glm::vec3& vec, const glm::vec3& axis, float angle) {
+    glm::mat4 rotMat = glm::rotate(glm::mat4(1.f), angle, axis);
+    glm::vec4 vec4 = rotMat * glm::vec4(vec, 1.f);
+    return glm::vec3(vec4.x, vec4.y, vec4.z);
+}

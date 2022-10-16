@@ -30,14 +30,15 @@ namespace rl {
 
 	class Plane {
 	public:
+		Plane(){}
 		Plane(const glm::vec3& norm, const glm::vec3& pos);
 
 		glm::vec3 normal();
-		void setNormal(const glm::vec3& norm){}
-		glm::vec3 position;
+		void setNormal(const glm::vec3& norm);
+		glm::vec3 position = glm::vec3(0.f);
 	
 	protected:
-		glm::vec3 _normal;
+		glm::vec3 _normal = glm::vec3(0.f, 0.f, 1.f);
 	};
 
 

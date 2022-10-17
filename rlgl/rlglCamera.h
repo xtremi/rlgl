@@ -46,9 +46,6 @@ public:
 	float aspectRatio = 800.f / 600.f;
 
 	bool isOrthoGraphic = false;
-
-	
-
 };
 
 }

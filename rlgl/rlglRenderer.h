@@ -1,11 +1,15 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "rlGeometry.h"
 
 namespace rlgl{
 
 	class Object;
 	class Scene;
 	class Camera;
+	class Frustum;
+
+	bool isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox);
 
 class Renderer{
 public:

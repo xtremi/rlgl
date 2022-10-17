@@ -1,5 +1,6 @@
 #pragma once
 #include "glm/glm.hpp"
+#include <vector>
 
 namespace rl {
 
@@ -13,8 +14,10 @@ namespace rl {
 		glm::vec3 size() const;
 		void translate(const glm::vec3& translation);
 
+
 	};
 
+	/*!AABB*/
 	class BoundingShape {
 
 	};
@@ -25,6 +28,7 @@ namespace rl {
 		BoundingBox() {}
 
 		static BoundingBox createCubeBoundingBox(const glm::vec3& center, float width);
+		std::vector<glm::vec3> corners() const;
 	};
 
 
@@ -33,7 +37,7 @@ namespace rl {
 		Plane(){}
 		Plane(const glm::vec3& norm, const glm::vec3& pos);
 
-		glm::vec3 normal();
+		glm::vec3 normal() const;
 		void setNormal(const glm::vec3& norm);
 		glm::vec3 position = glm::vec3(0.f);
 	

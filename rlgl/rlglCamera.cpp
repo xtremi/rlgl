@@ -152,8 +152,12 @@ void Camera::computeFrustum_method2(){
 	glm::vec3 sideL = sideVec();
 	glm::vec3 sideR = -sideVec();
 
-	frustum.near() = rl::Plane(front, position + near * front);
-	frustum.far() = rl::Plane(-front, (position + frontMultFar));
+	frustum.near() = rl::Plane(
+		front, 
+		position + near * front);
+	frustum.far() = rl::Plane(
+		-front, 
+		position + frontMultFar);
 
 	frustum.left() = rl::Plane(
 		glm::cross(frontMultFar - sideR * halfHSide, upVector),
@@ -187,11 +191,10 @@ void Camera::computeFrustum_method3(){
 	for (int i = 3; i--; ) near[i] = mat[i][3] + mat[i][2];
 	for (int i = 3; i--; ) far[i] = mat[i][3] - mat[i][2];
 
-	frustum.near() = rl::Plane(near, glm::vec3(0.f));
-	frustum.far() = rl::Plane(far, glm::vec3(0.f));
-	frustum.left() = rl::Plane(left, glm::vec3(0.f));
-	frustum.right() = rl::Plane(right, glm::vec3(0.f));
-	frustum.top() = rl::Plane(top, glm::vec3(0.f));
-	frustum.bottom() = rl::Plane(bottom, glm::vec3(0.f));
-
+	frustum.near()	 = rl::Plane(near, position + front * near);
+	frustum.far()	 = rl::Plane(far, position + front * far);
+	frustum.left()	 = rl::Plane(left,	 position);
+	frustum.right()  = rl::Plane(right,  position);
+	frustum.top()	 = rl::Plane(top,	 position);
+	frustum.bottom() = rl::Plane(bottom, position);
 }

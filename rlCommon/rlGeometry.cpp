@@ -18,6 +18,37 @@ void Cube::translate(const glm::vec3& translation) {
 	maxC += translation;
 }
 
+/*!
+           8--------7 maxC
+         /	      / |  _ y
+	   /        /	|  /|
+	 5--------6		| /
+	 | 		  |     3
+	 | 		  |   /
+	 | 		  | /
+minC 1--------2      --->x
+
+Returns the the corners of the bounding box.
+The bounding box is an AABB, so all axis are aligned with global XYZ axes.
+*/
+std::vector<glm::vec3> BoundingBox::corners() const {
+	std::vector<glm::vec3> coords(8);
+
+	glm::vec3 bsize = size();
+
+	coords.push_back(minC);
+	coords.push_back(minC + glm::vec3(bsize.x, 0.f, 0.f));
+	coords.push_back(minC + glm::vec3(bsize.x, bsize.y, 0.f));
+	coords.push_back(minC + glm::vec3(0.f, bsize.y, 0.f));
+
+	coords.push_back(minC + glm::vec3(0.f, 0.f, bsize.z));
+	coords.push_back(minC + glm::vec3(bsize.x, 0.f, bsize.z));
+	coords.push_back(maxC);
+	coords.push_back(maxC + glm::vec3(0.f, bsize.y, bsize.z));
+
+}
+
+
 /*************************************************/
 
 
@@ -36,7 +67,7 @@ Plane::Plane(const glm::vec3& norm, const glm::vec3& pos) {
 	setNormal(norm);
 }
 
-glm::vec3 Plane::normal() {
+glm::vec3 Plane::normal() const {
 	return _normal;
 }
 void Plane::setNormal(const glm::vec3& norm) {

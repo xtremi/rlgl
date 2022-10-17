@@ -1,6 +1,6 @@
 #include <iostream>
 #include "rlglCamera.h"
-
+#include <string>
 
 int test_rlglCamera();
 
@@ -53,8 +53,11 @@ int test_rlglCamera() {
 
 	camera.computeFrustum_method1();
 	printFrustum(camera.frustum);
+	std::cout << "\n";
 	camera.computeFrustum_method2();
 	printFrustum(camera.frustum);
-
+	std::cout << "\n";
+	camera.computeFrustum_method3();
+	printFrustum(camera.frustum);
 	return 0;
 }

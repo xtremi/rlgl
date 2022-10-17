@@ -72,6 +72,9 @@ void Camera::computeFrustum() {
 
 
 /*!
+Method based on my understanding.
+(rotating front vector to find the direction of frustum edges)
+This method also calculates correct (hopefully) positions of center of planes
         x
 		/|
 	D /  |
@@ -128,30 +131,67 @@ void Camera::computeFrustum_method1(){
 		position + (Bvec * nearDistanceFOV + Bvec * farDistanceFOV) / 2.f);
 
 }
-void Camera::computeFrustum_method2(){
 
-	const float halfVSide = far * tanf(fov * .5f);
+/*!
+Based on https://learnopengl.com/Guest-Articles/2021/Scene/Frustum-Culling
+slightly edited, I think because of definition of camera CSYS
+I consider:
+	X-direction to be out of camera (front / lookVec)
+	Y-direction to be side vector (positive left)
+	Z-direction up vector
+
+	Sometimes online I see negative Z axis being out of camera (front / lookVec)
+*/
+void Camera::computeFrustum_method2(){
+	
+	float fovY = glm::radians(fov);
+	const float halfVSide = far * tanf(fovY * .5f);
 	const float halfHSide = halfVSide * aspectRatio;
 	const glm::vec3 frontMultFar = far * front;
 
+	glm::vec3 sideL = sideVec();
 	glm::vec3 sideR = -sideVec();
 
 	frustum.near() = rl::Plane(front, position + near * front);
 	frustum.far() = rl::Plane(-front, (position + frontMultFar));
 
-	frustum.right() = rl::Plane(
-		glm::cross(upVector,frontMultFar + sideR * halfHSide),
-		position);
-
 	frustum.left() = rl::Plane(
 		glm::cross(frontMultFar - sideR * halfHSide, upVector),
 		position);
+	frustum.right() = rl::Plane(
+		glm::cross(upVector,frontMultFar + sideR * halfHSide),
+		position);
+	//frustum.top() = rl::Plane(
+	//	glm::cross(sideR, frontMultFar - upVector * halfVSide),
+	//	position);
 	frustum.top() = rl::Plane(
-		glm::cross(sideR, frontMultFar - upVector * halfVSide),
+		glm::cross(sideL, frontMultFar + upVector * halfVSide),
 		position);
 	frustum.bottom() = rl::Plane(
-		glm::cross(frontMultFar + upVector * halfVSide, sideR),
+		glm::cross(sideR, frontMultFar - upVector * halfVSide),
 		position);
 }
+
+/*!
+Based on https://stackoverflow.com/questions/12836967/extracting-view-frustum-planes-gribb-hartmann-method
+*/
 void Camera::computeFrustum_method3(){
+
+	glm::mat4 mat = projectionMatrix() * viewMatrix();
+	glm::vec3 left, right, bottom, top, near, far;
+
+	for (int i = 3; i--; ) left[i] = mat[i][3] + mat[i][0];
+	for (int i = 3; i--; ) right[i] = mat[i][3] - mat[i][0];
+	for (int i = 3; i--; ) bottom[i] = mat[i][3] + mat[i][1];
+	for (int i = 3; i--; ) top[i] = mat[i][3] - mat[i][1];
+	for (int i = 3; i--; ) near[i] = mat[i][3] + mat[i][2];
+	for (int i = 3; i--; ) far[i] = mat[i][3] - mat[i][2];
+
+	frustum.near() = rl::Plane(near, glm::vec3(0.f));
+	frustum.far() = rl::Plane(far, glm::vec3(0.f));
+	frustum.left() = rl::Plane(left, glm::vec3(0.f));
+	frustum.right() = rl::Plane(right, glm::vec3(0.f));
+	frustum.top() = rl::Plane(top, glm::vec3(0.f));
+	frustum.bottom() = rl::Plane(bottom, glm::vec3(0.f));
+
 }

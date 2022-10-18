@@ -182,19 +182,19 @@ Based on https://stackoverflow.com/questions/12836967/extracting-view-frustum-pl
 void Camera::computeFrustum_method3(){
 
 	glm::mat4 mat = projectionMatrix() * viewMatrix();
-	glm::vec3 left, right, bottom, top, near, far;
+	glm::vec3 leftN, rightN, bottomN, topN, nearN, farN;
 
-	for (int i = 3; i--; ) left[i] = mat[i][3] + mat[i][0];
-	for (int i = 3; i--; ) right[i] = mat[i][3] - mat[i][0];
-	for (int i = 3; i--; ) bottom[i] = mat[i][3] + mat[i][1];
-	for (int i = 3; i--; ) top[i] = mat[i][3] - mat[i][1];
-	for (int i = 3; i--; ) near[i] = mat[i][3] + mat[i][2];
-	for (int i = 3; i--; ) far[i] = mat[i][3] - mat[i][2];
+	for (int i = 3; i--; ) leftN[i] = mat[i][3] + mat[i][0];
+	for (int i = 3; i--; ) rightN[i] = mat[i][3] - mat[i][0];
+	for (int i = 3; i--; ) bottomN[i] = mat[i][3] + mat[i][1];
+	for (int i = 3; i--; ) topN[i] = mat[i][3] - mat[i][1];
+	for (int i = 3; i--; ) nearN[i] = mat[i][3] + mat[i][2];
+	for (int i = 3; i--; ) farN[i] = mat[i][3] - mat[i][2];
 
-	frustum.near()	 = rl::Plane(near, position + front * near);
-	frustum.far()	 = rl::Plane(far, position + front * far);
-	frustum.left()	 = rl::Plane(left,	 position);
-	frustum.right()  = rl::Plane(right,  position);
-	frustum.top()	 = rl::Plane(top,	 position);
-	frustum.bottom() = rl::Plane(bottom, position);
+	frustum.near()	 = rl::Plane(nearN, position + front * near);
+	frustum.far()	 = rl::Plane(farN, position + front * far);
+	frustum.left()	 = rl::Plane(leftN,	 position);
+	frustum.right()  = rl::Plane(rightN,  position);
+	frustum.top()	 = rl::Plane(topN,	 position);
+	frustum.bottom() = rl::Plane(bottomN, position);
 }

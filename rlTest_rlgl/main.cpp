@@ -1,15 +1,17 @@
 #include <iostream>
 #include "rlglCamera.h"
+#include "rlglRenderer.h"
 #include <string>
+#include <vector>
 
-int test_rlglCamera();
+int test_rlglFrustum();
 
 void runTest(int(*func)(), const std::string& testName);
 
 
 int main(int argc, char* argv[]){
 
-	runTest(test_rlglCamera, "rlglCamera");
+	runTest(test_rlglFrustum, "rlglFrustum");
 
 	return 0;
 }
@@ -24,7 +26,7 @@ void runTest(int(*func)(), const std::string& testName) {
 }
 
 #include <vector>
-#include <iomanip>      // std::setprecision
+#include <iomanip>  // std::setprecision
 
 void printFrustum(const rlgl::Frustum& _frustum) {
 
@@ -40,7 +42,26 @@ void printFrustum(const rlgl::Frustum& _frustum) {
 	}
 }
 
-int test_rlglCamera() {
+#include <glm/gtc/epsilon.hpp>
+bool frustumsAreEqual(const std::vector<rlgl::Frustum>& frustums) {
+
+	if (frustums.size() < 2) return false;
+
+	for (int i = 1; i < frustums.size(); i++) {
+
+		for (int j = 0; j < 6; j++) {
+			
+			glm::bvec3 eq = glm::epsilonEqual(frustums[0].planes[j].normal(), frustums[i].planes[j].normal(), 1e-6f);
+			if (!eq.x || !eq.y || !eq.z) {
+				return false;
+			}
+
+		}
+	}
+	return true;
+}
+
+int test_rlglFrustum() {
 
 	rlgl::Camera camera;
 	camera.aspectRatio = 1.5;
@@ -51,13 +72,38 @@ int test_rlglCamera() {
 	camera.front = glm::vec3(1.0f, 0.f, 0.f);
 	camera.upVector = glm::vec3(0.f, 0.f, 1.f);
 
+	std::vector<rlgl::Frustum> frustums;
 	camera.computeFrustum_method1();
 	printFrustum(camera.frustum);
+	frustums.push_back(camera.frustum);
 	std::cout << "\n";
 	camera.computeFrustum_method2();
 	printFrustum(camera.frustum);
+	frustums.push_back(camera.frustum);
 	std::cout << "\n";
 	camera.computeFrustum_method3();
 	printFrustum(camera.frustum);
+	frustums.push_back(camera.frustum);
+
+	if (!frustumsAreEqual(frustums)) return 1;
+
+	//Should be in frustum:
+	rl::BoundingBox bbox(glm::vec3(20.f, -5.f, -5.f), glm::vec3(25.f, 5.f, 5.f));
+	if (!rlgl::isInFrustum(camera.frustum, bbox)) {
+		return 1;
+	}
+
+	//Should not be in frustum
+	bbox.translate(glm::vec3(81.f, 0.f, 0.f));
+	if (rlgl::isInFrustum(camera.frustum, bbox)) {
+		return 1;
+	}
+
+	//Should be in frustum
+	bbox.translate(glm::vec3(-2.f, 0.f, 0.f));
+	if (!rlgl::isInFrustum(camera.frustum, bbox)) {
+		return 1;
+	}
+
 	return 0;
 }

@@ -36,16 +36,17 @@ std::vector<glm::vec3> BoundingBox::corners() const {
 
 	glm::vec3 bsize = size();
 
-	coords.push_back(minC);
-	coords.push_back(minC + glm::vec3(bsize.x, 0.f, 0.f));
-	coords.push_back(minC + glm::vec3(bsize.x, bsize.y, 0.f));
-	coords.push_back(minC + glm::vec3(0.f, bsize.y, 0.f));
+	size_t i = 0;
+	coords[i++] = minC;
+	coords[i++] = minC + glm::vec3(bsize.x, 0.f, 0.f);
+	coords[i++] = minC + glm::vec3(bsize.x, bsize.y, 0.f);
+	coords[i++] = minC + glm::vec3(0.f, bsize.y, 0.f);
 
-	coords.push_back(minC + glm::vec3(0.f, 0.f, bsize.z));
-	coords.push_back(minC + glm::vec3(bsize.x, 0.f, bsize.z));
-	coords.push_back(maxC);
-	coords.push_back(maxC + glm::vec3(0.f, bsize.y, bsize.z));
-
+	coords[i++] = minC + glm::vec3(0.f, 0.f, bsize.z);
+	coords[i++] = minC + glm::vec3(bsize.x, 0.f, bsize.z);
+	coords[i++] = maxC;
+	coords[i++] = maxC + glm::vec3(0.f, bsize.y, bsize.z);
+	return coords;
 }
 
 

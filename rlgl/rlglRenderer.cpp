@@ -71,8 +71,6 @@ void Renderer::render(const Scene& scene, const glm::mat4& projViewMat, Object* 
 
 
 bool rlgl::isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox) {
-	glm::vec3 a, b;
-	glm::dot(a, b);
 
 	std::vector<glm::vec3> bboxCorners = bbox.corners();
 	for (const glm::vec3& corner : bboxCorners) {
@@ -82,7 +80,10 @@ bool rlgl::isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox) {
 			const rl::Plane* pln = &frustum.planes[i];
 			glm::vec3 v = corner - pln->position;
 			float d = glm::dot(v, pln->normal());
-			if (d < 0.f) cornerInFrustum = false;
+			if (d < 0.f) {
+				cornerInFrustum = false;
+				break;
+			}
 		}
 
 		if (cornerInFrustum) {

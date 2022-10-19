@@ -7,6 +7,7 @@ class MyApp : public rlgl::BaseApp
 public:
 	virtual int prepareScene();
 	virtual int updateScene();
+	virtual int postRender();
 	virtual void processInput(GLFWwindow* window);
 
 protected:

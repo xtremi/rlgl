@@ -85,3 +85,6 @@ const glm::mat4& Object::modelMatrix() {
 bool Object::isInView() {
 	return _isInView;
 }
+void Object::setInViewState(bool state) {
+	_isInView = state;
+}

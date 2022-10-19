@@ -1,7 +1,9 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "rlGeometry.h"
 
 namespace rlgl{
+
 
 class Object
 {
@@ -25,6 +27,7 @@ public:
 	void scale(const glm::vec3& scale);
 	void calculateModelMatrix();
 	bool isInView();
+	void setInViewState(bool state);
 
 public:
 	uint64_t meshID;
@@ -35,6 +38,7 @@ protected:
 	bool _isInView		   = true;
 	bool _hasColor         = false;
 	bool _hasHighlight     = false;
+	//rl::BoundingBox	bbox;
 	glm::vec4 color		   = glm::vec4(1.f);
 	glm::vec3 scaleVec	   = glm::vec3(1.f);
 	glm::vec3 position	   = glm::vec3(0.f);

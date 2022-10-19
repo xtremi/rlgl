@@ -112,6 +112,23 @@ int MyApp::updateScene() {
 
     double curTime = glfwGetTime();
 
+	/************************/
+	camera.computeFrustum();
+	auto it = octTree.octStructTreeItemMap.begin();
+	for (it; it != octTree.octStructTreeItemMap.end(); it++) {
+
+		auto it2 = it->second->objects.begin();
+		for (it2; it2 != it->second->objects.end(); it2++) {
+
+			if (!rlgl::isInFrustum(camera.frustum, it2->bbox)) {
+				((rlgl::Object*)it2->data)->setInViewState(false);
+			}
+
+		}
+	}
+	/************************/
+
+
 	rl::Ray hitRay(camera.lookVec(), camera.position);
 	 
 	rlgl::Object* hitObj = nullptr;
@@ -126,5 +143,22 @@ int MyApp::updateScene() {
 		if (lastHitObj) lastHitObj->setHighlight(false);
 	}
 
+
+
+
     return 0;
+}
+
+int MyApp::postRender(){
+
+	camera.computeFrustum();
+	auto it = octTree.octStructTreeItemMap.begin();
+	for (it; it != octTree.octStructTreeItemMap.end(); it++) {
+
+		auto it2 = it->second->objects.begin();
+		for (it2; it2 != it->second->objects.end(); it2++) {
+			((rlgl::Object*)it2->data)->setInViewState(true);
+		}
+	}
+	return 0;
 }

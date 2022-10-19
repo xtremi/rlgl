@@ -54,7 +54,6 @@ int BaseApp::loopIteration() {
 	if (!fpsControl.process()) {
 		return 0;
 	}
-
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -66,7 +65,9 @@ int BaseApp::loopIteration() {
     if (int err = renderScene()) {
         return err;
     }
-
+	if(int err = postRender()){
+		return err;
+	}
     glfwSwapBuffers(_window);
     glfwPollEvents();
 

@@ -17,14 +17,20 @@ void Renderer::render(Scene& scene, const Camera& cam) {
 
 	glm::mat4 PVmat = cam.projectionMatrix() * cam.viewMatrix();
 
+
 	for (rlgl::cObjectIt it = scene.cbeginObject(); it != scene.cendObject(); it++) {
-		render(scene, PVmat, *it);
+		if((*it)->isInView()){
+			render(scene, PVmat, *it);
+		}
 	}
 
 }
 
 
-void Renderer::render(const Scene& scene, const glm::mat4& projViewMat, Object* obj) {
+void Renderer::render(
+	const Scene&	 scene, 
+	const glm::mat4& projViewMat, 
+	Object*			 obj) {
 
 	const Shader*	currentShader	= scene.shader(obj->shaderID);
 	const Material* currentMaterial = scene.material(obj->materialID);

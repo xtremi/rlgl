@@ -85,6 +85,7 @@ protected:
 	virtual int prepareScene() = 0;
 	virtual int updateScene() = 0;
 	virtual void processInput(GLFWwindow* window);
+	virtual int postRender() { return 0; }
 };
 
 

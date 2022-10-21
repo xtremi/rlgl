@@ -298,3 +298,4 @@ bool Octree::hitTest(const OctreeItem* item, const rl::Ray& ray, void** data) {
 bool Octree::hitTest(const rl::Ray& ray, void** data) {
 	return hitTest(root, ray, data);
 }
+

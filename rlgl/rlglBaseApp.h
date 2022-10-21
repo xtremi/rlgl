@@ -70,6 +70,7 @@ protected:
 	WindowParams   _windowParams;
 	GLFWwindow*	   _window = nullptr;
 	rlgl::Renderer renderer;
+	rlgl::Camera*  activeCamera;
 	rlgl::Camera   camera;
 	rlgl::Camera   uiCamera;
 	rlgl::Scene	   scene;

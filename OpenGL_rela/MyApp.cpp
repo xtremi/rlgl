@@ -2,9 +2,6 @@
 #include "rlMath.h"
 #include <iostream>
 
-void MyApp::processInput(GLFWwindow* window) {
-    BaseApp::processInput(window);
-}
 
 void MyApp::prepareAssets() {
 
@@ -40,6 +37,14 @@ void MyApp::prepareAssets() {
 
 
 int MyApp::prepareScene() {
+
+    secondaryCam.aspectRatio = windowParams().aspect();
+
+    secondaryCam.position = glm::vec3(70.f);
+    secondaryCam.front = glm::vec3(-1.f);
+    secondaryCam.upVector = glm::vec3(0.f, 0.f, 1.f);
+    secondaryCam.aspectRatio = windowParams().aspect();
+
     prepareAssets();
     
     createWorld();
@@ -119,12 +124,13 @@ int MyApp::updateScene() {
 
 		auto it2 = it->second->objects.begin();
 		for (it2; it2 != it->second->objects.end(); it2++) {
+        rlgl::Object* obj = (rlgl::Object*)it->first;
 
-			if (!rlgl::isInFrustum(camera.frustum, it2->bbox)) {
+			if (!rlgl::isInFrustum(camera.frustum, obj->bb)) {
 				((rlgl::Object*)it2->data)->setInViewState(false);
 			}
 
-		}
+	}
 	}
 	/************************/
 
@@ -161,4 +167,17 @@ int MyApp::postRender(){
 		}
 	}
 	return 0;
+}
+
+
+void MyApp::processInput(GLFWwindow* window) {
+
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+        activeCamera = &secondaryCam;
+    }
+    else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
+        activeCamera = &camera;
+    }
+
+    BaseApp::processInput(window);
 }

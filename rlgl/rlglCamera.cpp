@@ -67,7 +67,7 @@ void Camera::moveRight(float distance) {
 
 
 void Camera::computeFrustum() {
-	computeFrustum_method1();
+	computeFrustum_method3();
 }
 
 

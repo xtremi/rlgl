@@ -12,6 +12,7 @@ BaseApp::BaseApp() {}
 
 /*!*/
 int BaseApp::init(int windowSizeX, int windowSizeY) {
+    activeCamera = &camera;
     windowParams().size = glm::ivec2(windowSizeX, windowSizeY);
     camera.aspectRatio = windowParams().aspect();
     
@@ -146,9 +147,6 @@ void BaseApp::processInput(GLFWwindow* window)
     else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         camera.moveRight(CURSOR_MOVE_SPEED);
     }
-    else if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
-        
-    }
 
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
@@ -205,7 +203,7 @@ int BaseApp::initializeWindow() {
 
 int BaseApp::renderScene() {
 
-    renderer.render(scene, camera);
+    renderer.render(scene, *activeCamera);
     renderer.render(uiScene, uiCamera);
 
     return 0;

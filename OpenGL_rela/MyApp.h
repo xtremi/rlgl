@@ -8,15 +8,18 @@ public:
 	virtual int prepareScene();
 	virtual int updateScene();
 	virtual int postRender();
-	virtual void processInput(GLFWwindow* window);
 
 protected:
 	rl::Octree octTree;
+	rlgl::Camera secondaryCam;
 	void prepareAssets();
 	void createWorld();
 	void createUI();
 	void createBoxes();
 	void createCSYS();
+
+	void processInput(GLFWwindow* window);
+
 
 	struct WorldObjects {
 		rlgl::Object* worldPlane;

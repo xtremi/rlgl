@@ -75,8 +75,11 @@ public:
 
 	std::string toStr();
 
-private:
+	std::unordered_map<void*, OctreeItem*>::const_iterator objectIt;
+
+protected:
 	bool hitTest(const OctreeItem* item, const rl::Ray& ray, void** data);
+
 
 };
 

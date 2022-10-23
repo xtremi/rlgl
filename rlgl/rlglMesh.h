@@ -43,12 +43,14 @@ public:
 
     GLBuffer<float>  vertices;
     GLBuffer<GLuint> indices;
+    GLBuffer<float>  instances;
 	GLuint VAO;
 
 	bool hasIndices = false;
 	bool hasNormals = false;	
 	bool hasColours = false;
 	bool hasTexCoords = false;
+	bool hasInstances = false;
 
 	GLsizei nVertices;
 	GLsizei nElements;

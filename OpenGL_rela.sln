@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1705
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGL_rela", "OpenGL_rela\OpenGL_rela.vcxproj", "{29728E66-EE5F-4A51-B5E6-0D6D68D19C8D}"
 EndProject
@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shaders", "shaders", "{B87C
 		data\shaders\object.vs = data\shaders\object.vs
 		data\shaders\object_col.fs = data\shaders\object_col.fs
 		data\shaders\object_col.vs = data\shaders\object_col.vs
+		data\shaders\object_inst.fs = data\shaders\object_inst.fs
+		data\shaders\object_inst.vs = data\shaders\object_inst.vs
 		data\shaders\ui_element.fs = data\shaders\ui_element.fs
 		data\shaders\ui_element.vs = data\shaders\ui_element.vs
 	EndProjectSection

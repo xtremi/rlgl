@@ -2,15 +2,16 @@
 #include "rlglBaseApp.h"
 #include "rlOctree.h"
 
+
 struct AssetIDs {
 	struct Meshes {
-		uint64_t world, cubeTex, cube, square;
+		uint64_t world, cubeTex, cube, square, cubeInst;
 	};
 	struct Materials {
 		uint64_t checker, box;
 	};
 	struct Shaders {
-		uint64_t textured, colored, ui;
+		uint64_t textured, colored, ui, inst;
 
 	};
 	Meshes mesh;
@@ -22,6 +23,7 @@ struct WorldObjects {
 	rlgl::Object*			   worldPlane;
 	std::vector<rlgl::Object*> cubes;
 	std::vector<rlgl::Object*> axes;
+	rlgl::Object*			   instObj;
 };
 
 struct UIobjects {
@@ -38,16 +40,27 @@ protected:
 	WorldObjects objects;
 	UIobjects	 uiObjects;
 	AssetIDs	 assetIDs;
+	rlgl::Mesh	 cubeTexInstMesh;
 
-	int prepareScene();
-	int updateScene();
-	int postRender();
+	int prepareScene();						//inherited from BaseApp
+	int updateScene();						//inherited from BaseApp
+	int postRender();						//inherited from BaseApp
+	void processInput(GLFWwindow* window);	//inherited from BaseApp
+
+	//initialization
 	void prepareAssets();
 	void createWorld();
 	void createUI();
 	void createBoxes();
 	void createCSYS();
-	void processInput(GLFWwindow* window);
+
+	//update
+	void updateCubes();
+	void updateHitTestOctTree();
+
+private:
+	static const float BOX_WIDTH;
+
 };
 
 /*!

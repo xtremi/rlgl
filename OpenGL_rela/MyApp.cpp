@@ -2,14 +2,19 @@
 #include "rlMath.h"
 #include <iostream>
 
+const float MyApp::BOX_WIDTH = 2.f;
 
 void MyApp::prepareAssets() {
+
+    cubeTexInstMesh = rlgl::primitive_mesh::cube_tex;
+
 
     rlgl::primitive_mesh::plane_textureX10.initialize();
     rlgl::primitive_mesh::plane.initialize();
     rlgl::primitive_mesh::cube_tex.initialize();
     rlgl::primitive_mesh::cube.initialize();
     rlgl::primitive_mesh::square.initialize();
+
 
     assetIDs.mesh.world = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
     assetIDs.mesh.cubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
@@ -23,15 +28,17 @@ void MyApp::prepareAssets() {
     assetIDs.material.checker = scene.addMaterial(materialChecker);
     assetIDs.material.box = scene.addMaterial(materialBox);
 
-    rlgl::Shader shaderTextured, shaderColored, uiShader;
+    rlgl::Shader shaderTextured, shaderColored, shaderInst, uiShader;
     shaderTextured.initialize("..\\data\\shaders\\object.vs", "..\\data\\shaders\\object.fs");
     shaderTextured.setInt("textureID", materialChecker.glID);
     shaderColored.initialize("..\\data\\shaders\\object_col.vs", "..\\data\\shaders\\object_col.fs"); 
     uiShader.initialize("..\\data\\shaders\\ui_element.vs", "..\\data\\shaders\\ui_element.fs");
+    shaderInst.initialize("..\\data\\shaders\\object_inst.vs", "..\\data\\shaders\\object_inst.fs");
 
     assetIDs.shader.textured = scene.addShader(shaderTextured);
     assetIDs.shader.colored = scene.addShader(shaderColored);
     assetIDs.shader.ui = uiScene.addShader(uiShader);
+    assetIDs.shader.inst = uiScene.addShader(shaderInst);
 }
 
 
@@ -73,16 +80,21 @@ void MyApp::createUI() {
 }
 
 void MyApp::createBoxes() {
-    rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);
+
+    rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 150.f, 5);
     octTree = rl::Octree(octStruct);
 
     int nBoxes = 500;
     glm::vec3 boxPos;
     rl::BoundingBox bbox;
-    float boxSize = 2.f;
+    float boxSize = BOX_WIDTH;
     for (int i = 0; i < nBoxes; i++) {
 
         boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
+        cubeTexInstMesh.instances.data.push_back(boxPos.z + 5.f);
+        cubeTexInstMesh.instances.data.push_back(boxPos.x + 5.f);
+        cubeTexInstMesh.instances.data.push_back(boxPos.y + 5.f);
+
         bbox = rl::BoundingBox::createCubeBoundingBox(boxPos, boxSize);
 
         objects.cubes.push_back(new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.textured, assetIDs.material.box));
@@ -92,6 +104,14 @@ void MyApp::createBoxes() {
         scene.addObject(objects.cubes[i]);
     }
 
+    cubeTexInstMesh.hasInstances = true;
+    cubeTexInstMesh.initialize();
+    assetIDs.mesh.cubeInst = scene.addMesh(&cubeTexInstMesh);
+
+    objects.instObj = new rlgl::Object(assetIDs.mesh.cubeInst, assetIDs.shader.inst, assetIDs.material.box);
+    objects.instObj->setPosition(glm::vec3(0.f));
+    objects.instObj->setScale(glm::vec3(boxSize /2.f));
+    scene.addObject(objects.instObj);
 }
 
 void MyApp::createCSYS() {
@@ -113,26 +133,11 @@ void MyApp::createCSYS() {
 static rlgl::Object* lastHitObj = nullptr;
 int MyApp::updateScene() {
 
-    double curTime = glfwGetTime();
-
     camera.computeFrustum();
     octTree.callOnAllOctTreeObject(&OctTreeFunc::hideIfInFrustum, &camera.frustum);
 
-	rl::Ray hitRay(camera.lookVec(), camera.position);
-	 
-	rlgl::Object* hitObj = nullptr;
-	if (octTree.hitTest(hitRay, (void**)&hitObj)) {
-		if (lastHitObj && (lastHitObj != hitObj)) lastHitObj->setHighlight(false);
-
-		hitObj->rotate(0.01f, glm::vec3(0.f, 0.f, 1.f));
-		hitObj->setHighlight(true);	
-		lastHitObj = hitObj;
-	}
-	else {
-		if (lastHitObj) lastHitObj->setHighlight(false);
-	}
-
-
+    updateHitTestOctTree();
+    updateCubes();
 
 
     return 0;
@@ -156,6 +161,42 @@ void MyApp::processInput(GLFWwindow* window) {
 
     BaseApp::processInput(window);
 }
+
+/*!
+    Performs hittest on objects in OctTree
+    - spins and highligh object if hit
+*/
+void MyApp::updateHitTestOctTree() {
+    rl::Ray hitRay(camera.lookVec(), camera.position);
+    rlgl::Object* hitObj = nullptr;
+    if (octTree.hitTest(hitRay, (void**)&hitObj)) {
+        if (lastHitObj && (lastHitObj != hitObj)) lastHitObj->setHighlight(false);
+
+        hitObj->rotate(0.01f, glm::vec3(0.f, 0.f, 1.f));
+        hitObj->setHighlight(true);
+        lastHitObj = hitObj;
+    }
+    else {
+        if (lastHitObj) lastHitObj->setHighlight(false);
+    }
+}
+
+
+void MyApp::updateCubes() {
+
+    double curTime = glfwGetTime();
+    for (rlgl::Object* obj : objects.cubes) {
+
+        obj->translate(glm::vec3(0.1f * glm::sin(curTime * 2.5f), 0.f, 0.f));
+        rl::BoundingBox bbox = rl::BoundingBox::createCubeBoundingBox(obj->getPosition(), BOX_WIDTH);
+
+        octTree.moveObject(obj, bbox);
+    }
+
+
+
+}
+
 
 void OctTreeFunc::hideIfInFrustum(void* object, const rl::BoundingBox& bbox, void* frustumPtr) {
     const rlgl::Frustum& frustum = *(rlgl::Frustum*)frustumPtr;

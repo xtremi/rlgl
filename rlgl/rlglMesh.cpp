@@ -8,7 +8,12 @@ void Mesh::bind() const {
 
 void Mesh::draw() const {
 	if(!hasIndices){
-		glDrawArrays(GL_TRIANGLES, 0, nVertices);
+		if(!hasInstances){
+			glDrawArrays(GL_TRIANGLES, 0, nVertices);
+		}
+		else {
+			glDrawArraysInstanced(GL_TRIANGLES, 0, nVertices, 500);
+		}
 	}
 	else{
 		glDrawElements(GL_TRIANGLES, nElements, GL_UNSIGNED_INT, 0);
@@ -27,6 +32,7 @@ void Mesh::initialize() {
 	if (hasNormals) stride += 3;
 	if (hasColours) stride += 3;
 	if (hasTexCoords) stride += 2;
+	//if (hasInstances) stride += 3;
 
 	int startIndex = 0;
 
@@ -63,6 +69,16 @@ void Mesh::initialize() {
 		indices.bufferData(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
 	}
 
+	//indices:
+	if (hasInstances) {
+		instances.genBuffer();
+		instances.bindBuffer(GL_ARRAY_BUFFER);
+		instances.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(4);
+		glVertexAttribDivisor(4, 1);
+	}
+
 }
 
 
@@ -78,7 +94,8 @@ Mesh rlgl::primitive_mesh::plane_textureX10 = {
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
     }),
-	0, true, false, true, true, 4, 6
+	rlgl::GLBuffer<float>({}),
+	0, true, false, true, true, false, 4, 6
 	
 };
 
@@ -94,7 +111,8 @@ Mesh rlgl::primitive_mesh::plane = {
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
     }),
-    0, true, false, true, true, 4, 6
+	rlgl::GLBuffer<float>({}),
+    0, true, false, true, true, false, 4, 6
 
 };
 
@@ -110,7 +128,8 @@ Mesh rlgl::primitive_mesh::square = {
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
 	}),
-	0, true, false, false, false, 4, 6
+	rlgl::GLBuffer<float>({}),
+	0, true, false, false, false, false, 4, 6
 
 };
 
@@ -159,7 +178,8 @@ Mesh rlgl::primitive_mesh::cube_tex{
         -0.5f,  0.5f, -0.5f,   1.0f, 0.f, 0.f,   0.0f, 1.0f
      }),
     rlgl::GLBuffer<GLuint>({}),
-	0, false, false, true, true, 36, 12
+	rlgl::GLBuffer<float>({}),
+	0, false, false, true, true, false, 36, 12
 };
 
 
@@ -208,5 +228,6 @@ Mesh rlgl::primitive_mesh::cube{
 		-0.5f,  0.5f, -0.5f,   0.f, 1.f, 0.f,
 	 }),
 	rlgl::GLBuffer<GLuint>({}),
-	0, false, true, false, false, 36, 12
+	rlgl::GLBuffer<float>({}),
+	0, false, true, false, false, false, 36, 12
 };

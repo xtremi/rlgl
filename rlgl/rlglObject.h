@@ -29,6 +29,9 @@ public:
 	bool isInView();
 	void setInViewState(bool state);
 
+	glm::vec3 getPosition() const  { return position; }
+
+
 public:
 	uint64_t meshID;
 	uint64_t shaderID;

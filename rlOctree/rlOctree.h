@@ -61,25 +61,23 @@ public:
 		root = new OctreeItem(nullptr, "0", 
 			BoundingBox::createCubeBoundingBox(octStruct.center, octStruct.size * 2.f), nullptr);
 	}
+	OctreeStruct octStruct;
 	std::unordered_map<void*, OctreeItem*> octStructTreeItemMap;
-	OctreeStruct		   octStruct;
 	OctreeItem* root = nullptr;
 
-	OctreeItem* addObject(void* obj, const BoundingBox& bbox);
+	OctreeItem*		   addObject(void* obj, const BoundingBox& bbox);
 	void			   moveObject(void* obj, const BoundingBox& bbox);
 	std::vector<void*> getObjects(const BoundingBox& bbox);
 	std::vector<void*> getObjects(const std::string& address);
 	void               removeObject(void* obj);
 	bool               hitTest(const rl::Ray& ray, void** data);
 	std::string        getBoundingBoxAddress(const BoundingBox& bbox);
+	void			   callOnAllOctTreeObject(void (*func)(void*, const BoundingBox&, void*), void* customData = nullptr);
 
 	std::string toStr();
 
-	std::unordered_map<void*, OctreeItem*>::const_iterator objectIt;
-
 protected:
 	bool hitTest(const OctreeItem* item, const rl::Ray& ray, void** data);
-
 
 };
 

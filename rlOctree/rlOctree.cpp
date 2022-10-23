@@ -299,3 +299,26 @@ bool Octree::hitTest(const rl::Ray& ray, void** data) {
 	return hitTest(root, ray, data);
 }
 
+/*!
+	Iterates over all objects (OctTreeObjects) in OctTree
+	and performs the function func on the form: 
+		void func(void* data, const BoundingBox& bbox, void* customData)
+	passed to this function.
+
+	Where:
+		- data* is the data* of the object previously added to the tree with addObject().
+		- bbox is the bounding box defined for the added object
+		- customData* is any data useful for the function
+*/
+void Octree::callOnAllOctTreeObject(void (*func)(void*, const BoundingBox&, void*), void* customData) {
+
+	auto it = octStructTreeItemMap.begin();
+	for (it; it != octStructTreeItemMap.end(); it++) {
+
+		auto it2 = it->second->objects.begin();
+		for (it2; it2 != it->second->objects.end(); it2++) {
+			func(it2->data, it2->bbox, customData);
+		}
+	}
+
+}

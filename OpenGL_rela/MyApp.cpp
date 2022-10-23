@@ -23,7 +23,6 @@ void MyApp::prepareAssets() {
     assetIDs.material.checker = scene.addMaterial(materialChecker);
     assetIDs.material.box = scene.addMaterial(materialBox);
 
-
     rlgl::Shader shaderTextured, shaderColored, uiShader;
     shaderTextured.initialize("..\\data\\shaders\\object.vs", "..\\data\\shaders\\object.fs");
     shaderTextured.setInt("textureID", materialChecker.glID);
@@ -46,7 +45,6 @@ int MyApp::prepareScene() {
     secondaryCam.aspectRatio = windowParams().aspect();
 
     prepareAssets();
-    
     createWorld();
     createBoxes();
     createCSYS();
@@ -117,23 +115,8 @@ int MyApp::updateScene() {
 
     double curTime = glfwGetTime();
 
-	/************************/
-	camera.computeFrustum();
-	auto it = octTree.octStructTreeItemMap.begin();
-	for (it; it != octTree.octStructTreeItemMap.end(); it++) {
-
-		auto it2 = it->second->objects.begin();
-		for (it2; it2 != it->second->objects.end(); it2++) {
-        rlgl::Object* obj = (rlgl::Object*)it->first;
-
-			if (!rlgl::isInFrustum(camera.frustum, obj->bb)) {
-				((rlgl::Object*)it2->data)->setInViewState(false);
-			}
-
-	}
-	}
-	/************************/
-
+    camera.computeFrustum();
+    octTree.callOnAllOctTreeObject(&OctTreeFunc::hideIfInFrustum, &camera.frustum);
 
 	rl::Ray hitRay(camera.lookVec(), camera.position);
 	 
@@ -157,15 +140,7 @@ int MyApp::updateScene() {
 
 int MyApp::postRender(){
 
-	camera.computeFrustum();
-	auto it = octTree.octStructTreeItemMap.begin();
-	for (it; it != octTree.octStructTreeItemMap.end(); it++) {
-
-		auto it2 = it->second->objects.begin();
-		for (it2; it2 != it->second->objects.end(); it2++) {
-			((rlgl::Object*)it2->data)->setInViewState(true);
-		}
-	}
+    octTree.callOnAllOctTreeObject(OctTreeFunc::unhide);
 	return 0;
 }
 
@@ -181,3 +156,14 @@ void MyApp::processInput(GLFWwindow* window) {
 
     BaseApp::processInput(window);
 }
+
+void OctTreeFunc::hideIfInFrustum(void* object, const rl::BoundingBox& bbox, void* frustumPtr) {
+    const rlgl::Frustum& frustum = *(rlgl::Frustum*)frustumPtr;
+    if (!rlgl::isInFrustum(frustum, bbox)) {
+        ((rlgl::Object*)object)->setInViewState(false);
+    }
+}
+void OctTreeFunc::unhide(void* object, const rl::BoundingBox& bbox, void*) {
+    ((rlgl::Object*)object)->setInViewState(true);
+}
+

@@ -78,7 +78,9 @@ void Renderer::render(
 
 bool rlgl::isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox) {
 
-	std::vector<glm::vec3> bboxCorners = bbox.corners();
+	//std::vector<glm::vec3> bboxCorners = bbox.corners();
+	std::vector<glm::vec3> bboxCorners({bbox.minC, bbox.maxC});
+
 	for (const glm::vec3& corner : bboxCorners) {
 
 		bool cornerInFrustum = true;

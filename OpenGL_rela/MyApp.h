@@ -8,7 +8,7 @@ struct AssetIDs {
 		uint64_t world, cubeTex, cube, square, cubeInst;
 	};
 	struct Materials {
-		uint64_t checker, box;
+		uint64_t checker, box, boxMetal;
 	};
 	struct Shaders {
 		uint64_t textured, colored, ui, inst;

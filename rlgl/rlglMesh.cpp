@@ -12,7 +12,7 @@ void Mesh::draw() const {
 			glDrawArrays(GL_TRIANGLES, 0, nVertices);
 		}
 		else {
-			glDrawArraysInstanced(GL_TRIANGLES, 0, nVertices, 500);
+			glDrawArraysInstanced(GL_TRIANGLES, 0, nVertices, 1e5);
 		}
 	}
 	else{
@@ -37,28 +37,32 @@ void Mesh::initialize() {
 	int startIndex = 0;
 
 	//position:
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)startIndex);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)startIndex);
+	
 	startIndex += 3;
 
 	//normals:
 	if (hasNormals) {
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(startIndex * sizeof(float)));
 		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(startIndex * sizeof(float)));
+		
 		startIndex += 3;
 	}
 
 	//color:
 	if(hasColours){
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(startIndex * sizeof(float)));
 		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(startIndex * sizeof(float)));
+		
 		startIndex += 3;
 	}
 
 	//texture:
 	if(hasTexCoords){
-		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(startIndex * sizeof(float)));
 		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(startIndex * sizeof(float)));
+		
 		startIndex += 2;
 	}
 
@@ -69,13 +73,14 @@ void Mesh::initialize() {
 		indices.bufferData(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
 	}
 
-	//indices:
+	//instances:
 	if (hasInstances) {
 		instances.genBuffer();
 		instances.bindBuffer(GL_ARRAY_BUFFER);
 		instances.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		
 		glVertexAttribDivisor(4, 1);
 	}
 

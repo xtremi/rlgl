@@ -21,12 +21,14 @@ void MyApp::prepareAssets() {
     assetIDs.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
     assetIDs.mesh.square = uiScene.addMesh(&rlgl::primitive_mesh::square);
 
-    rlgl::Material materialChecker, materialBox;
+    rlgl::Material materialChecker, materialBox, materialBoxMetal;
     materialChecker.initialize("..\\data\\textures\\checker_grey.jpg", true);
     materialBox.initialize("..\\data\\textures\\box-texture.png", false);
+    materialBoxMetal.initialize("..\\data\\textures\\box_metal.jpg", false);
 
     assetIDs.material.checker = scene.addMaterial(materialChecker);
     assetIDs.material.box = scene.addMaterial(materialBox);
+    assetIDs.material.boxMetal = scene.addMaterial(materialBoxMetal);
 
     rlgl::Shader shaderTextured, shaderColored, shaderInst, uiShader;
     shaderTextured.initialize("..\\data\\shaders\\object.vs", "..\\data\\shaders\\object.fs");
@@ -37,8 +39,9 @@ void MyApp::prepareAssets() {
 
     assetIDs.shader.textured = scene.addShader(shaderTextured);
     assetIDs.shader.colored = scene.addShader(shaderColored);
+    assetIDs.shader.inst = scene.addShader(shaderInst);
+
     assetIDs.shader.ui = uiScene.addShader(uiShader);
-    assetIDs.shader.inst = uiScene.addShader(shaderInst);
 }
 
 
@@ -84,16 +87,16 @@ void MyApp::createBoxes() {
     rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 150.f, 5);
     octTree = rl::Octree(octStruct);
 
-    int nBoxes = 500;
+    int nBoxes = 100;
     glm::vec3 boxPos;
     rl::BoundingBox bbox;
     float boxSize = BOX_WIDTH;
     for (int i = 0; i < nBoxes; i++) {
 
         boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
-        cubeTexInstMesh.instances.data.push_back(boxPos.z + 5.f);
-        cubeTexInstMesh.instances.data.push_back(boxPos.x + 5.f);
-        cubeTexInstMesh.instances.data.push_back(boxPos.y + 5.f);
+        //cubeTexInstMesh.instances.data.push_back(boxPos.x + 5.f);
+        //cubeTexInstMesh.instances.data.push_back(boxPos.y + 5.f);
+        //cubeTexInstMesh.instances.data.push_back(boxPos.z + 5.f);
 
         bbox = rl::BoundingBox::createCubeBoundingBox(boxPos, boxSize);
 
@@ -104,13 +107,19 @@ void MyApp::createBoxes() {
         scene.addObject(objects.cubes[i]);
     }
 
+    for (int i = 0; i < 1e5; i++) {
+        boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
+        cubeTexInstMesh.instances.data.push_back(boxPos.x + 5.f);
+        cubeTexInstMesh.instances.data.push_back(boxPos.y + 5.f);
+        cubeTexInstMesh.instances.data.push_back(boxPos.z + 5.f);
+    }
     cubeTexInstMesh.hasInstances = true;
     cubeTexInstMesh.initialize();
     assetIDs.mesh.cubeInst = scene.addMesh(&cubeTexInstMesh);
 
-    objects.instObj = new rlgl::Object(assetIDs.mesh.cubeInst, assetIDs.shader.inst, assetIDs.material.box);
+    objects.instObj = new rlgl::Object(assetIDs.mesh.cubeInst, assetIDs.shader.inst, assetIDs.material.boxMetal);
     objects.instObj->setPosition(glm::vec3(0.f));
-    objects.instObj->setScale(glm::vec3(boxSize /2.f));
+    objects.instObj->setScale(glm::vec3(boxSize /32.f));
     scene.addObject(objects.instObj);
 }
 

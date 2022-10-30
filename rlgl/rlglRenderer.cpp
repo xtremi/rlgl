@@ -56,15 +56,13 @@ void Renderer::render(
 		if(currentMaterial->glID != lastUsedMaterialID){
 			glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
 			glBindTexture(GL_TEXTURE_2D, currentMaterial->glID);
-			//currentShader->setInt("textureID", currentMaterial->glID);
 		}
 	}
-
 
 	if(currentMesh->VAO != lastUsedMeshID){
 		currentMesh->bind();
 	}
-	currentMesh->draw();
+	currentMesh->draw(obj->nInstances());
 
 
 	lastUsedShaderID = currentShader->glID;

@@ -6,13 +6,13 @@ void Mesh::bind() const {
 	glBindVertexArray(VAO);
 }
 
-void Mesh::draw() const {
+void Mesh::draw(int32_t nInst) const {
 	if(!hasIndices){
 		if(!hasInstances){
 			glDrawArrays(GL_TRIANGLES, 0, nVertices);
 		}
 		else {
-			glDrawArraysInstanced(GL_TRIANGLES, 0, nVertices, 1e5);
+			glDrawArraysInstanced(GL_TRIANGLES, 0, nVertices, (GLsizei)nInst);
 		}
 	}
 	else{
@@ -79,9 +79,18 @@ void Mesh::initialize() {
 		instances.bindBuffer(GL_ARRAY_BUFFER);
 		instances.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(1 * 4 * sizeof(float)));
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(2 * 4 * sizeof(float)));
+		glEnableVertexAttribArray(7);
+		glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(3 * 4 * sizeof(float)));
 		
 		glVertexAttribDivisor(4, 1);
+		glVertexAttribDivisor(5, 1);
+		glVertexAttribDivisor(6, 1);
+		glVertexAttribDivisor(7, 1);
 	}
 
 }

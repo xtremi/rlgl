@@ -32,6 +32,9 @@ public:
 	glm::vec3 getPosition() const  { return position; }
 
 
+	int32_t nInstances() const { return _nInstances; }
+	void setNinstances(int32_t n) { _nInstances = n; }
+
 public:
 	uint64_t meshID;
 	uint64_t shaderID;
@@ -41,13 +44,14 @@ protected:
 	bool _isInView		   = true;
 	bool _hasColor         = false;
 	bool _hasHighlight     = false;
-	//rl::BoundingBox	bbox;
+	int32_t	_nInstances    = -1;
 	glm::vec4 color		   = glm::vec4(1.f);
 	glm::vec3 scaleVec	   = glm::vec3(1.f);
 	glm::vec3 position	   = glm::vec3(0.f);
 	glm::vec3 rotAxis	   = glm::vec3(1.f, 0.f, 0.f);
 	glm::mat4 _modelMatrix = glm::mat4(1.f);
 	float rotAngle         = 0.f;
+	
 	
 	bool needMatrixRecalculation = true;
 };

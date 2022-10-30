@@ -39,7 +39,7 @@ class Mesh
 public:
 	void initialize();
 	void bind() const;
-	void draw() const;
+	void draw(int32_t nInstances = 0) const;
 
     GLBuffer<float>  vertices;
     GLBuffer<GLuint> indices;

@@ -107,19 +107,24 @@ void MyApp::createBoxes() {
         scene.addObject(objects.cubes[i]);
     }
 
-    for (int i = 0; i < 1e5; i++) {
+    int nInstances = 1e4;
+    for (int i = 0; i < nInstances; i++) {
         boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
-        cubeTexInstMesh.instances.data.push_back(boxPos.x + 5.f);
-        cubeTexInstMesh.instances.data.push_back(boxPos.y + 5.f);
-        cubeTexInstMesh.instances.data.push_back(boxPos.z + 5.f);
+        glm::mat4 tMat = glm::translate(glm::mat4(1.f), boxPos);
+        glm::mat4 sMat = glm::scale(glm::mat4(1.f), glm::vec3(0.25f));
+        glm::mat4 mMat = tMat * sMat;
+        for (int j = 0; j < 4; j++) {
+            for (int k = 0; k < 4; k++) {
+                cubeTexInstMesh.instances.data.push_back(mMat[j][k]);
+            }
+        }
     }
     cubeTexInstMesh.hasInstances = true;
     cubeTexInstMesh.initialize();
     assetIDs.mesh.cubeInst = scene.addMesh(&cubeTexInstMesh);
 
     objects.instObj = new rlgl::Object(assetIDs.mesh.cubeInst, assetIDs.shader.inst, assetIDs.material.boxMetal);
-    objects.instObj->setPosition(glm::vec3(0.f));
-    objects.instObj->setScale(glm::vec3(boxSize /32.f));
+    objects.instObj->setNinstances(nInstances);
     scene.addObject(objects.instObj);
 }
 

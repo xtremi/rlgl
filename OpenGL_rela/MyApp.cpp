@@ -20,6 +20,7 @@ void MyApp::prepareAssets() {
     assetIDs.mesh.cubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
     assetIDs.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
     assetIDs.mesh.square = uiScene.addMesh(&rlgl::primitive_mesh::square);
+    assetIDs.mesh.terrainDummy = uiScene.addMesh(&rlgl::primitive_mesh::terrainDummy);
 
     rlgl::Material materialChecker, materialBox, materialBoxMetal;
     materialChecker.initialize("..\\data\\textures\\checker_grey.jpg", true);
@@ -47,6 +48,8 @@ void MyApp::prepareAssets() {
 
 int MyApp::prepareScene() {
 
+    lodControl = rlgl::LODcontroller(5.f, 3);
+
     secondaryCam.aspectRatio = windowParams().aspect();
 
     secondaryCam.position = glm::vec3(70.f);
@@ -56,6 +59,7 @@ int MyApp::prepareScene() {
 
     prepareAssets();
     createWorld();
+    createLODterrain();
     createBoxes();
     createCSYS();
     createUI();
@@ -126,7 +130,48 @@ void MyApp::createBoxes() {
     objects.instObj = new rlgl::Object(assetIDs.mesh.cubeInst, assetIDs.shader.inst, assetIDs.material.boxMetal);
     objects.instObj->setNinstances(nInstances);
     scene.addObject(objects.instObj);
+
 }
+
+void MyApp::createLODterrain() {
+    
+    rlgl::Object* terrainQuad_0 = new rlgl::Object(assetIDs.mesh.terrainDummy, assetIDs.shader.colored, INT64_MAX);
+    objects.terrainLODquads.push_back(terrainQuad_0);
+
+    glm::vec3 quadPos = glm::vec3(lodControl.quadPosition(rlgl::LODloc::center, 0), 50.f);
+    terrainQuad_0->setPosition(quadPos);
+    terrainQuad_0->setScale(glm::vec3(lodControl.quadSideLength(0)));
+    terrainQuad_0->setColor(glm::vec4(1.f, 0.5f, 0.5f, 1.f));
+    scene.addObject(terrainQuad_0);
+
+    std::vector<glm::vec4> colors({
+        glm::vec4(1.f, 0.f, 0.f, 1.f),
+        glm::vec4(0.f, 1.f, 0.f, 1.f),
+        glm::vec4(1.f, 0.f, 1.f, 1.f),
+        glm::vec4(1.f, 1.f, 0.f, 1.f) });
+    for (int i = 0; i < lodControl.levels(); i++) { //level
+
+        for (int j = 0; j < 8; j++) { //location
+
+            rlgl::LODloc loc = (rlgl::LODloc)j;
+
+            rlgl::Object* terrainQuad = new rlgl::Object(assetIDs.mesh.terrainDummy, assetIDs.shader.colored, INT64_MAX);
+            objects.terrainLODquads.push_back(terrainQuad);
+
+            glm::vec3 quadPos = glm::vec3(lodControl.quadPosition(loc, i), 10.f);
+            terrainQuad->setPosition(quadPos);
+            
+            glm::vec2 quadSize(lodControl.quadSideLength(i));
+            terrainQuad->setScale(glm::vec3(quadSize, 1.f));
+            terrainQuad->setColor(colors[i]);
+            scene.addObject(terrainQuad);
+
+        }
+       
+    }
+
+}
+
 
 void MyApp::createCSYS() {
     float axesL = 5.f;

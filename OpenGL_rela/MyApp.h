@@ -1,11 +1,11 @@
 #pragma once
 #include "rlglBaseApp.h"
 #include "rlOctree.h"
-
+#include "rlglLodController.h"
 
 struct AssetIDs {
 	struct Meshes {
-		uint64_t world, cubeTex, cube, square, cubeInst;
+		uint64_t world, cubeTex, cube, square, cubeInst, terrainDummy;
 	};
 	struct Materials {
 		uint64_t checker, box, boxMetal;
@@ -24,6 +24,8 @@ struct WorldObjects {
 	std::vector<rlgl::Object*> cubes;
 	std::vector<rlgl::Object*> axes;
 	rlgl::Object*			   instObj;
+
+	std::vector<rlgl::Object*>  terrainLODquads;
 };
 
 struct UIobjects {
@@ -36,7 +38,9 @@ public:
 
 protected:
 	rl::Octree	 octTree;
+	rlgl::LODcontroller lodControl;
 	rlgl::Camera secondaryCam;
+
 	WorldObjects objects;
 	UIobjects	 uiObjects;
 	AssetIDs	 assetIDs;
@@ -48,10 +52,11 @@ protected:
 	void processInput(GLFWwindow* window);	//inherited from BaseApp
 
 	//initialization
-	void prepareAssets();
+	void prepareAssets();	
 	void createWorld();
 	void createUI();
 	void createBoxes();
+	void createLODterrain();
 	void createCSYS();
 
 	//update
@@ -60,7 +65,6 @@ protected:
 
 private:
 	static const float BOX_WIDTH;
-
 };
 
 /*!

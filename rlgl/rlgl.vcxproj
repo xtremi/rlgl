@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="rlglCamera.h" />
     <ClInclude Include="rlglErrors.h" />
+    <ClInclude Include="rlglLodController.h" />
     <ClInclude Include="rlglMaterial.h" />
     <ClInclude Include="rlglMesh.h" />
     <ClInclude Include="rlglObject.h" />
@@ -32,6 +33,7 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="rlglCamera.cpp" />
+    <ClCompile Include="rlglLodController.cpp" />
     <ClCompile Include="rlglMaterial.cpp" />
     <ClCompile Include="rlglMesh.cpp" />
     <ClCompile Include="rlglObject.cpp" />

@@ -336,6 +336,12 @@ void Octree::callOnOctTreeObjects(bool (*func)(void*, const BoundingBox&, void*)
 
 void  Octree::callOnOctTreeObjects2(bool (*func)(void*, const BoundingBox&, void*), void* customData, rl::OctreeItem* item) {
 
+	if (func(nullptr, item->boundingBox, customData)) {
+		auto it = item->children.begin();
+		for (it; it != item->children.end(); it++) {
+			callOnOctTreeObjects2(func, customData, it->second);
+		}
 
+	}
 
 }

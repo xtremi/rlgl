@@ -306,7 +306,9 @@ void OctTreeFunc::hideIfInFrustum(void* object, const rl::BoundingBox& bbox, voi
 bool OctTreeFunc::isInFrustumOrHide(void* object, const rl::BoundingBox& bbox, void* frustumPtr) {
     const rlgl::Frustum& frustum = *(rlgl::Frustum*)frustumPtr;
     if (!rlgl::isInFrustum(frustum, bbox)) {
-        ((rlgl::Object*)object)->setInViewState(false);
+        if (object) {
+            ((rlgl::Object*)object)->setInViewState(false);
+        }
         return false;
     }
     return true;

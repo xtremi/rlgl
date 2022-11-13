@@ -319,7 +319,23 @@ void Octree::callOnAllOctTreeObject(void (*func)(void*, const BoundingBox&, void
 		auto it2 = it->second->objects.begin();
 		for (it2; it2 != it->second->objects.end(); it2++) {
 			func(it2->data, it2->bbox, customData);
+
 		}
 	}
+
+}
+
+
+void Octree::callOnOctTreeObjects(bool (*func)(void*, const BoundingBox&, void*), void* customData) {
+
+	auto it = root->children.begin();
+	for (it; it != root->children.end(); it++) {
+		callOnOctTreeObjects2(func, customData, it->second);
+	}
+}
+
+void  Octree::callOnOctTreeObjects2(bool (*func)(void*, const BoundingBox&, void*), void* customData, rl::OctreeItem* item) {
+
+
 
 }

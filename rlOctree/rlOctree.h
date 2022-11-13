@@ -24,7 +24,7 @@ namespace rl{
 class OctreeItem {
 public:
 	OctreeItem(
-		OctreeItem*	   _parent,
+		OctreeItem*			   _parent,
 		const std::string&	   _address, 
 		const rl::BoundingBox& _boundingBox,
 		const OctreeObject* object = nullptr)
@@ -34,9 +34,9 @@ public:
 		if (parent) parent->children[address] = this;
 	}
 	std::set<OctreeObject> objects;
-	std::string				  address;
-	OctreeItem*		  parent;
-	rl::BoundingBox			  boundingBox;
+	std::string			   address;
+	OctreeItem*			   parent;
+	rl::BoundingBox		   boundingBox;
 	std::unordered_map<std::string, OctreeItem*> children;
 
 	OctreeItem* insertObject(
@@ -72,12 +72,17 @@ public:
 	void               removeObject(void* obj);
 	bool               hitTest(const rl::Ray& ray, void** data);
 	std::string        getBoundingBoxAddress(const BoundingBox& bbox);
+
 	void			   callOnAllOctTreeObject(void (*func)(void*, const BoundingBox&, void*), void* customData = nullptr);
+	void			   callOnOctTreeObjects(bool (*func)(void*, const BoundingBox&, void*), void* customData = nullptr);
 
 	std::string toStr();
 
 protected:
 	bool hitTest(const OctreeItem* item, const rl::Ray& ray, void** data);
+	void callOnOctTreeObjects2(bool (*func)(void*, const BoundingBox&, void*), void* customData, rl::OctreeItem* item);
+
+
 
 };
 

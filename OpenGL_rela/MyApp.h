@@ -47,7 +47,7 @@ class MyApp : public rlgl::BaseApp
 public:
 
 protected:
-	rl::Octree	 octTree;
+	rl::Octree			octTree;
 	rlgl::LODcontroller lodControl;
 	rlgl::Camera secondaryCam;
 
@@ -83,6 +83,7 @@ private:
 */
 namespace OctTreeFunc{
 	void hideIfInFrustum(void* object, const rl::BoundingBox& bbox, void* frustumPtr);
+	bool isInFrustumOrHide(void* object, const rl::BoundingBox& bbox, void* frustumPtr);
 	void unhide(void* object, const rl::BoundingBox& bbox, void*);
 }
 

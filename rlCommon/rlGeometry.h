@@ -28,6 +28,7 @@ namespace rl {
 		BoundingBox() {}
 
 		static BoundingBox createCubeBoundingBox(const glm::vec3& center, float width);
+		static BoundingBox createCubeBoundingBox(const glm::vec3& center, const glm::vec3& size);
 		std::vector<glm::vec3> corners() const;
 	};
 

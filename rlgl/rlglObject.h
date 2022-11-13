@@ -31,6 +31,7 @@ public:
 	void setInViewState(bool state);
 
 	glm::vec3 getPosition() const  { return position; }
+	glm::vec3 getScale() const  { return scaleVec; }
 
 
 	int32_t nInstances() const { return _nInstances; }

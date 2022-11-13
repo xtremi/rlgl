@@ -54,7 +54,7 @@ void MyApp::prepareAssets() {
 
 int MyApp::prepareScene() {
 
-    lodControl = rlgl::LODcontroller(glm::vec3(0.f), 5.f, 4, 0.5);
+    lodControl = rlgl::LODcontroller(glm::vec3(0.f), 15.f, 4, 0.5);
 
     secondaryCam.aspectRatio = windowParams().aspect();
 
@@ -93,8 +93,7 @@ void MyApp::createUI() {
 }
 
 void MyApp::createBoxes() {
-
-    rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 150.f, 5);
+    rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 350.f, 5);
     octTree = rl::Octree(octStruct);
 
     int nBoxes = 100;
@@ -104,9 +103,6 @@ void MyApp::createBoxes() {
     for (int i = 0; i < nBoxes; i++) {
 
         boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
-        //cubeTexInstMesh.instances.data.push_back(boxPos.x + 5.f);
-        //cubeTexInstMesh.instances.data.push_back(boxPos.y + 5.f);
-        //cubeTexInstMesh.instances.data.push_back(boxPos.z + 5.f);
 
         bbox = rl::BoundingBox::createCubeBoundingBox(boxPos, boxSize);
 
@@ -148,9 +144,13 @@ void MyApp::createLODterrain() {
 
     glm::vec3 quadPos = glm::vec3(lodControl.quadPosition(rlgl::LODloc::center, 0), zpos);
     terrainQuad_0->setPosition(quadPos);
-    terrainQuad_0->setScale(glm::vec3(lodControl.quadSideLength(0)));
+
+    float quadSize = lodControl.quadSideLength(0);
+    terrainQuad_0->setScale(glm::vec3(quadSize, quadSize, 1.f));
     terrainQuad_0->setColor(glm::vec4(1.f, 0.5f, 0.5f, 1.f));
     scene.addObject(terrainQuad_0);
+
+    rl::BoundingBox bbox = rl::BoundingBox::createCubeBoundingBox(glm::vec3(quadPos), glm::vec3(quadSize, quadSize, 1.f));
 
     std::vector<glm::vec3> colors({
         glm::vec3(1.f, 0.f, 0.f),
@@ -166,14 +166,13 @@ void MyApp::createLODterrain() {
             TerrainQuadObject* terrainQuad = new TerrainQuadObject(assetIDs.mesh.terrainDummy, assetIDs.shader.colored, i, loc);
             objects.terrainLODquads.push_back(terrainQuad);
 
-            glm::vec3 quadPos = glm::vec3(lodControl.quadPosition(loc, i), zpos);
+            quadPos = glm::vec3(lodControl.quadPosition(loc, i), zpos);
             terrainQuad->setPosition(quadPos);
             
-            glm::vec2 quadSize(lodControl.quadSideLength(i));
-            terrainQuad->setScale(glm::vec3(quadSize, 1.f));
+            quadSize = lodControl.quadSideLength(i);
+            terrainQuad->setScale(glm::vec3(quadSize, quadSize, 1.f));
             terrainQuad->setColor(colors[i] * 0.1f * (float)(j + 1));
             scene.addObject(terrainQuad);
-
         }
        
     }
@@ -203,6 +202,7 @@ int MyApp::updateScene() {
     camera.computeFrustum();
     octTree.callOnAllOctTreeObject(&OctTreeFunc::hideIfInFrustum, &camera.frustum);
 
+
     updateHitTestOctTree();
     updateCubes();
     updateTerrainLOD();
@@ -213,6 +213,11 @@ int MyApp::updateScene() {
 int MyApp::postRender(){
 
     octTree.callOnAllOctTreeObject(OctTreeFunc::unhide);
+    for (rlgl::Object* obj : objects.terrainLODquads) {
+        obj->setInViewState(true);
+    }
+
+
 	return 0;
 }
 
@@ -232,12 +237,21 @@ void MyApp::processInput(GLFWwindow* window) {
 
 void MyApp::updateTerrainLOD() {
 
+    for (rlgl::Object* obj : objects.terrainLODquads) {
+        rl::BoundingBox bbox = rl::BoundingBox::createCubeBoundingBox(obj->getPosition(), obj->getScale());
+        if (!rlgl::isInFrustum(camera.frustum, bbox)) {
+            (obj->setInViewState(false));
+        }
+    }
+
+
     if (lodControl.outOfCenterLimit(camera.position)) {
 
         lodControl.setCenterPosition(camera.position);
 
         for (TerrainQuadObject* tobj : objects.terrainLODquads) {
             tobj->setPosition(glm::vec3(lodControl.quadPosition(tobj->loc, tobj->level), 1.f));
+
         }
 
 
@@ -288,6 +302,17 @@ void OctTreeFunc::hideIfInFrustum(void* object, const rl::BoundingBox& bbox, voi
         ((rlgl::Object*)object)->setInViewState(false);
     }
 }
+
+bool OctTreeFunc::isInFrustumOrHide(void* object, const rl::BoundingBox& bbox, void* frustumPtr) {
+    const rlgl::Frustum& frustum = *(rlgl::Frustum*)frustumPtr;
+    if (!rlgl::isInFrustum(frustum, bbox)) {
+        ((rlgl::Object*)object)->setInViewState(false);
+        return false;
+    }
+    return true;
+}
+
+
 void OctTreeFunc::unhide(void* object, const rl::BoundingBox& bbox, void*) {
     ((rlgl::Object*)object)->setInViewState(true);
 }

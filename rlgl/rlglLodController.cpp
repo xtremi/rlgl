@@ -27,10 +27,10 @@ using namespace rlgl;
 glm::vec2 LODcontroller::quadPosition(LODloc loc, int level) const {
 
     float length = m_centerQuadSideLength * glm::pow(3, level);    //length to end of level
-    return LODlocUnitDir(loc) * length;
+    return LODlocUnitDir(loc) * length + glm::vec2(m_pos.x, m_pos.y);
 }
 
-double LODcontroller::quadSideLength(int level) const {
+float LODcontroller::quadSideLength(int level) const {
     return m_centerQuadSideLength * glm::pow(3, level);
 }
 

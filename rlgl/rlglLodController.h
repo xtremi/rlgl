@@ -42,13 +42,13 @@ namespace rlgl {
             : m_pos{ pos }, m_centerQuadSideLength{ centerQuadSize },
             m_levels{ levels }, m_centerLimitDistanceFactor{ centerLimitDistanceFactor }{}
 
-        void setCenterPosition(const glm::vec3& pos) { m_pos = pos; }
-        bool outOfCenterLimit(const glm::vec3& pos) const;
+        void      setCenterPosition(const glm::vec3& pos) { m_pos = pos; }
 
+        bool      outOfCenterLimit(const glm::vec3& pos) const;
+        int       levels() const { return m_levels; }
+        glm::vec2 quadPosition(LODloc loc, int level) const;
+        float     quadSideLength(int level) const;
 
-        int              levels() const { return m_levels; }
-        glm::vec2        quadPosition(LODloc loc, int level) const;
-        double           quadSideLength(int level) const;
         static glm::vec2 LODlocUnitDir(LODloc loc);
 
 	private:

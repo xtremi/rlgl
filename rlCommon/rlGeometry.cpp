@@ -37,15 +37,15 @@ std::vector<glm::vec3> BoundingBox::corners() const {
 	glm::vec3 bsize = size();
 
 	size_t i = 0;
-	coords[i++] = minC;
-	coords[i++] = minC + glm::vec3(bsize.x, 0.f, 0.f);
-	coords[i++] = minC + glm::vec3(bsize.x, bsize.y, 0.f);
-	coords[i++] = minC + glm::vec3(0.f, bsize.y, 0.f);
+	coords[0] = minC;
+	coords[1] = minC + glm::vec3(bsize.x, 0.f, 0.f);
+	coords[2] = minC + glm::vec3(bsize.x, bsize.y, 0.f);
+	coords[3] = minC + glm::vec3(0.f, bsize.y, 0.f);
 
-	coords[i++] = minC + glm::vec3(0.f, 0.f, bsize.z);
-	coords[i++] = minC + glm::vec3(bsize.x, 0.f, bsize.z);
-	coords[i++] = maxC;
-	coords[i++] = maxC + glm::vec3(0.f, bsize.y, bsize.z);
+	coords[4] = coords[0] + glm::vec3(0.f, 0.f, bsize.z);
+	coords[5] = coords[1] + glm::vec3(0.f, 0.f, bsize.z);
+	coords[6] = coords[2] + glm::vec3(0.f, 0.f, bsize.z);
+	coords[7] = coords[3] + glm::vec3(0.f, 0.f, bsize.z);
 	return coords;
 }
 
@@ -60,6 +60,10 @@ BoundingBox::BoundingBox(const glm::vec3& minCoords, const glm::vec3& maxCoords)
 BoundingBox BoundingBox::createCubeBoundingBox(const glm::vec3& center, float width) {
 	return BoundingBox(center - glm::vec3(width / 2.f), center + glm::vec3(width / 2.f));
 }
+BoundingBox BoundingBox::createCubeBoundingBox(const glm::vec3& center, const glm::vec3& size) {
+	return BoundingBox(center - size / 2.f, center + size / 2.f);
+}
+
 
 /**************************************************/
 

@@ -11,6 +11,7 @@ public:
 	Object(uint64_t meshID, uint64_t shaderID, uint64_t materialID);
 	bool hasColor() const;
 	void setColor(const glm::vec4& col);
+	void setColor(const glm::vec3& col);
 	glm::vec4 getColor() const;
 
 	bool hasHighlight() const;

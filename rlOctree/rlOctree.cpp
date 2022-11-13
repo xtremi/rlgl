@@ -296,6 +296,7 @@ bool Octree::hitTest(const OctreeItem* item, const rl::Ray& ray, void** data) {
 
 
 bool Octree::hitTest(const rl::Ray& ray, void** data) {
+	if (!root) return false;
 	return hitTest(root, ray, data);
 }
 

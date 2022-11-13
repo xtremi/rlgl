@@ -3,6 +3,16 @@
 #include "rlOctree.h"
 #include "rlglLodController.h"
 
+class TerrainQuadObject : public rlgl::Object {
+public:
+	TerrainQuadObject(uint64_t meshID, uint64_t shaderID, int _level, rlgl::LODloc _loc) 
+		: rlgl::Object(meshID, shaderID, INT64_MAX), level{_level}, loc{_loc}{}
+
+	int level;
+	rlgl::LODloc loc;
+};
+
+
 struct AssetIDs {
 	struct Meshes {
 		uint64_t world, cubeTex, cube, square, cubeInst, terrainDummy;
@@ -25,7 +35,7 @@ struct WorldObjects {
 	std::vector<rlgl::Object*> axes;
 	rlgl::Object*			   instObj;
 
-	std::vector<rlgl::Object*>  terrainLODquads;
+	std::vector<TerrainQuadObject*>  terrainLODquads;
 };
 
 struct UIobjects {
@@ -62,6 +72,7 @@ protected:
 	//update
 	void updateCubes();
 	void updateHitTestOctTree();
+	void updateTerrainLOD();
 
 private:
 	static const float BOX_WIDTH;

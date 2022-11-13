@@ -16,6 +16,10 @@ void Object::setColor(const glm::vec4& col) {
 	color = col;
 	_hasColor = true;
 }
+void Object::setColor(const glm::vec3& col) {
+	color = glm::vec4(col, 1.f);
+	_hasColor = true;
+}
 glm::vec4 Object::getColor() const {
 	return color;
 }

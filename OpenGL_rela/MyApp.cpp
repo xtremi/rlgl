@@ -13,14 +13,13 @@ void MyApp::prepareAssets() {
     rlgl::primitive_mesh::plane.initialize();
     rlgl::primitive_mesh::cube_tex.initialize();
     rlgl::primitive_mesh::cube.initialize();
-    rlgl::primitive_mesh::square.initialize();
-
+    rlgl::primitive_mesh::terrainDummy.initialize();
 
     assetIDs.mesh.world = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
     assetIDs.mesh.cubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
     assetIDs.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
-    assetIDs.mesh.square = uiScene.addMesh(&rlgl::primitive_mesh::square);
-    assetIDs.mesh.terrainDummy = uiScene.addMesh(&rlgl::primitive_mesh::terrainDummy);
+    assetIDs.mesh.terrainDummy = scene.addMesh(&rlgl::primitive_mesh::terrainDummy);
+
 
     rlgl::Material materialChecker, materialBox, materialBoxMetal;
     materialChecker.initialize("..\\data\\textures\\checker_grey.jpg", true);
@@ -31,16 +30,23 @@ void MyApp::prepareAssets() {
     assetIDs.material.box = scene.addMaterial(materialBox);
     assetIDs.material.boxMetal = scene.addMaterial(materialBoxMetal);
 
-    rlgl::Shader shaderTextured, shaderColored, shaderInst, uiShader;
+    rlgl::Shader shaderTextured, shaderColored, shaderInst;
     shaderTextured.initialize("..\\data\\shaders\\object.vs", "..\\data\\shaders\\object.fs");
     shaderTextured.setInt("textureID", materialChecker.glID);
     shaderColored.initialize("..\\data\\shaders\\object_col.vs", "..\\data\\shaders\\object_col.fs"); 
-    uiShader.initialize("..\\data\\shaders\\ui_element.vs", "..\\data\\shaders\\ui_element.fs");
     shaderInst.initialize("..\\data\\shaders\\object_inst.vs", "..\\data\\shaders\\object_inst.fs");
 
     assetIDs.shader.textured = scene.addShader(shaderTextured);
     assetIDs.shader.colored = scene.addShader(shaderColored);
     assetIDs.shader.inst = scene.addShader(shaderInst);
+
+
+    //UI:
+    rlgl::primitive_mesh::square.initialize();
+    assetIDs.mesh.square = uiScene.addMesh(&rlgl::primitive_mesh::square);
+
+    rlgl::Shader uiShader;
+    uiShader.initialize("..\\data\\shaders\\ui_element.vs", "..\\data\\shaders\\ui_element.fs");
 
     assetIDs.shader.ui = uiScene.addShader(uiShader);
 }
@@ -48,7 +54,7 @@ void MyApp::prepareAssets() {
 
 int MyApp::prepareScene() {
 
-    lodControl = rlgl::LODcontroller(5.f, 3);
+    lodControl = rlgl::LODcontroller(glm::vec3(0.f), 5.f, 4, 0.5);
 
     secondaryCam.aspectRatio = windowParams().aspect();
 
@@ -60,7 +66,7 @@ int MyApp::prepareScene() {
     prepareAssets();
     createWorld();
     createLODterrain();
-    createBoxes();
+    //createBoxes();
     createCSYS();
     createUI();
     return 0;
@@ -135,35 +141,37 @@ void MyApp::createBoxes() {
 
 void MyApp::createLODterrain() {
     
-    rlgl::Object* terrainQuad_0 = new rlgl::Object(assetIDs.mesh.terrainDummy, assetIDs.shader.colored, INT64_MAX);
+    float zpos = 1.f;
+
+    TerrainQuadObject* terrainQuad_0 = new TerrainQuadObject(assetIDs.mesh.terrainDummy, assetIDs.shader.colored, 0, rlgl::LODloc::center);
     objects.terrainLODquads.push_back(terrainQuad_0);
 
-    glm::vec3 quadPos = glm::vec3(lodControl.quadPosition(rlgl::LODloc::center, 0), 50.f);
+    glm::vec3 quadPos = glm::vec3(lodControl.quadPosition(rlgl::LODloc::center, 0), zpos);
     terrainQuad_0->setPosition(quadPos);
     terrainQuad_0->setScale(glm::vec3(lodControl.quadSideLength(0)));
     terrainQuad_0->setColor(glm::vec4(1.f, 0.5f, 0.5f, 1.f));
     scene.addObject(terrainQuad_0);
 
-    std::vector<glm::vec4> colors({
-        glm::vec4(1.f, 0.f, 0.f, 1.f),
-        glm::vec4(0.f, 1.f, 0.f, 1.f),
-        glm::vec4(1.f, 0.f, 1.f, 1.f),
-        glm::vec4(1.f, 1.f, 0.f, 1.f) });
+    std::vector<glm::vec3> colors({
+        glm::vec3(1.f, 0.f, 0.f),
+        glm::vec3(0.f, 1.f, 0.f),
+        glm::vec3(1.f, 0.f, 1.f),
+        glm::vec3(1.f, 1.f, 0.f) });
     for (int i = 0; i < lodControl.levels(); i++) { //level
 
         for (int j = 0; j < 8; j++) { //location
 
             rlgl::LODloc loc = (rlgl::LODloc)j;
 
-            rlgl::Object* terrainQuad = new rlgl::Object(assetIDs.mesh.terrainDummy, assetIDs.shader.colored, INT64_MAX);
+            TerrainQuadObject* terrainQuad = new TerrainQuadObject(assetIDs.mesh.terrainDummy, assetIDs.shader.colored, i, loc);
             objects.terrainLODquads.push_back(terrainQuad);
 
-            glm::vec3 quadPos = glm::vec3(lodControl.quadPosition(loc, i), 10.f);
+            glm::vec3 quadPos = glm::vec3(lodControl.quadPosition(loc, i), zpos);
             terrainQuad->setPosition(quadPos);
             
             glm::vec2 quadSize(lodControl.quadSideLength(i));
             terrainQuad->setScale(glm::vec3(quadSize, 1.f));
-            terrainQuad->setColor(colors[i]);
+            terrainQuad->setColor(colors[i] * 0.1f * (float)(j + 1));
             scene.addObject(terrainQuad);
 
         }
@@ -197,7 +205,7 @@ int MyApp::updateScene() {
 
     updateHitTestOctTree();
     updateCubes();
-
+    updateTerrainLOD();
 
     return 0;
 }
@@ -220,6 +228,23 @@ void MyApp::processInput(GLFWwindow* window) {
 
     BaseApp::processInput(window);
 }
+
+
+void MyApp::updateTerrainLOD() {
+
+    if (lodControl.outOfCenterLimit(camera.position)) {
+
+        lodControl.setCenterPosition(camera.position);
+
+        for (TerrainQuadObject* tobj : objects.terrainLODquads) {
+            tobj->setPosition(glm::vec3(lodControl.quadPosition(tobj->loc, tobj->level), 1.f));
+        }
+
+
+    }
+
+}
+
 
 /*!
     Performs hittest on objects in OctTree

@@ -3,37 +3,42 @@ using namespace rlgl;
 
 
 /*
+
+ x--|--x----x--------x----------------x--------------------------------x
  |  |  |    |        |                |                                |
  |  |  |    |        |                |                                |
  x--|--x----x--------x----------------x--------------------------------x
+    |0.5  1      3           9                       27
     |
-    |0.5  1      2           4                       8
-    |  
-    |     1    2.5         5.5                      11.5
+    |---->1
+    |----------->3         
+    |----------------------->9
+    |----------------------------------------------->27
 
+    NOTE:   Distance from center of center quad to center of quad N is
+            equal to width of quad N
 
- 11.5 = 2^0 + 2^1 + 2^2 + (2^8 / 2) + 0.5  = 1+2+4+4 + 0.5   
- 8.5  = 2^0 + 2^1 + (2^2 / 2) + 0.5 = 1+2+2 + 0.5  
- 4.5  = 2^0 + (2^1 / 2) = 2 + 0.5   
-
-
- sumOfPowers = 2^(N+1) - 1 = 2^0 + 2^1 + 2^2 .... + 2^N
+1  = 3^0
+3  = 3^1
+9  = 3^3
+27 = 3^4
 
  */
+glm::vec2 LODcontroller::quadPosition(LODloc loc, int level) const {
 
-glm::vec2 LODcontroller::quadPosition(LODloc loc, int level) {
-
-    float quadSideL = quadSideLength(level);
-    float length = m_centerQuadSideLength * (glm::pow(2, level + 1) - 1.0 + 0.5);    //length to end of level
-    length -= quadSideL/2.f;
-
+    float length = m_centerQuadSideLength * glm::pow(3, level);    //length to end of level
     return LODlocUnitDir(loc) * length;
 }
 
-double LODcontroller::quadSideLength(int level) {
-    return m_centerQuadSideLength * glm::pow(2, level);
+double LODcontroller::quadSideLength(int level) const {
+    return m_centerQuadSideLength * glm::pow(3, level);
 }
 
+
+bool LODcontroller::outOfCenterLimit(const glm::vec3& pos) const {
+    return glm::abs(glm::distance(glm::vec2(pos.x, pos.y), glm::vec2(m_pos.x, m_pos.y))) >
+        m_centerLimitDistanceFactor * m_centerQuadSideLength;
+}
 
 glm::vec2 LODcontroller::LODlocUnitDir(LODloc loc) {
     switch (loc)
@@ -60,3 +65,18 @@ glm::vec2 LODcontroller::LODlocUnitDir(LODloc loc) {
         return glm::vec2(0.f);
     }
 }
+
+/*If quads a doubling in size instead of 3x*/
+/*glm::vec2 LODcontroller::quadPosition(LODloc loc, int level) const {
+
+    float quadSideL = quadSideLength(level);
+    float length = m_centerQuadSideLength * (glm::pow(2, level + 1) - 1.0 + 0.5);    //length to end of level
+    length -= quadSideL / 2.f;
+
+    return LODlocUnitDir(loc) * length;
+}
+
+double LODcontroller::quadSideLength(int level) const {
+    return m_centerQuadSideLength * glm::pow(2, level);
+}
+*/

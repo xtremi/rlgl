@@ -74,15 +74,23 @@ public:
 	std::string        getBoundingBoxAddress(const BoundingBox& bbox);
 
 	void			   callOnAllOctTreeObject(void (*func)(void*, const BoundingBox&, void*), void* customData = nullptr);
-	void			   callOnOctTreeObjects(bool (*func)(void*, const BoundingBox&, void*), void* customData = nullptr);
+	void			   callOnOctTreeObjects(
+		bool (*funcTestOctreeNode)(OctreeItem*, void*), 
+		void (*funcDoOnNegativeTest)(void*),
+		void* customData = nullptr);
 
 	std::string toStr();
 
 protected:
 	bool hitTest(const OctreeItem* item, const rl::Ray& ray, void** data);
-	void callOnOctTreeObjects2(bool (*func)(void*, const BoundingBox&, void*), void* customData, rl::OctreeItem* item);
-
-
+	void callOnOctTreeObjects2(
+		OctreeItem* octTreeNode,
+		bool (*funcTestOctreeNode)(OctreeItem*, void*),
+		void (*funcDoOnNegativeTest)(void*),
+		void* customData = nullptr);
+	void callOnAllChildrenObjects(
+		OctreeItem* octTreeNode,
+		void (*func)(void*));
 
 };
 

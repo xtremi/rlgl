@@ -70,7 +70,7 @@ protected:
 	void createCSYS();
 
 	//update
-	void updateCubes();
+	void updateBoxes();
 	void updateHitTestOctTree();
 	void updateTerrainLOD();
 
@@ -82,8 +82,11 @@ private:
 	Function used in OctTree::callOnAllOctTreeObject
 */
 namespace OctTreeFunc{
-	void hideIfInFrustum(void* object, const rl::BoundingBox& bbox, void* frustumPtr);
-	bool isInFrustumOrHide(void* object, const rl::BoundingBox& bbox, void* frustumPtr);
+
+	bool isInFrustum(rl::OctreeItem* octreeNode, void* frustumPtr);
+	void hide(void* object);
+
+	void hideIfOutsideFrustum(void* object, const rl::BoundingBox& bbox, void* frustumPtr);
 	void unhide(void* object, const rl::BoundingBox& bbox, void*);
 }
 

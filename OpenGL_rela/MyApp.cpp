@@ -65,8 +65,8 @@ int MyApp::prepareScene() {
 
     prepareAssets();
     createWorld();
-    createLODterrain();
-    //createBoxes();
+    //createLODterrain();
+    createBoxes();
     createCSYS();
     createUI();
     return 0;
@@ -200,11 +200,14 @@ static rlgl::Object* lastHitObj = nullptr;
 int MyApp::updateScene() {
 
     camera.computeFrustum();
-    octTree.callOnAllOctTreeObject(&OctTreeFunc::hideIfInFrustum, &camera.frustum);
-
+    //octTree.callOnAllOctTreeObject(&OctTreeFunc::hideIfOutsideFrustum, &camera.frustum);
+    octTree.callOnOctTreeObjects(
+        &OctTreeFunc::isInFrustum,
+        &OctTreeFunc::hide, 
+        &camera.frustum);
 
     updateHitTestOctTree();
-    updateCubes();
+    //updateBoxes();
     updateTerrainLOD();
 
     return 0;
@@ -280,7 +283,7 @@ void MyApp::updateHitTestOctTree() {
 }
 
 
-void MyApp::updateCubes() {
+void MyApp::updateBoxes() {
 
     double curTime = glfwGetTime();
     for (rlgl::Object* obj : objects.cubes) {
@@ -294,28 +297,27 @@ void MyApp::updateCubes() {
 
 
 }
+/*!*/
+bool OctTreeFunc::isInFrustum(rl::OctreeItem* octreeNode, void* frustumPtr) {
+    const rlgl::Frustum& frustum = *(rlgl::Frustum*)frustumPtr;
+    return rlgl::isInFrustum(frustum, octreeNode->boundingBox);
+}
 
-
-void OctTreeFunc::hideIfInFrustum(void* object, const rl::BoundingBox& bbox, void* frustumPtr) {
+/*!*/
+void OctTreeFunc::hideIfOutsideFrustum(void* object, const rl::BoundingBox& bbox, void* frustumPtr) {
     const rlgl::Frustum& frustum = *(rlgl::Frustum*)frustumPtr;
     if (!rlgl::isInFrustum(frustum, bbox)) {
         ((rlgl::Object*)object)->setInViewState(false);
     }
 }
 
-bool OctTreeFunc::isInFrustumOrHide(void* object, const rl::BoundingBox& bbox, void* frustumPtr) {
-    const rlgl::Frustum& frustum = *(rlgl::Frustum*)frustumPtr;
-    if (!rlgl::isInFrustum(frustum, bbox)) {
-        if (object) {
-            ((rlgl::Object*)object)->setInViewState(false);
-        }
-        return false;
-    }
-    return true;
-}
-
-
+/*!*/
 void OctTreeFunc::unhide(void* object, const rl::BoundingBox& bbox, void*) {
     ((rlgl::Object*)object)->setInViewState(true);
+}
+
+/*!*/
+void OctTreeFunc::hide(void* object) {
+    ((rlgl::Object*)object)->setInViewState(false);
 }
 

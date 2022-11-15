@@ -325,23 +325,56 @@ void Octree::callOnAllOctTreeObject(void (*func)(void*, const BoundingBox&, void
 
 }
 
+void Octree::callOnOctTreeObjects(
+	bool (*funcTestOctreeNode)(OctreeItem*, void*),
+	void (*funcDoOnNegativeTest)(void*),
+	void* customData)
+{
+	callOnOctTreeObjects2(root, funcTestOctreeNode, funcDoOnNegativeTest, customData);
+}
 
-void Octree::callOnOctTreeObjects(bool (*func)(void*, const BoundingBox&, void*), void* customData) {
+/*!
+	Calls funcTestOctreeNode() on octTreeNode
+	If return false:
+		- Calls funcDoOnNegativeTest() on all objects of that OctreeItem/OctreeNode
+		- Calls funcDoOnNegativeTest() of all children of that OctreeItem/OctreeNode
+	Else calls this same function on the children of this OctreeItem/OctreeNode
+*/
+void  Octree::callOnOctTreeObjects2(
+	OctreeItem* octTreeNode,
+	bool (*funcTestOctreeNode)(OctreeItem*, void*),
+	void (*funcDoOnNegativeTest)(void*),
+	void* customData)
+{
+	if(!octTreeNode) {
+		return;
+	}
+	if (!funcTestOctreeNode(octTreeNode, customData)) {
 
-	auto it = root->children.begin();
-	for (it; it != root->children.end(); it++) {
-		callOnOctTreeObjects2(func, customData, it->second);
+		for (auto objIt = octTreeNode->objects.begin(); objIt != octTreeNode->objects.end(); objIt++) {
+			funcDoOnNegativeTest(objIt->data);
+		}
+		callOnAllChildrenObjects(octTreeNode, funcDoOnNegativeTest);
+	}
+	else {
+		for (auto nodeIt = octTreeNode->children.begin(); nodeIt != octTreeNode->children.end(); nodeIt++) {
+			callOnOctTreeObjects2(nodeIt->second, funcTestOctreeNode, funcDoOnNegativeTest, customData);
+		}
 	}
 }
 
-void  Octree::callOnOctTreeObjects2(bool (*func)(void*, const BoundingBox&, void*), void* customData, rl::OctreeItem* item) {
 
-	if (func(nullptr, item->boundingBox, customData)) {
-		auto it = item->children.begin();
-		for (it; it != item->children.end(); it++) {
-			callOnOctTreeObjects2(func, customData, it->second);
+void Octree::callOnAllChildrenObjects(
+	OctreeItem* octTreeNode,
+	void (*func)(void*))
+{
+	auto it = octTreeNode->children.begin();
+	for (it; it != octTreeNode->children.end(); it++) {
+
+		//Objects owned by item				
+		auto itObj = it->second->objects.begin();
+		for (itObj; itObj != it->second->objects.end(); itObj++) {
+			func(itObj->data);
 		}
-
 	}
-
 }

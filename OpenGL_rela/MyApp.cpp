@@ -150,7 +150,8 @@ void MyApp::createLODterrain() {
     terrainQuad_0->setColor(glm::vec4(1.f, 0.5f, 0.5f, 1.f));
     scene.addObject(terrainQuad_0);
 
-    rl::BoundingBox bbox = rl::BoundingBox::createCubeBoundingBox(glm::vec3(quadPos), glm::vec3(quadSize, quadSize, 1.f));
+    //rl::BoundingBox bbox = rl::BoundingBox::createCubeBoundingBox(glm::vec3(quadPos), glm::vec3(quadSize, quadSize, 1.f));
+	//octTree.addObject(terrainQuad_0, bbox);
 
     std::vector<glm::vec3> colors({
         glm::vec3(1.f, 0.f, 0.f),
@@ -173,6 +174,9 @@ void MyApp::createLODterrain() {
             terrainQuad->setScale(glm::vec3(quadSize, quadSize, 1.f));
             terrainQuad->setColor(colors[i] * 0.1f * (float)(j + 1));
             scene.addObject(terrainQuad);
+
+			//bbox = rl::BoundingBox::createCubeBoundingBox(glm::vec3(quadPos), glm::vec3(quadSize, quadSize, 1.f));
+			//octTree.addObject(terrainQuad, bbox);
         }
        
     }
@@ -200,10 +204,10 @@ static rlgl::Object* lastHitObj = nullptr;
 int MyApp::updateScene() {
 
     camera.computeFrustum();
-    //octTree.callOnAllOctTreeObject(&OctTreeFunc::hideIfOutsideFrustum, &camera.frustum);
+
     octTree.callOnOctTreeObjects(
         &OctTreeFunc::isInFrustum,
-        &OctTreeFunc::setHighlight, 
+        &OctTreeFunc::hide, 
         &camera.frustum);
 
     updateHitTestOctTree();
@@ -215,10 +219,10 @@ int MyApp::updateScene() {
 
 int MyApp::postRender(){
 
-    octTree.callOnAllOctTreeObject(OctTreeFunc::setNoHighlight);
-    //for (rlgl::Object* obj : objects.terrainLODquads) {
-    //    obj->setInViewState(true);
-    //}
+    octTree.callOnAllOctTreeObject(OctTreeFunc::unhide);
+    for (rlgl::Object* obj : objects.terrainLODquads) {
+        obj->setInViewState(true);
+    }
 
 
 	return 0;

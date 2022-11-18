@@ -325,6 +325,19 @@ void Octree::callOnAllOctTreeObject(void (*func)(void*, const BoundingBox&, void
 
 }
 
+void Octree::callOnAllOctTreeObject(void(*func)(void*)) {
+
+	auto it = octStructTreeItemMap.begin();
+	for (it; it != octStructTreeItemMap.end(); it++) {
+
+		auto it2 = it->second->objects.begin();
+		for (it2; it2 != it->second->objects.end(); it2++) {
+			func(it2->data);
+		}
+	}
+
+}
+
 void Octree::callOnOctTreeObjects(
 	bool (*funcTestOctreeNode)(OctreeItem*, void*),
 	void (*funcDoOnNegativeTest)(void*),
@@ -376,5 +389,7 @@ void Octree::callOnAllChildrenObjects(
 		for (itObj; itObj != it->second->objects.end(); itObj++) {
 			func(itObj->data);
 		}
+		callOnAllChildrenObjects(it->second, func);
 	}
+	
 }

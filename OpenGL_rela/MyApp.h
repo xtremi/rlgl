@@ -85,6 +85,8 @@ namespace OctTreeFunc{
 
 	bool isInFrustum(rl::OctreeItem* octreeNode, void* frustumPtr);
 	void hide(void* object);
+	void setHighlight(void* object);
+	void setNoHighlight(void* object);
 
 	void hideIfOutsideFrustum(void* object, const rl::BoundingBox& bbox, void* frustumPtr);
 	void unhide(void* object, const rl::BoundingBox& bbox, void*);

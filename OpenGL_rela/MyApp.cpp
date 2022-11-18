@@ -203,7 +203,7 @@ int MyApp::updateScene() {
     //octTree.callOnAllOctTreeObject(&OctTreeFunc::hideIfOutsideFrustum, &camera.frustum);
     octTree.callOnOctTreeObjects(
         &OctTreeFunc::isInFrustum,
-        &OctTreeFunc::hide, 
+        &OctTreeFunc::setHighlight, 
         &camera.frustum);
 
     updateHitTestOctTree();
@@ -215,10 +215,10 @@ int MyApp::updateScene() {
 
 int MyApp::postRender(){
 
-    octTree.callOnAllOctTreeObject(OctTreeFunc::unhide);
-    for (rlgl::Object* obj : objects.terrainLODquads) {
-        obj->setInViewState(true);
-    }
+    octTree.callOnAllOctTreeObject(OctTreeFunc::setNoHighlight);
+    //for (rlgl::Object* obj : objects.terrainLODquads) {
+    //    obj->setInViewState(true);
+    //}
 
 
 	return 0;
@@ -319,5 +319,12 @@ void OctTreeFunc::unhide(void* object, const rl::BoundingBox& bbox, void*) {
 /*!*/
 void OctTreeFunc::hide(void* object) {
     ((rlgl::Object*)object)->setInViewState(false);
+}
+
+void OctTreeFunc::setHighlight(void* object) {
+	((rlgl::Object*)object)->setHighlight(true);
+}
+void OctTreeFunc::setNoHighlight(void* object) {
+	((rlgl::Object*)object)->setHighlight(false);
 }
 

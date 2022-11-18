@@ -74,6 +74,7 @@ public:
 	std::string        getBoundingBoxAddress(const BoundingBox& bbox);
 
 	void			   callOnAllOctTreeObject(void (*func)(void*, const BoundingBox&, void*), void* customData = nullptr);
+	void			   callOnAllOctTreeObject(void (*func)(void*));
 	void			   callOnOctTreeObjects(
 		bool (*funcTestOctreeNode)(OctreeItem*, void*), 
 		void (*funcDoOnNegativeTest)(void*),

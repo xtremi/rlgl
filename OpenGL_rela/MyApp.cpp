@@ -65,7 +65,7 @@ int MyApp::prepareScene() {
 
     prepareAssets();
     createWorld();
-    //createLODterrain();
+    createLODterrain();
     createBoxes();
     createCSYS();
     createUI();

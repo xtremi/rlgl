@@ -384,7 +384,7 @@ void Octree::callOnAllChildrenObjects(
 	auto it = octTreeNode->children.begin();
 	for (it; it != octTreeNode->children.end(); it++) {
 
-		//Objects owned by item				
+		//Objects owned by item
 		auto itObj = it->second->objects.begin();
 		for (itObj; itObj != it->second->objects.end(); itObj++) {
 			func(itObj->data);

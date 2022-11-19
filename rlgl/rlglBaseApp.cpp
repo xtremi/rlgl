@@ -120,7 +120,7 @@ void BaseApp::handleMouse(double xpos, double ypos)
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.z = sin(glm::radians(pitch)); 
-    camera.setFront(glm::normalize(front));    
+    activeCamera->setFront(glm::normalize(front));    
 }
 
 static const float CURSOR_MOVE_SPEED = 0.05f;
@@ -146,6 +146,12 @@ void BaseApp::processInput(GLFWwindow* window)
     }
     else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         camera.moveRight(CURSOR_MOVE_SPEED);
+    }
+    else if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+        camera.fov -= 0.1;
+    }
+    else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+        camera.fov += 0.1;
     }
 
     double xpos, ypos;

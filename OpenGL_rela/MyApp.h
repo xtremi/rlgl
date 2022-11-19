@@ -15,7 +15,7 @@ public:
 
 struct AssetIDs {
 	struct Meshes {
-		uint64_t world, cubeTex, cube, square, cubeInst, terrainDummy;
+		uint64_t world, cubeTex, cube, square, cubeInst, terrainDummy, frustum;
 	};
 	struct Materials {
 		uint64_t checker, box, boxMetal;
@@ -36,6 +36,8 @@ struct WorldObjects {
 	rlgl::Object*			   instObj;
 
 	std::vector<TerrainQuadObject*>  terrainLODquads;
+
+	rlgl::Object* frustum;
 };
 
 struct UIobjects {
@@ -55,6 +57,7 @@ protected:
 	UIobjects	 uiObjects;
 	AssetIDs	 assetIDs;
 	rlgl::Mesh	 cubeTexInstMesh;
+	rlgl::Mesh	 frustumMesh;
 
 	int prepareScene();						//inherited from BaseApp
 	int updateScene();						//inherited from BaseApp
@@ -86,6 +89,9 @@ namespace OctTreeFunc{
 	bool isInFrustum(rl::OctreeItem* octreeNode, void* frustumPtr);
 	void hide(void* object);
 	void setHighlight(void* object);
+	void setHighlightColorBlue(void* object);
+	void setHighlightColorRed(void* object);
+	void setHighlightColorGreen(void* object);
 	void setNoHighlight(void* object);
 
 	void hideIfOutsideFrustum(void* object, const rl::BoundingBox& bbox, void* frustumPtr);

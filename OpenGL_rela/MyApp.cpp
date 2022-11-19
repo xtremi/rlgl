@@ -7,6 +7,29 @@ const float MyApp::BOX_WIDTH = 2.f;
 void MyApp::prepareAssets() {
 
     cubeTexInstMesh = rlgl::primitive_mesh::cube_tex;
+    frustumMesh = rlgl::primitive_mesh::cube;
+
+    glm::vec3 b1, b2, b3, b4, t1, t2, t3, t4;
+    b1 = glm::vec3(10.f, 0.f, 0.f);
+    b2 = b1 + glm::vec3(2.f, 0.f, 0.f);
+    b3 = b2 + glm::vec3(0.f, 2.f, 0.f);
+    b4 = b1 + glm::vec3(0.f, 2.f, 0.f);
+    t1 = b1 + glm::vec3(0.f, 0.f, 2.f);
+    t2 = b2 + glm::vec3(0.f, 0.f, 2.f);
+    t3 = b3 + glm::vec3(0.f, 0.f, 2.f);
+    t4 = b4 + glm::vec3(0.f, 0.f, 2.f);
+
+    frustumMesh.vertices.data = rlgl::Mesh::createHexagonal(
+        std::vector<glm::vec3>({ b1,b2,b3,b4 }),
+        std::vector<glm::vec3>({ t1,t2,t3,t4 }));
+    frustumMesh.initialize();
+    
+    frustumMesh.vertices.data = rlgl::Mesh::createHexagonal(
+        std::vector<glm::vec3>({ b1,b2,b3,b4 }),
+        std::vector<glm::vec3>({ t1,t2,t3,t4 + glm::vec3(0.f, 0.f, 1.f) }));
+    frustumMesh.vertices.bindBuffer(GL_ARRAY_BUFFER);
+    frustumMesh.vertices.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+
 
 
     rlgl::primitive_mesh::plane_textureX10.initialize();
@@ -19,6 +42,7 @@ void MyApp::prepareAssets() {
     assetIDs.mesh.cubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
     assetIDs.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
     assetIDs.mesh.terrainDummy = scene.addMesh(&rlgl::primitive_mesh::terrainDummy);
+    assetIDs.mesh.frustum = scene.addMesh(&frustumMesh);
 
 
     rlgl::Material materialChecker, materialBox, materialBoxMetal;
@@ -62,13 +86,21 @@ int MyApp::prepareScene() {
     secondaryCam.front = glm::vec3(-1.f);
     secondaryCam.upVector = glm::vec3(0.f, 0.f, 1.f);
     secondaryCam.aspectRatio = windowParams().aspect();
+    secondaryCam.far = 800.f;
 
     prepareAssets();
     createWorld();
-    createLODterrain();
+    //createLODterrain();
     createBoxes();
     createCSYS();
     createUI();
+
+    objects.frustum = new rlgl::Object(assetIDs.mesh.frustum, assetIDs.shader.colored, NO_MATERIAL);
+    objects.frustum->setPosition(glm::vec3(0.f));
+    objects.frustum->setScale(glm::vec3(1.f));
+    objects.frustum->setColor(glm::vec4(0.f, 0.5f, 0.7f, 0.2f));
+    scene.addObject(objects.frustum);
+
     return 0;
 }
 
@@ -80,8 +112,8 @@ void MyApp::createWorld() {
 }
 
 void MyApp::createUI() {
-    uiObjects.aimCross.push_back(new rlgl::Object(assetIDs.mesh.square, assetIDs.shader.ui, INT64_MAX));
-    uiObjects.aimCross.push_back(new rlgl::Object(assetIDs.mesh.square, assetIDs.shader.ui, INT64_MAX));
+    uiObjects.aimCross.push_back(new rlgl::Object(assetIDs.mesh.square, assetIDs.shader.ui, NO_MATERIAL));
+    uiObjects.aimCross.push_back(new rlgl::Object(assetIDs.mesh.square, assetIDs.shader.ui, NO_MATERIAL));
     uiObjects.aimCross[0]->setPosition(glm::vec3(0.f, 0.f, 0.2f));
     uiObjects.aimCross[0]->setScale(glm::vec3(0.2f, 0.01f, 1.f));
     uiObjects.aimCross[1]->setPosition(glm::vec3(0.0f, 0.0f, 0.2f));
@@ -93,7 +125,7 @@ void MyApp::createUI() {
 }
 
 void MyApp::createBoxes() {
-    rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 350.f, 5);
+    rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);
     octTree = rl::Octree(octStruct);
 
     int nBoxes = 100;
@@ -102,20 +134,39 @@ void MyApp::createBoxes() {
     float boxSize = BOX_WIDTH;
     for (int i = 0; i < nBoxes; i++) {
 
-        boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
-
+        float z = rl::rand(0.f, 20.f);
+        float rad = rl::rand(20.f, 40.f);
+        float alpha = rl::rand(0.f, glm::pi<float>() * 2.f);
+        boxPos = glm::vec3(rad * glm::cos(alpha), rad * glm::sin(alpha), z);
         bbox = rl::BoundingBox::createCubeBoundingBox(boxPos, boxSize);
 
         objects.cubes.push_back(new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.textured, assetIDs.material.box));
         objects.cubes[i]->setPosition(boxPos);
         objects.cubes[i]->setScale(glm::vec3(boxSize));
+        objects.cubes[i]->setColor(glm::vec4(0.f, 1.0f, 0.5f, 1.f));
         rl::OctreeItem* item = octTree.addObject((void*)objects.cubes[i], bbox);
         scene.addObject(objects.cubes[i]);
     }
+    std::cout << octTree.toStr() << "\n";
+    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorBlue, "1", true);
+    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorBlue, "2", true);
+    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorRed,  "3", true);
+    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorGreen,"4", true);
+    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorBlue, "5", true);
+    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorBlue, "6", true);
+    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorRed,  "7", true);
+    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorGreen,"8", true);
+
 
     int nInstances = 1e4;
     for (int i = 0; i < nInstances; i++) {
         boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
+
+        float rad = rl::rand(40.f, 50.f);
+        float alpha = rl::rand(0.f, glm::pi<float>() * 2.f);
+        float theta = rl::rand(0.f, glm::pi<float>() * 2.f);
+        boxPos = glm::vec3(rad * glm::sin(alpha) * glm::cos(theta), rad * glm::sin(alpha) * glm::sin(theta), rad * glm::cos(alpha));
+
         glm::mat4 tMat = glm::translate(glm::mat4(1.f), boxPos);
         glm::mat4 sMat = glm::scale(glm::mat4(1.f), glm::vec3(0.25f));
         glm::mat4 mMat = tMat * sMat;
@@ -204,6 +255,11 @@ static rlgl::Object* lastHitObj = nullptr;
 int MyApp::updateScene() {
 
     camera.computeFrustum();
+    std::vector<glm::vec3> near, far;
+    camera.frustumCorners(near, far);
+    frustumMesh.vertices.data = rlgl::Mesh::createHexagonal(near, far);
+    frustumMesh.vertices.bindBuffer(GL_ARRAY_BUFFER);
+    frustumMesh.vertices.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 
     octTree.callOnOctTreeObjects(
         &OctTreeFunc::isInFrustum,
@@ -298,7 +354,7 @@ void MyApp::updateBoxes() {
         octTree.moveObject(obj, bbox);
     }
 
-
+    
 
 }
 /*!*/
@@ -331,4 +387,15 @@ void OctTreeFunc::setHighlight(void* object) {
 void OctTreeFunc::setNoHighlight(void* object) {
 	((rlgl::Object*)object)->setHighlight(false);
 }
-
+void OctTreeFunc::setHighlightColorBlue(void* object) {
+    OctTreeFunc::setHighlight(object);
+    ((rlgl::Object*)object)->setColor(glm::vec3(1.f, 0.f, 0.f));
+}
+void OctTreeFunc::setHighlightColorRed(void* object) {
+    OctTreeFunc::setHighlight(object);
+    ((rlgl::Object*)object)->setColor(glm::vec3(0.f, 1.f, 0.f));
+}
+void OctTreeFunc::setHighlightColorGreen(void* object) {
+    OctTreeFunc::setHighlight(object);
+    ((rlgl::Object*)object)->setColor(glm::vec3(0.f, 0.f, 1.f));
+}

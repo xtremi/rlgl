@@ -4,6 +4,8 @@
 
 using namespace rlgl;
 
+
+
 rl::Plane& Frustum::near() {
 	return planes[0];
 }
@@ -65,6 +67,31 @@ void Camera::moveRight(float distance) {
 	moveLeft(-distance);
 }
 
+void Camera::frustumCorners(
+	std::vector<glm::vec3>& nearPlaneCoords,
+	std::vector<glm::vec3>& farPlaneCoords)
+{
+	glm::vec3 p = position + front * near;
+
+	float fovY = glm::radians(fov);
+	float fovX = glm::atan(glm::tan(fovY / 2.f) * aspectRatio) * 2.f;
+	float nearPlaneHalfWidth = glm::sin(fovX / 2.) * near;
+	float nearPlaneHalfHeight = glm::sin(fovX / 2.) * near;
+
+	nearPlaneCoords.push_back(p - sideVec() * nearPlaneHalfWidth - upVector * nearPlaneHalfHeight);
+	nearPlaneCoords.push_back(p + sideVec() * nearPlaneHalfWidth - upVector * nearPlaneHalfHeight);
+	nearPlaneCoords.push_back(p + sideVec() * nearPlaneHalfWidth + upVector * nearPlaneHalfHeight);
+	nearPlaneCoords.push_back(p - sideVec() * nearPlaneHalfWidth + upVector * nearPlaneHalfHeight);
+
+	p = position + front * far;
+	float farPlaneHalfWidth = glm::sin(fovX / 2.) * far;
+	float farPlaneHalfHeight = glm::sin(fovX / 2.) * far;
+
+	farPlaneCoords.push_back(p - sideVec() * farPlaneHalfWidth - upVector * farPlaneHalfHeight);
+	farPlaneCoords.push_back(p + sideVec() * farPlaneHalfWidth - upVector * farPlaneHalfHeight);
+	farPlaneCoords.push_back(p + sideVec() * farPlaneHalfWidth + upVector * farPlaneHalfHeight);
+	farPlaneCoords.push_back(p - sideVec() * farPlaneHalfWidth + upVector * farPlaneHalfHeight);
+}
 
 void Camera::computeFrustum() {
 	computeFrustum_method3();

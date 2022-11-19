@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 namespace rlgl {
 
@@ -54,6 +55,12 @@ public:
 
 	GLsizei nVertices;
 	GLsizei nElements;
+
+public:
+    static std::vector<float> createHexagonal(
+        const std::vector<glm::vec3>& top,
+        const std::vector<glm::vec3>& bot);
+
 };
 
 namespace primitive_mesh{

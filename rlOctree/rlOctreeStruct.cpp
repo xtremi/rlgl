@@ -130,8 +130,8 @@ std::string rl::getCommonAddress(const std::string& addr1, const std::string& ad
 		commonAddr += addr2[i++];
 		if (i == addr2.size()) break;
 	}
-	if (commonAddr.empty()) {
-		commonAddr = "0";
-	}
+	//if (commonAddr.empty()) {
+	//	commonAddr = "0";
+	//}
 	return commonAddr;
 }

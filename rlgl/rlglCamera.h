@@ -1,12 +1,12 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <vector>
 #include "rlGeometry.h"
 
 namespace rlgl{
 
 class Frustum {
 public:
-
 	rl::Plane& near();
 	rl::Plane& far();
 	rl::Plane& top();
@@ -31,6 +31,9 @@ public:
 	void moveLeft(float distance);
 	void moveRight(float distance);
 
+	void frustumCorners(
+		std::vector<glm::vec3>& near,
+		std::vector<glm::vec3>& far);
 	void computeFrustum();
 	void computeFrustum_method1();
 	void computeFrustum_method2();
@@ -42,7 +45,7 @@ public:
 	glm::vec3 upVector = glm::vec3(0.f, 0.f, 1.f);
 	float fov  = 45.f;
 	float near = 0.1f;
-	float far  = 800.f;
+	float far  = 100.f;
 	float aspectRatio = 800.f / 600.f;
 
 	bool isOrthoGraphic = false;

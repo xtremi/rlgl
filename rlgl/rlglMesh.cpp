@@ -263,3 +263,60 @@ Mesh rlgl::primitive_mesh::cube{
 	rlgl::GLBuffer<float>({}),
 	0, false, true, false, false, false, 36, 12
 };
+
+
+/*
+  
+    back
+
+   3x---x2
+	| / |
+	x---x
+	0   1
+left       right
+   3x---x2
+	| / |
+	x---x
+    0   1
+	front
+
+*/
+std::vector<float> Mesh::createHexagonal(
+	const std::vector<glm::vec3>& top, 
+	const std::vector<glm::vec3>& bot) 
+{
+
+	std::vector<glm::vec3> bufferdataV({
+		//bottom face
+		bot[0], bot[1], bot[2], //glm::normalize(glm::cross(bot[1] - bot[0], bot[2] - bot[0])),
+		bot[0], bot[2], bot[3], //glm::normalize(glm::cross(bot[2] - bot[0], bot[3] - bot[0])),
+		//front face			//
+		bot[0], bot[1], top[1], //glm::normalize(glm::cross(bot[1] - bot[0], top[1] - bot[0])),
+		bot[0], top[1], top[0],	//glm::normalize(glm::cross(top[1] - bot[0], top[0] - bot[0])),
+		//right face			//
+		bot[1], bot[2], top[2], //glm::normalize(glm::cross(bot[2] - bot[1], top[2] - bot[1])),
+		bot[1], top[2], top[1],	//glm::normalize(glm::cross(top[2] - bot[1], top[1] - bot[1])),
+		//back face				//
+		bot[2], bot[3], top[3], //glm::normalize(glm::cross(bot[3] - bot[2], top[3] - bot[2])),
+		bot[2], top[3], top[2],	//glm::normalize(glm::cross(top[3] - bot[2], top[2] - bot[2])),
+		//left face				//
+		bot[3], bot[0], top[0], //glm::normalize(glm::cross(bot[0] - bot[3], top[0] - bot[3])),
+		bot[3], top[0], top[3],	//glm::normalize(glm::cross(top[0] - bot[3], top[3] - bot[3])),
+		//top face				//
+		top[0], top[1], top[2],	//glm::normalize(glm::cross(top[1] - top[0], top[2] - top[0])),
+		top[0], top[2], top[3],	//glm::normalize(glm::cross(top[2] - top[0], top[3] - top[0]))
+
+	});
+
+	std::vector<float> bufferDataF;
+	for (const glm::vec3& v : bufferdataV) {
+		bufferDataF.push_back(v.x);
+		bufferDataF.push_back(v.y);
+		bufferDataF.push_back(v.z);
+		bufferDataF.push_back(1.f);
+		bufferDataF.push_back(0.f);
+		bufferDataF.push_back(0.f);
+	}
+
+	return bufferDataF;
+}

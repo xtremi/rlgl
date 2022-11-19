@@ -73,14 +73,19 @@ public:
 	bool               hitTest(const rl::Ray& ray, void** data);
 	std::string        getBoundingBoxAddress(const BoundingBox& bbox);
 
-	void			   callOnAllOctTreeObject(void (*func)(void*, const BoundingBox&, void*), void* customData = nullptr);
-	void			   callOnAllOctTreeObject(void (*func)(void*));
-	void			   callOnOctTreeObjects(
+	void callOnAllOctTreeObject(void (*func)(void*, const BoundingBox&, void*), void* customData = nullptr);
+	void callOnAllOctTreeObject(void (*func)(void*));
+	void callOnOctTreeObjects(
 		bool (*funcTestOctreeNode)(OctreeItem*, void*), 
 		void (*funcDoOnNegativeTest)(void*),
 		void* customData = nullptr);
 
+	void callOnAllOctTreeObjectWithAddress(void(*func)(void*), const std::string& address, bool includingChildren = true);
+
 	std::string toStr();
+
+
+
 
 protected:
 	bool hitTest(const OctreeItem* item, const rl::Ray& ray, void** data);
@@ -92,6 +97,15 @@ protected:
 	void callOnAllChildrenObjects(
 		OctreeItem* octTreeNode,
 		void (*func)(void*));
+	void callOnAllOctTreeObjectWithAddress(
+		OctreeItem* octTreeNode,
+		void(*func)(void*), 
+		const std::string& address, 
+		bool includingChildren = true);
+
+
+
+	int hitTestCount = 0;
 
 };
 

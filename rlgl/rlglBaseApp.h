@@ -16,6 +16,8 @@
 
 namespace rlgl{
 
+	#define NO_MATERIAL INT64_MAX
+
 	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 	struct GLFWparams {

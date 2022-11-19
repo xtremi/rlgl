@@ -77,10 +77,15 @@ Ex5
 
 */
 OctreeItem* OctreeItem::insertObject(
-	const OctreeObject& object,
-	const std::string&     objAddress,
-	const rl::OctreeStruct&   octStruct)
+	const OctreeObject&		object,
+	const std::string&      objAddress,
+	const rl::OctreeStruct& octStruct)
 {
+
+	if (objAddress == this->address) {
+		this->objects.insert(object);
+		return this;
+	}
 
 	/*
 		1. This item has a child with the exact same address
@@ -166,6 +171,8 @@ std::string OctreeItem::toStr(std::string& str, int& level) {
 std::string OctreeItem::toStr() {
 	std::string str = "";
 	str += "[" + address + "] - ";
+	str += " (" + std::to_string(objects.size()) + " objects) - ";
+
 	for(const OctreeObject& obj : objects){
 		str += std::to_string((uint64_t)obj.data) + ", ";
 	}
@@ -178,11 +185,16 @@ std::string OctreeItem::toStr() {
 std::string Octree::getBoundingBoxAddress(const BoundingBox& bbox) {
 	std::string addrMin = octStruct.getOctAddress(bbox.minC);
 	std::string addrMax = octStruct.getOctAddress(bbox.maxC);
-	return getCommonAddress(addrMin, addrMax);
+	std::string ca = getCommonAddress(addrMin, addrMax);
+	if (ca == "") {
+		ca = "0";
+	}
+	return ca;
 }
 
 OctreeItem* Octree::addObject(void* obj, const BoundingBox& bbox) {
 	std::string address = getBoundingBoxAddress(bbox);
+
 	BoundingBox treeItemBbox = octStruct.addressBoundingBox(address);
 	OctreeItem* item = root->insertObject({obj, bbox}, address, this->octStruct);
 	this->octStructTreeItemMap[obj] = item;
@@ -273,12 +285,13 @@ bool Octree::hitTest(const OctreeItem* item, const rl::Ray& ray, void** data) {
 	for (it; it != item->children.end(); it++) {
 		
 		if (rl::rayIntersection(ray, it->second->boundingBox)) {
-
+			hitTestCount++;
 			//Objects owned by item				
 			auto itObj = it->second->objects.begin();
 			for (itObj; itObj != it->second->objects.end(); itObj++) {
 
 				if (rl::rayIntersection(ray, itObj->bbox)) {
+					hitTestCount++;
 					*data = itObj->data;
 					return true;
 				}
@@ -294,8 +307,8 @@ bool Octree::hitTest(const OctreeItem* item, const rl::Ray& ray, void** data) {
 
 }
 
-
 bool Octree::hitTest(const rl::Ray& ray, void** data) {
+	hitTestCount = 0;
 	if (!root) return false;
 	return hitTest(root, ray, data);
 }
@@ -346,6 +359,8 @@ void Octree::callOnOctTreeObjects(
 	callOnOctTreeObjects2(root, funcTestOctreeNode, funcDoOnNegativeTest, customData);
 }
 
+
+
 /*!
 	Calls funcTestOctreeNode() on octTreeNode
 	If return false:
@@ -363,10 +378,6 @@ void  Octree::callOnOctTreeObjects2(
 		return;
 	}
 	if (!funcTestOctreeNode(octTreeNode, customData)) {
-
-		for (auto objIt = octTreeNode->objects.begin(); objIt != octTreeNode->objects.end(); objIt++) {
-			funcDoOnNegativeTest(objIt->data);
-		}
 		callOnAllChildrenObjects(octTreeNode, funcDoOnNegativeTest);
 	}
 	else {
@@ -381,15 +392,77 @@ void Octree::callOnAllChildrenObjects(
 	OctreeItem* octTreeNode,
 	void (*func)(void*))
 {
+	//Objects owned by item:
+	for (auto objIt = octTreeNode->objects.begin(); objIt != octTreeNode->objects.end(); objIt++) {
+		func(objIt->data);
+	}
+
+	//Children owned by item:
 	auto it = octTreeNode->children.begin();
 	for (it; it != octTreeNode->children.end(); it++) {
-
-		//Objects owned by item
-		auto itObj = it->second->objects.begin();
-		for (itObj; itObj != it->second->objects.end(); itObj++) {
-			func(itObj->data);
-		}
 		callOnAllChildrenObjects(it->second, func);
 	}
 	
+}
+
+
+
+
+void Octree::callOnAllOctTreeObjectWithAddress(void(*func)(void*), const std::string& address, bool includingChildren) {
+
+	//lazy method:
+	if (false) {
+		auto it = octStructTreeItemMap.begin();
+		for (it; it != octStructTreeItemMap.end(); it++) {
+
+			bool processObjects = false;
+			if (includingChildren) {
+				std::string commonAddress = getCommonAddress(address, it->second->address);
+				if (!commonAddress.empty()) processObjects = true;
+			}
+			else {
+				if (address == it->second->address) processObjects = true;
+			}
+			if (processObjects) {
+
+				auto it2 = it->second->objects.begin();
+				for (it2; it2 != it->second->objects.end(); it2++) {
+					func(it2->data);
+				}
+			}
+
+		}
+	}
+	else {
+		//better method:
+		callOnAllOctTreeObjectWithAddress(root, func, address, includingChildren);
+	}
+}
+
+void Octree::callOnAllOctTreeObjectWithAddress(
+	OctreeItem* octTreeNode,
+	void(*func)(void*),
+	const std::string& address,
+	bool includingChildren)
+{
+	auto it = octTreeNode->children.begin();
+	for (it; it != octTreeNode->children.end(); it++) {
+
+		std::string commonAddress = getCommonAddress(address, it->second->address);
+		if (commonAddress == address) {
+			if (includingChildren) {
+				callOnAllChildrenObjects(it->second, func);
+			}
+			else {
+				for (auto objIt = octTreeNode->objects.begin(); objIt != octTreeNode->objects.end(); objIt++) {
+					func(objIt->data);
+				}
+			}
+		}
+		else {
+			callOnAllOctTreeObjectWithAddress(it->second, func, address, includingChildren);
+		}
+
+	}
+
 }

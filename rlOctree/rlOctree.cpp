@@ -172,6 +172,7 @@ std::string OctreeItem::toStr() {
 	std::string str = "";
 	str += "[" + address + "] - ";
 	str += " (" + std::to_string(objects.size()) + " objects)";// - ";
+	str += " size.x = " + std::to_string(bbsize.x);
 
 	//for(const OctreeObject& obj : objects){
 	//	str += std::to_string((uint64_t)obj.data) + ", ";

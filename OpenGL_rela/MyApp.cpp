@@ -2,7 +2,7 @@
 #include "rlMath.h"
 #include <iostream>
 
-const float MyApp::BOX_WIDTH = 2.f;
+const float MyApp::BOX_WIDTH = 2.5f;
 
 void MyApp::prepareAssets() {
 
@@ -125,7 +125,7 @@ void MyApp::createUI() {
 }
 
 void MyApp::createBoxes() {
-    rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);
+    rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 4);
     octTree = rl::Octree(octStruct);
 
     int nBoxes = 2000;
@@ -294,6 +294,7 @@ void MyApp::processInput(GLFWwindow* window) {
 
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
         activeCamera = &secondaryCam;
+        secondaryCam.setFront(glm::vec3(-1.f));
     }
     else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
         activeCamera = &camera;

@@ -24,7 +24,8 @@ public:
 	glm::mat4 viewMatrix() const;
 	glm::vec3 lookVec() const;
 	glm::vec3 sideVec() const;
-	
+	glm::vec3 correctedUpVector() const;
+
 	void setFront(const glm::vec3& front);
 	void moveForward(float distance);
 	void moveBackward(float distance);

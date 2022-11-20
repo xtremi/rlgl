@@ -32,6 +32,7 @@ public:
 	{
 		if (object) objects.insert(*object);
 		if (parent) parent->children[address] = this;
+		bbsize = boundingBox.size();
 	}
 	std::set<OctreeObject> objects;
 	std::string			   address;
@@ -46,6 +47,8 @@ public:
 
 	std::string toStr(std::string& str, int& level);
 	std::string toStr();
+
+	glm::vec3 bbsize;
 
 };
 

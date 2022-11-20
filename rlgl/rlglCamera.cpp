@@ -45,6 +45,10 @@ glm::vec3 Camera::lookVec() const {
 glm::vec3 Camera::sideVec() const {
 	return glm::cross(upVector, lookVec());
 }
+glm::vec3 Camera::correctedUpVector() const {
+	return glm::cross(lookVec(), sideVec());
+}
+
 
 void Camera::setFront(const glm::vec3& _front) {
 	front = _front;
@@ -71,26 +75,28 @@ void Camera::frustumCorners(
 	std::vector<glm::vec3>& nearPlaneCoords,
 	std::vector<glm::vec3>& farPlaneCoords)
 {
+	glm::vec3 upVectorC = correctedUpVector();
+
 	glm::vec3 p = position + front * near;
 
 	float fovY = glm::radians(fov);
 	float fovX = glm::atan(glm::tan(fovY / 2.f) * aspectRatio) * 2.f;
 	float nearPlaneHalfWidth = glm::sin(fovX / 2.) * near;
-	float nearPlaneHalfHeight = glm::sin(fovX / 2.) * near;
+	float nearPlaneHalfHeight = glm::sin(fovY / 2.) * near;
 
-	nearPlaneCoords.push_back(p - sideVec() * nearPlaneHalfWidth - upVector * nearPlaneHalfHeight);
-	nearPlaneCoords.push_back(p + sideVec() * nearPlaneHalfWidth - upVector * nearPlaneHalfHeight);
-	nearPlaneCoords.push_back(p + sideVec() * nearPlaneHalfWidth + upVector * nearPlaneHalfHeight);
-	nearPlaneCoords.push_back(p - sideVec() * nearPlaneHalfWidth + upVector * nearPlaneHalfHeight);
+	nearPlaneCoords.push_back(p - sideVec() * nearPlaneHalfWidth - upVectorC * nearPlaneHalfHeight);
+	nearPlaneCoords.push_back(p + sideVec() * nearPlaneHalfWidth - upVectorC * nearPlaneHalfHeight);
+	nearPlaneCoords.push_back(p + sideVec() * nearPlaneHalfWidth + upVectorC * nearPlaneHalfHeight);
+	nearPlaneCoords.push_back(p - sideVec() * nearPlaneHalfWidth + upVectorC * nearPlaneHalfHeight);
 
-	p = position + front * far;
+	p = position + front * far*0.99f; //to be a little bit nearer than far (if not won't see)
 	float farPlaneHalfWidth = glm::sin(fovX / 2.) * far;
-	float farPlaneHalfHeight = glm::sin(fovX / 2.) * far;
+	float farPlaneHalfHeight = glm::sin(fovY / 2.) * far;
 
-	farPlaneCoords.push_back(p - sideVec() * farPlaneHalfWidth - upVector * farPlaneHalfHeight);
-	farPlaneCoords.push_back(p + sideVec() * farPlaneHalfWidth - upVector * farPlaneHalfHeight);
-	farPlaneCoords.push_back(p + sideVec() * farPlaneHalfWidth + upVector * farPlaneHalfHeight);
-	farPlaneCoords.push_back(p - sideVec() * farPlaneHalfWidth + upVector * farPlaneHalfHeight);
+	farPlaneCoords.push_back(p - sideVec() * farPlaneHalfWidth - upVectorC * farPlaneHalfHeight);
+	farPlaneCoords.push_back(p + sideVec() * farPlaneHalfWidth - upVectorC * farPlaneHalfHeight);
+	farPlaneCoords.push_back(p + sideVec() * farPlaneHalfWidth + upVectorC * farPlaneHalfHeight);
+	farPlaneCoords.push_back(p - sideVec() * farPlaneHalfWidth + upVectorC * farPlaneHalfHeight);
 }
 
 void Camera::computeFrustum() {
@@ -120,7 +126,7 @@ fov_x  = atan(tan(fov_y/2) * aspect) * 2
 
 */
 void Camera::computeFrustum_method1(){
-
+	glm::vec3 upVectorC = correctedUpVector();
 	float fovY = glm::radians(fov);
 	float fovX = glm::atan(glm::tan(fovY / 2.f) * aspectRatio) * 2.f;
 	fovX /= 2.f;
@@ -130,8 +136,8 @@ void Camera::computeFrustum_method1(){
 	frustum.far() = rl::Plane(-front, position + front * far);
 
 	glm::vec3 side = sideVec();
-	glm::vec3 Lvec = rl::rotateVec3(front, upVector, fovX);
-	glm::vec3 Rvec = rl::rotateVec3(front, upVector, -fovX);
+	glm::vec3 Lvec = rl::rotateVec3(front, upVectorC, fovX);
+	glm::vec3 Rvec = rl::rotateVec3(front, upVectorC, -fovX);
 	glm::vec3 Tvec = rl::rotateVec3(front, side, -fovY);
 	glm::vec3 Bvec = rl::rotateVec3(front, side, fovY);
 
@@ -139,11 +145,11 @@ void Camera::computeFrustum_method1(){
 	float farDistanceFOV = far / glm::cos(fovX);
 
 	frustum.left() = rl::Plane(
-		glm::cross(upVector, -Lvec),
+		glm::cross(upVectorC, -Lvec),
 		position + (Lvec * nearDistanceFOV + Lvec * farDistanceFOV) / 2.f);
 
 	frustum.right() = rl::Plane(
-		glm::cross(upVector, Rvec),
+		glm::cross(upVectorC, Rvec),
 		position + (Rvec * nearDistanceFOV + Rvec * farDistanceFOV) / 2.f);
 
 	nearDistanceFOV = near / glm::cos(fovY);
@@ -170,7 +176,8 @@ I consider:
 	Sometimes online I see negative Z axis being out of camera (front / lookVec)
 */
 void Camera::computeFrustum_method2(){
-	
+	glm::vec3 upVectorC = correctedUpVector();
+
 	float fovY = glm::radians(fov);
 	const float halfVSide = far * tanf(fovY * .5f);
 	const float halfHSide = halfVSide * aspectRatio;
@@ -187,19 +194,19 @@ void Camera::computeFrustum_method2(){
 		position + frontMultFar);
 
 	frustum.left() = rl::Plane(
-		glm::cross(frontMultFar - sideR * halfHSide, upVector),
+		glm::cross(frontMultFar - sideR * halfHSide, upVectorC),
 		position);
 	frustum.right() = rl::Plane(
-		glm::cross(upVector,frontMultFar + sideR * halfHSide),
+		glm::cross(upVectorC,frontMultFar + sideR * halfHSide),
 		position);
 	//frustum.top() = rl::Plane(
 	//	glm::cross(sideR, frontMultFar - upVector * halfVSide),
 	//	position);
 	frustum.top() = rl::Plane(
-		glm::cross(sideL, frontMultFar + upVector * halfVSide),
+		glm::cross(sideL, frontMultFar + upVectorC * halfVSide),
 		position);
 	frustum.bottom() = rl::Plane(
-		glm::cross(sideR, frontMultFar - upVector * halfVSide),
+		glm::cross(sideR, frontMultFar - upVectorC * halfVSide),
 		position);
 }
 
@@ -207,16 +214,17 @@ void Camera::computeFrustum_method2(){
 Based on https://stackoverflow.com/questions/12836967/extracting-view-frustum-planes-gribb-hartmann-method
 */
 void Camera::computeFrustum_method3(){
+	glm::vec3 upVectorC = correctedUpVector();
 
 	glm::mat4 mat = projectionMatrix() * viewMatrix();
 	glm::vec3 leftN, rightN, bottomN, topN, nearN, farN;
 
-	for (int i = 3; i--; ) leftN[i] = mat[i][3] + mat[i][0];
-	for (int i = 3; i--; ) rightN[i] = mat[i][3] - mat[i][0];
-	for (int i = 3; i--; ) bottomN[i] = mat[i][3] + mat[i][1];
-	for (int i = 3; i--; ) topN[i] = mat[i][3] - mat[i][1];
-	for (int i = 3; i--; ) nearN[i] = mat[i][3] + mat[i][2];
-	for (int i = 3; i--; ) farN[i] = mat[i][3] - mat[i][2];
+	for (int i = 3; i--; ) leftN[i]		= mat[i][3] + mat[i][0];
+	for (int i = 3; i--; ) rightN[i]	= mat[i][3] - mat[i][0];
+	for (int i = 3; i--; ) bottomN[i]	= mat[i][3] + mat[i][1];
+	for (int i = 3; i--; ) topN[i]		= mat[i][3] - mat[i][1];
+	for (int i = 3; i--; ) nearN[i]		= mat[i][3] + mat[i][2];
+	for (int i = 3; i--; ) farN[i]		= mat[i][3] - mat[i][2];
 
 	frustum.near()	 = rl::Plane(nearN, position + front * near);
 	frustum.far()	 = rl::Plane(farN, position + front * far);

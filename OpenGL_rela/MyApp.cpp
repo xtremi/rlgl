@@ -128,16 +128,19 @@ void MyApp::createBoxes() {
     rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 5);
     octTree = rl::Octree(octStruct);
 
-    int nBoxes = 100;
+    int nBoxes = 2000;
     glm::vec3 boxPos;
     rl::BoundingBox bbox;
     float boxSize = BOX_WIDTH;
     for (int i = 0; i < nBoxes; i++) {
 
         float z = rl::rand(0.f, 20.f);
-        float rad = rl::rand(20.f, 40.f);
+        float rad = rl::rand(35.f, 40.f);
         float alpha = rl::rand(0.f, glm::pi<float>() * 2.f);
         boxPos = glm::vec3(rad * glm::cos(alpha), rad * glm::sin(alpha), z);
+        boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(0.f, 50.f));
+        //alpha = 2.f * glm::pi<float>() * (float)i / (float)nBoxes;
+        //boxPos = glm::vec3(35.f * glm::cos(alpha), 35.f * glm::sin(alpha), 10.f);
         bbox = rl::BoundingBox::createCubeBoundingBox(boxPos, boxSize);
 
         objects.cubes.push_back(new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.textured, assetIDs.material.box));
@@ -152,10 +155,10 @@ void MyApp::createBoxes() {
     octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorBlue, "2", true);
     octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorRed,  "3", true);
     octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorGreen,"4", true);
-    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorBlue, "5", true);
-    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorBlue, "6", true);
-    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorRed,  "7", true);
-    octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorGreen,"8", true);
+    //octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorBlue, "5", true);
+    //octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorBlue, "6", true);
+    //octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorRed,  "7", true);
+    //octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorGreen,"8", true);
 
 
     int nInstances = 1e4;
@@ -261,10 +264,12 @@ int MyApp::updateScene() {
     frustumMesh.vertices.bindBuffer(GL_ARRAY_BUFFER);
     frustumMesh.vertices.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 
-    octTree.callOnOctTreeObjects(
-        &OctTreeFunc::isInFrustum,
-        &OctTreeFunc::hide, 
-        &camera.frustum);
+    if(octreeFrustumCullingON){
+        octTree.callOnOctTreeObjects(
+            &OctTreeFunc::isInFrustum,
+            &OctTreeFunc::hide, 
+            &camera.frustum);
+    }
 
     updateHitTestOctTree();
     //updateBoxes();
@@ -292,6 +297,10 @@ void MyApp::processInput(GLFWwindow* window) {
     }
     else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
         activeCamera = &camera;
+    }
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+        octreeFrustumCullingON = !octreeFrustumCullingON;
+        std::cout << "Octree frustum culling in " << std::string(octreeFrustumCullingON ? "ON" : "OFF") << std::endl;
     }
 
     BaseApp::processInput(window);
@@ -357,6 +366,13 @@ void MyApp::updateBoxes() {
     
 
 }
+
+bool OctTreeFunc::isInFrustum(const rl::BoundingBox& boundingBox, void* frustumPtr){
+    const rlgl::Frustum& frustum = *(rlgl::Frustum*)frustumPtr;
+    return rlgl::isInFrustum(frustum, boundingBox);
+}
+
+
 /*!*/
 bool OctTreeFunc::isInFrustum(rl::OctreeItem* octreeNode, void* frustumPtr) {
     const rlgl::Frustum& frustum = *(rlgl::Frustum*)frustumPtr;
@@ -387,15 +403,17 @@ void OctTreeFunc::setHighlight(void* object) {
 void OctTreeFunc::setNoHighlight(void* object) {
 	((rlgl::Object*)object)->setHighlight(false);
 }
-void OctTreeFunc::setHighlightColorBlue(void* object) {
+
+void OctTreeFunc::setHighlightColorRed(void* object) {
     OctTreeFunc::setHighlight(object);
     ((rlgl::Object*)object)->setColor(glm::vec3(1.f, 0.f, 0.f));
 }
-void OctTreeFunc::setHighlightColorRed(void* object) {
+void OctTreeFunc::setHighlightColorGreen(void* object) {
     OctTreeFunc::setHighlight(object);
     ((rlgl::Object*)object)->setColor(glm::vec3(0.f, 1.f, 0.f));
 }
-void OctTreeFunc::setHighlightColorGreen(void* object) {
+void OctTreeFunc::setHighlightColorBlue(void* object) {
     OctTreeFunc::setHighlight(object);
     ((rlgl::Object*)object)->setColor(glm::vec3(0.f, 0.f, 1.f));
 }
+

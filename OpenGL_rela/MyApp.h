@@ -79,6 +79,7 @@ protected:
 
 private:
 	static const float BOX_WIDTH;
+	bool octreeFrustumCullingON = true;
 };
 
 /*!
@@ -87,6 +88,7 @@ private:
 namespace OctTreeFunc{
 
 	bool isInFrustum(rl::OctreeItem* octreeNode, void* frustumPtr);
+	bool isInFrustum(const rl::BoundingBox& boundingBox, void* frustumPtr);
 	void hide(void* object);
 	void setHighlight(void* object);
 	void setHighlightColorBlue(void* object);

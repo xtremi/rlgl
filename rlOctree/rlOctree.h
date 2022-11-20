@@ -76,7 +76,7 @@ public:
 	void callOnAllOctTreeObject(void (*func)(void*, const BoundingBox&, void*), void* customData = nullptr);
 	void callOnAllOctTreeObject(void (*func)(void*));
 	void callOnOctTreeObjects(
-		bool (*funcTestOctreeNode)(OctreeItem*, void*), 
+		bool (*funcTestBoundingBox)(const rl::BoundingBox&, void*),
 		void (*funcDoOnNegativeTest)(void*),
 		void* customData = nullptr);
 
@@ -91,7 +91,7 @@ protected:
 	bool hitTest(const OctreeItem* item, const rl::Ray& ray, void** data);
 	void callOnOctTreeObjects2(
 		OctreeItem* octTreeNode,
-		bool (*funcTestOctreeNode)(OctreeItem*, void*),
+		bool (*funcTestBoundingBox)(const rl::BoundingBox&, void*),
 		void (*funcDoOnNegativeTest)(void*),
 		void* customData = nullptr);
 	void callOnAllChildrenObjects(
@@ -106,6 +106,7 @@ protected:
 
 
 	int hitTestCount = 0;
+	int nFuncCalls = 0;
 
 };
 

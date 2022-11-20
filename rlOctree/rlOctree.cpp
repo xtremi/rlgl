@@ -171,14 +171,14 @@ std::string OctreeItem::toStr(std::string& str, int& level) {
 std::string OctreeItem::toStr() {
 	std::string str = "";
 	str += "[" + address + "] - ";
-	str += " (" + std::to_string(objects.size()) + " objects) - ";
+	str += " (" + std::to_string(objects.size()) + " objects)";// - ";
 
-	for(const OctreeObject& obj : objects){
-		str += std::to_string((uint64_t)obj.data) + ", ";
-	}
-	if(!objects.empty()){
-		str.pop_back(); str.pop_back();
-	}
+	//for(const OctreeObject& obj : objects){
+	//	str += std::to_string((uint64_t)obj.data) + ", ";
+	//}
+	//if(!objects.empty()){
+	//	str.pop_back(); str.pop_back();
+	//}
 	return str;
 }
 
@@ -352,11 +352,12 @@ void Octree::callOnAllOctTreeObject(void(*func)(void*)) {
 }
 
 void Octree::callOnOctTreeObjects(
-	bool (*funcTestOctreeNode)(OctreeItem*, void*),
+	bool (*funcTestBoundingBox)(const rl::BoundingBox&, void*),
 	void (*funcDoOnNegativeTest)(void*),
 	void* customData)
 {
-	callOnOctTreeObjects2(root, funcTestOctreeNode, funcDoOnNegativeTest, customData);
+	nFuncCalls = 0;
+	callOnOctTreeObjects2(root, funcTestBoundingBox, funcDoOnNegativeTest, customData);
 }
 
 
@@ -370,23 +371,34 @@ void Octree::callOnOctTreeObjects(
 */
 void  Octree::callOnOctTreeObjects2(
 	OctreeItem* octTreeNode,
-	bool (*funcTestOctreeNode)(OctreeItem*, void*),
+	bool (*funcTestBoundingBox)(const rl::BoundingBox&, void*),
 	void (*funcDoOnNegativeTest)(void*),
 	void* customData)
 {
 	if(!octTreeNode) {
 		return;
 	}
-	if (!funcTestOctreeNode(octTreeNode, customData)) {
+	//If bounding box test fails, we call function funcDoOnNegativeTest on every object owned and objects of children
+	if (!funcTestBoundingBox(octTreeNode->boundingBox, customData)) {
 		callOnAllChildrenObjects(octTreeNode, funcDoOnNegativeTest);
 	}
 	else {
+
+		//if the bounding box test passes, we also check all the objects's bounding boxes
+		//before checking all children
+		for (auto objIt = octTreeNode->objects.begin(); objIt != octTreeNode->objects.end(); objIt++) {
+			if (!funcTestBoundingBox(objIt->bbox, customData)) {
+				funcDoOnNegativeTest(objIt->data);
+				nFuncCalls++;
+			}
+		}
+
 		for (auto nodeIt = octTreeNode->children.begin(); nodeIt != octTreeNode->children.end(); nodeIt++) {
-			callOnOctTreeObjects2(nodeIt->second, funcTestOctreeNode, funcDoOnNegativeTest, customData);
+			callOnOctTreeObjects2(nodeIt->second, funcTestBoundingBox, funcDoOnNegativeTest, customData);
 		}
 	}
 }
-
+ 
 
 void Octree::callOnAllChildrenObjects(
 	OctreeItem* octTreeNode,
@@ -395,6 +407,7 @@ void Octree::callOnAllChildrenObjects(
 	//Objects owned by item:
 	for (auto objIt = octTreeNode->objects.begin(); objIt != octTreeNode->objects.end(); objIt++) {
 		func(objIt->data);
+		nFuncCalls++;
 	}
 
 	//Children owned by item:

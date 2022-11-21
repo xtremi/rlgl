@@ -215,14 +215,21 @@ Based on https://stackoverflow.com/questions/12836967/extracting-view-frustum-pl
 */
 void Camera::computeFrustum_method3(){
 	glm::mat4 mat = projectionMatrix() * viewMatrix();
-	glm::vec3 leftN, rightN, bottomN, topN, nearN, farN;
+	glm::vec4 leftN, rightN, bottomN, topN, nearN, farN;
 
-	for (int i = 3; i--; ) leftN[i]		= mat[i][3] + mat[i][0];
-	for (int i = 3; i--; ) rightN[i]	= mat[i][3] - mat[i][0];
-	for (int i = 3; i--; ) bottomN[i]	= mat[i][3] + mat[i][1];
-	for (int i = 3; i--; ) topN[i]		= mat[i][3] - mat[i][1];
-	for (int i = 3; i--; ) nearN[i]		= mat[i][3] + mat[i][2];
-	for (int i = 3; i--; ) farN[i]		= mat[i][3] - mat[i][2];
+	for (int i = 4; i--; ) leftN[i]		= mat[i][3] + mat[i][0];
+	for (int i = 4; i--; ) rightN[i]	= mat[i][3] - mat[i][0];
+	for (int i = 4; i--; ) bottomN[i]	= mat[i][3] + mat[i][1];
+	for (int i = 4; i--; ) topN[i]		= mat[i][3] - mat[i][1];
+	for (int i = 4; i--; ) nearN[i]		= mat[i][3] + mat[i][2];
+	for (int i = 4; i--; ) farN[i]		= mat[i][3] - mat[i][2];
+
+	leftN  	= glm::normalize(leftN);
+	rightN 	= glm::normalize(rightN);
+	bottomN = glm::normalize(bottomN);
+	topN 	= glm::normalize(topN);
+	nearN	= glm::normalize(nearN);
+	farN	= glm::normalize(farN);
 
 	frustum.near()	 = rl::Plane(nearN, position + front * near);
 	frustum.far()	 = rl::Plane(farN, position + front * far);

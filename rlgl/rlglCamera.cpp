@@ -214,8 +214,6 @@ void Camera::computeFrustum_method2(){
 Based on https://stackoverflow.com/questions/12836967/extracting-view-frustum-planes-gribb-hartmann-method
 */
 void Camera::computeFrustum_method3(){
-	glm::vec3 upVectorC = correctedUpVector();
-
 	glm::mat4 mat = projectionMatrix() * viewMatrix();
 	glm::vec3 leftN, rightN, bottomN, topN, nearN, farN;
 

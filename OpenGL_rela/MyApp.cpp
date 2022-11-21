@@ -128,7 +128,7 @@ void MyApp::createBoxes() {
     rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 4);
     octTree = rl::Octree(octStruct);
 
-    int nBoxes = 2000;
+    int nBoxes = 400;
     glm::vec3 boxPos;
     rl::BoundingBox bbox;
     float boxSize = BOX_WIDTH;
@@ -138,7 +138,7 @@ void MyApp::createBoxes() {
         float rad = rl::rand(35.f, 40.f);
         float alpha = rl::rand(0.f, glm::pi<float>() * 2.f);
         boxPos = glm::vec3(rad * glm::cos(alpha), rad * glm::sin(alpha), z);
-        boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(0.f, 50.f));
+        boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(BOX_WIDTH / 2.f, BOX_WIDTH));
         //alpha = 2.f * glm::pi<float>() * (float)i / (float)nBoxes;
         //boxPos = glm::vec3(35.f * glm::cos(alpha), 35.f * glm::sin(alpha), 10.f);
         bbox = rl::BoundingBox::createCubeBoundingBox(boxPos, boxSize);
@@ -161,7 +161,7 @@ void MyApp::createBoxes() {
     //octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorGreen,"8", true);
 
 
-    int nInstances = 1e4;
+    int nInstances = 1e2;
     for (int i = 0; i < nInstances; i++) {
         boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
 

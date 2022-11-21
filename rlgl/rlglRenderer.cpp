@@ -108,7 +108,11 @@ bool rlgl::isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox) {
 	if (plane_outside_of[0] != plane_outside_of[1]) {
 		return true;
 	}
-
+	//for (int i = 1; i < 6; i++) {
+	//	if (plane_outside_of[0] != plane_outside_of[i]) {
+	//		return true;
+	//	}
+	//}
 
 	return false;
 }

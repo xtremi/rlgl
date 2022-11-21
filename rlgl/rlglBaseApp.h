@@ -40,9 +40,14 @@ public:
 	bool process();
 	
 private:
-	const double maxFPS = 120.0;
+	const double maxFPS = 220.0;
 	const double maxPeriod = 1.0 / maxFPS;
 	double lastTime = 0.0, currentTime, deltaTime;
+	static const size_t n_frames = 20;
+	double FPS_values[n_frames];
+	size_t currentFrame = 0;
+	double renderTime = 0.;
+
 };
 
 class BaseApp {

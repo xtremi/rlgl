@@ -43,10 +43,10 @@ glm::vec3 Camera::lookVec() const {
 	return front;
 }
 glm::vec3 Camera::sideVec() const {
-	return glm::cross(upVector, lookVec());
+	return glm::normalize(glm::cross(upVector, lookVec()));
 }
 glm::vec3 Camera::correctedUpVector() const {
-	return glm::cross(lookVec(), sideVec());
+	return glm::normalize(glm::cross(lookVec(), sideVec()));
 }
 
 
@@ -89,7 +89,7 @@ void Camera::frustumCorners(
 	nearPlaneCoords.push_back(p + sideVec() * nearPlaneHalfWidth + upVectorC * nearPlaneHalfHeight);
 	nearPlaneCoords.push_back(p - sideVec() * nearPlaneHalfWidth + upVectorC * nearPlaneHalfHeight);
 
-	p = position + front * far*0.99f; //to be a little bit nearer than far (if not won't see)
+	p = position + front * far*0.97f; //to be a little bit nearer than far (if not won't see)
 	float farPlaneHalfWidth = glm::sin(fovX / 2.) * far;
 	float farPlaneHalfHeight = glm::sin(fovY / 2.) * far;
 
@@ -217,19 +217,19 @@ void Camera::computeFrustum_method3(){
 	glm::mat4 mat = projectionMatrix() * viewMatrix();
 	glm::vec4 leftN, rightN, bottomN, topN, nearN, farN;
 
-	for (int i = 4; i--; ) leftN[i]		= mat[i][3] + mat[i][0];
-	for (int i = 4; i--; ) rightN[i]	= mat[i][3] - mat[i][0];
-	for (int i = 4; i--; ) bottomN[i]	= mat[i][3] + mat[i][1];
-	for (int i = 4; i--; ) topN[i]		= mat[i][3] - mat[i][1];
-	for (int i = 4; i--; ) nearN[i]		= mat[i][3] + mat[i][2];
-	for (int i = 4; i--; ) farN[i]		= mat[i][3] - mat[i][2];
+	for (int i = 3; i--; ) leftN[i]		= mat[i][3] + mat[i][0];
+	for (int i = 3; i--; ) rightN[i]	= mat[i][3] - mat[i][0];
+	for (int i = 3; i--; ) bottomN[i]	= mat[i][3] + mat[i][1];
+	for (int i = 3; i--; ) topN[i]		= mat[i][3] - mat[i][1];
+	for (int i = 3; i--; ) nearN[i]		= mat[i][3] + mat[i][2];
+	for (int i = 3; i--; ) farN[i]		= mat[i][3] - mat[i][2];
 
-	leftN  	= glm::normalize(leftN);
-	rightN 	= glm::normalize(rightN);
-	bottomN = glm::normalize(bottomN);
-	topN 	= glm::normalize(topN);
-	nearN	= glm::normalize(nearN);
-	farN	= glm::normalize(farN);
+	//leftN  	= glm::normalize(leftN);
+	//rightN 	= glm::normalize(rightN);
+	//bottomN = glm::normalize(bottomN);
+	//topN 	= glm::normalize(topN);
+	//nearN	= glm::normalize(nearN);
+	//farN	= glm::normalize(farN);
 
 	frustum.near()	 = rl::Plane(nearN, position + front * near);
 	frustum.far()	 = rl::Plane(farN, position + front * far);

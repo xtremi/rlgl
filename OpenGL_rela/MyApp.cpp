@@ -78,7 +78,7 @@ void MyApp::prepareAssets() {
 
 int MyApp::prepareScene() {
 
-    lodControl = rlgl::LODcontroller(glm::vec3(0.f), 15.f, 4, 0.5);
+    lodControl = rlgl::LODcontroller(glm::vec3(0.f), 10.f, 4, 0.5);
 
     secondaryCam.aspectRatio = windowParams().aspect();
 
@@ -89,19 +89,21 @@ int MyApp::prepareScene() {
     secondaryCam.far = 800.f;
 
     prepareAssets();
-    createWorld();
-    //createLODterrain();
-    createBoxes();
+    //createWorld();
+    createLODterrain();
+    //createBoxes();
     createCSYS();
     createUI();
+    //createFrustumObject();
+    return 0;
+}
 
+void MyApp::createFrustumObject() {
     objects.frustum = new rlgl::Object(assetIDs.mesh.frustum, assetIDs.shader.colored, NO_MATERIAL);
     objects.frustum->setPosition(glm::vec3(0.f));
     objects.frustum->setScale(glm::vec3(1.f));
     objects.frustum->setColor(glm::vec4(0.f, 0.5f, 0.7f, 0.2f));
     scene.addObject(objects.frustum);
-
-    return 0;
 }
 
 void MyApp::createWorld() {
@@ -193,9 +195,10 @@ void MyApp::createBoxes() {
 
 void MyApp::createLODterrain() {
     
-    float zpos = 1.f;
+    float zpos = 0.f;
 
-    TerrainQuadObject* terrainQuad_0 = new TerrainQuadObject(assetIDs.mesh.terrainDummy, assetIDs.shader.colored, 0, rlgl::LODloc::center);
+    TerrainQuadObject* terrainQuad_0 = new TerrainQuadObject(
+        assetIDs.mesh.terrainDummy, assetIDs.shader.colored, 0, rlgl::LODloc::center);
     objects.terrainLODquads.push_back(terrainQuad_0);
 
     glm::vec3 quadPos = glm::vec3(lodControl.quadPosition(rlgl::LODloc::center, 0), zpos);
@@ -228,7 +231,7 @@ void MyApp::createLODterrain() {
             
             quadSize = lodControl.quadSideLength(i);
             terrainQuad->setScale(glm::vec3(quadSize, quadSize, 1.f));
-            terrainQuad->setColor(colors[i] * 0.1f * (float)(j + 1));
+            terrainQuad->setColor(colors[i] * (0.5f + 0.5f*(float)j/8));
             scene.addObject(terrainQuad);
 
 			//bbox = rl::BoundingBox::createCubeBoundingBox(glm::vec3(quadPos), glm::vec3(quadSize, quadSize, 1.f));
@@ -258,7 +261,7 @@ void MyApp::createCSYS() {
 
 static rlgl::Object* lastHitObj = nullptr;
 int MyApp::updateScene() {
-
+    camera.position.z = 2.f;
     camera.computeFrustum();
     std::vector<glm::vec3> near, far;
     camera.frustumCorners(near, far);
@@ -312,10 +315,11 @@ void MyApp::processInput(GLFWwindow* window) {
 
 void MyApp::updateTerrainLOD() {
 
-    for (rlgl::Object* obj : objects.terrainLODquads) {
-        rl::BoundingBox bbox = rl::BoundingBox::createCubeBoundingBox(obj->getPosition(), obj->getScale());
-        if (!rlgl::isInFrustum(camera.frustum, bbox)) {
-            (obj->setInViewState(false));
+    for (int i = 1; i < objects.terrainLODquads.size(); i++) {
+        rl::BoundingBox bbox = rl::BoundingBox::createCubeBoundingBox(
+            objects.terrainLODquads[i]->getPosition(), objects.terrainLODquads[i]->getScale());
+        if (!rlgl::isInFrustum(camera.frustum, bbox, true)) {
+            (objects.terrainLODquads[i]->setInViewState(false));
         }
     }
 

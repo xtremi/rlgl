@@ -74,6 +74,7 @@ protected:
 	void createBoxes();
 	void createLODterrain();
 	void createCSYS();
+	void createFrustumObject();
 
 	//update
 	void updateBoxes();

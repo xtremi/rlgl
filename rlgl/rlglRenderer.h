@@ -9,7 +9,7 @@ namespace rlgl{
 	class Camera;
 	class Frustum;
 
-	bool isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox);
+	bool isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox, bool strict = false);
 
 class Renderer{
 public:

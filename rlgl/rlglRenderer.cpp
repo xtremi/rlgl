@@ -74,12 +74,17 @@ void Renderer::render(
 
 
 
-bool rlgl::isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox) {
+bool rlgl::isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox, bool strict) {
 	static const size_t NUMBER_OF_PLANES = 6;
 
-	//std::vector<glm::vec3> bboxCorners = bbox.corners();
-	std::vector<glm::vec3> bboxCorners({bbox.minC, bbox.maxC});
-	int plane_outside_of[2];
+	std::vector<glm::vec3> bboxCorners;
+	if(strict){
+		bboxCorners = bbox.corners();
+	}
+	else{
+		bboxCorners = std::vector<glm::vec3>({bbox.minC, bbox.maxC});
+	}
+	std::vector<int> plane_outside_of(8);
 	
 	size_t cornerIndex = 0;
 	for (const glm::vec3& corner : bboxCorners) {
@@ -105,8 +110,10 @@ bool rlgl::isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox) {
 	//If both corners are outside frustum, but not
 	//based on the same planes, we keep it.
 	//This is for large object, larger than the frusum space
-	if (plane_outside_of[0] != plane_outside_of[1]) {
-		return true;
+	if(!strict){
+		if (plane_outside_of[0] != plane_outside_of[1]) {
+			return true;
+		}
 	}
 	//for (int i = 1; i < 6; i++) {
 	//	if (plane_outside_of[0] != plane_outside_of[i]) {

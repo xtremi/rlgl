@@ -131,7 +131,7 @@ void BaseApp::handleMouse(double xpos, double ypos)
     activeCamera->setFront(glm::normalize(front));    
 }
 
-static const float CURSOR_MOVE_SPEED = 0.05f;
+static const float CURSOR_MOVE_SPEED = 0.15f;
 void BaseApp::processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -182,7 +182,20 @@ int BaseApp::initializeWindow() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_SAMPLES, 4);
 
-    _window = glfwCreateWindow(windowParams().size.x, windowParams().size.y, windowParams().label.c_str(), NULL, NULL);
+	GLFWmonitor** monitors = nullptr;
+	int nMonitors = 0;
+	monitors = glfwGetMonitors(&nMonitors);
+	if (nMonitors == 0) {
+		glfwTerminate();
+		errmsg = "glfwGetMonitors() - found 0 monitors";
+		return (int)error_code::GLFW_NO_MONITORS;
+	}
+
+    _window = glfwCreateWindow(
+		windowParams().size.x, windowParams().size.y, 
+		windowParams().label.c_str(), 
+		NULL, NULL);
+
     if (_window == NULL)
     {
         glfwTerminate();

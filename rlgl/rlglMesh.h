@@ -69,6 +69,7 @@ namespace primitive_mesh{
 	extern Mesh plane_textureX10;
 	extern Mesh cube_tex;
 	extern Mesh cube;
+	extern Mesh grass;
 
     extern Mesh terrainDummy;
 }

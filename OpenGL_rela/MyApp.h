@@ -16,17 +16,19 @@ public:
 struct AssetIDs {
 	struct Meshes {
 		uint64_t world, cubeTex, cube, square, cubeInst, terrainDummy, frustum;
+		uint64_t grass;
 	};
 	struct Materials {
 		uint64_t checker, box, boxMetal;
 	};
 	struct Shaders {
 		uint64_t textured, colored, ui, inst;
+		uint64_t grass;
 
 	};
-	Meshes mesh;
+	Meshes	  mesh;
 	Materials material;
-	Shaders shader;
+	Shaders   shader;
 };
 
 struct WorldObjects {
@@ -36,6 +38,7 @@ struct WorldObjects {
 	rlgl::Object*			   instObj;
 
 	std::vector<TerrainQuadObject*>  terrainLODquads;
+	std::vector<rlgl::Object*> grass;
 
 	rlgl::Object* frustum;
 };

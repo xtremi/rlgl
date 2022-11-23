@@ -75,6 +75,7 @@ protected:
 	void createLODterrain();
 	void createCSYS();
 	void createFrustumObject();
+	void createGrass();
 
 	//update
 	void updateBoxes();

@@ -268,22 +268,22 @@ Mesh rlgl::primitive_mesh::cube{
 //x, y, z, u, v (*8)
 Mesh rlgl::primitive_mesh::grass{
 	 rlgl::GLBuffer<float>({
-		-0.5f,  0.0f,  0.0f,  //0.f, 0.f,
-		 0.5f,  0.0f,  0.0f,  //1.f, 0.f,
-		 0.5f,  0.0f,  1.0f,  //1.f, 1.f,
-		-0.5f,  0.0f,  1.0f,  //0.f, 1.f,
-							  //
-		 0.0f, -0.5f,  0.0f,  //0.f, 0.f,
-		 0.0f,  0.5f,  0.0f,  //1.f, 0.f,
-		 0.0f,  0.5f,  1.0f,  //1.f, 1.f,
-		 0.0f, -0.5f,  1.0f,  //0.f, 1.f,
+		-0.5f,  0.0f,  0.0f,    -1.f, 0.f,
+		 0.5f,  0.0f,  0.0f,     1.f,  0.f,
+		 0.5f,  0.0f,  1.0f,     1.f,  1.f,
+		-0.5f,  0.0f,  1.0f,    -1.f, 1.f,
+							    
+		 0.0f, -0.5f,  0.0f,    -1.f, 0.f,
+		 0.0f,  0.5f,  0.0f,     1.f,  0.f,
+		 0.0f,  0.5f,  1.0f,     1.f,  1.f,
+		 0.0f, -0.5f,  1.0f,    -1.f, 1.f,
 	 }),
 	rlgl::GLBuffer<GLuint>({
 		0,1,2, 0,2,3,
 		4,5,6, 4,6,7
 		}),
 	rlgl::GLBuffer<float>({}),
-	0, true, false, false, false, false, 8, 4
+	0, true, false, false, true, false, 8, 3*4
 };
 
 

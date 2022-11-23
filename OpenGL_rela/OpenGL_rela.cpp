@@ -4,7 +4,7 @@
 
 int main(int argc, char* argv[]) {
 
-    glm::ivec2 windowSize(800, 600);
+    glm::ivec2 windowSize(800/2, 600/2);
 
 	//rlgl::DemoApp app;
 	MyApp app;

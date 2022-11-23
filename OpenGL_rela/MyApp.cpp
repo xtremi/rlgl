@@ -37,11 +37,13 @@ void MyApp::prepareAssets() {
     rlgl::primitive_mesh::cube_tex.initialize();
     rlgl::primitive_mesh::cube.initialize();
     rlgl::primitive_mesh::terrainDummy.initialize();
+    rlgl::primitive_mesh::grass.initialize();
 
     assetIDs.mesh.world = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
     assetIDs.mesh.cubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
     assetIDs.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
     assetIDs.mesh.terrainDummy = scene.addMesh(&rlgl::primitive_mesh::terrainDummy);
+	assetIDs.mesh.grass = scene.addMesh(&rlgl::primitive_mesh::grass);
     assetIDs.mesh.frustum = scene.addMesh(&frustumMesh);
 
 
@@ -54,15 +56,17 @@ void MyApp::prepareAssets() {
     assetIDs.material.box = scene.addMaterial(materialBox);
     assetIDs.material.boxMetal = scene.addMaterial(materialBoxMetal);
 
-    rlgl::Shader shaderTextured, shaderColored, shaderInst;
+    rlgl::Shader shaderTextured, shaderColored, shaderInst, shaderGrass;
     shaderTextured.initialize("..\\data\\shaders\\object.vs", "..\\data\\shaders\\object.fs");
     shaderTextured.setInt("textureID", materialChecker.glID);
     shaderColored.initialize("..\\data\\shaders\\object_col.vs", "..\\data\\shaders\\object_col.fs"); 
     shaderInst.initialize("..\\data\\shaders\\object_inst.vs", "..\\data\\shaders\\object_inst.fs");
+	shaderGrass.initialize("..\\data\\shaders\\grass.vs", "..\\data\\shaders\\grass.fs");
 
     assetIDs.shader.textured = scene.addShader(shaderTextured);
     assetIDs.shader.colored = scene.addShader(shaderColored);
-    assetIDs.shader.inst = scene.addShader(shaderInst);
+    assetIDs.shader.colored = scene.addShader(shaderColored);
+    assetIDs.shader.grass = scene.addShader(shaderGrass);
 
 
     //UI:
@@ -89,12 +93,13 @@ int MyApp::prepareScene() {
     secondaryCam.far = 800.f;
 
     prepareAssets();
-    //createWorld();
-    createLODterrain();
+    createWorld();
+    //createLODterrain();
     //createBoxes();
     createCSYS();
     createUI();
     //createFrustumObject();
+	createGrass();
     return 0;
 }
 
@@ -105,6 +110,18 @@ void MyApp::createFrustumObject() {
     objects.frustum->setColor(glm::vec4(0.f, 0.5f, 0.7f, 0.2f));
     scene.addObject(objects.frustum);
 }
+
+void MyApp::createGrass() {
+
+	rlgl::Object* grassObj = new rlgl::Object(assetIDs.mesh.grass, assetIDs.shader.grass, NO_MATERIAL);
+	grassObj->setPosition(glm::vec3(5.f, 0.f, 0.f));
+	grassObj->setScale(glm::vec3(2.f));
+	grassObj->setColor(glm::vec4(0.1f, 0.7f, 0.1f, 1.0f));
+
+	objects.grass.push_back(grassObj);
+	scene.addObject(grassObj);
+}
+
 
 void MyApp::createWorld() {
     objects.worldPlane = new rlgl::Object(assetIDs.mesh.world, assetIDs.shader.textured, assetIDs.material.checker);
@@ -325,15 +342,12 @@ void MyApp::updateTerrainLOD() {
 
 
     if (lodControl.outOfCenterLimit(camera.position)) {
-
-        lodControl.setCenterPosition(camera.position);
-
+		glm::vec3 newPos(camera.position.x, camera.position.y, 0.f);
+		lodControl.setCenterPosition(newPos);
+		
         for (TerrainQuadObject* tobj : objects.terrainLODquads) {
-            tobj->setPosition(glm::vec3(lodControl.quadPosition(tobj->loc, tobj->level), 1.f));
-
+            tobj->setPosition(glm::vec3(lodControl.quadPosition(tobj->loc, tobj->level), 0.f));
         }
-
-
     }
 
 }

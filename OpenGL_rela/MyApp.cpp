@@ -113,13 +113,20 @@ void MyApp::createFrustumObject() {
 
 void MyApp::createGrass() {
 
-	rlgl::Object* grassObj = new rlgl::Object(assetIDs.mesh.grass, assetIDs.shader.grass, NO_MATERIAL);
-	grassObj->setPosition(glm::vec3(5.f, 0.f, 0.f));
-	grassObj->setScale(glm::vec3(2.f));
-	grassObj->setColor(glm::vec4(0.1f, 0.7f, 0.1f, 1.0f));
+    glm::vec3 gpos(4., 4., 0.);
 
-	objects.grass.push_back(grassObj);
-	scene.addObject(grassObj);
+    for(int i = 0; i < 10; i++){
+	    rlgl::Object* grassObj = new rlgl::Object(assetIDs.mesh.grass, assetIDs.shader.grass, NO_MATERIAL);
+	    grassObj->setPosition(glm::vec3(
+            gpos.x + rl::rand(0.0, 2.0), 
+            gpos.y + rl::rand(0.0, 2.0), 
+            gpos.z));
+	    grassObj->setScale(glm::vec3(2.f));
+	    grassObj->setColor(glm::vec4(0.1f, 0.7f, 0.1f, 1.0f));
+
+	    objects.grass.push_back(grassObj);
+	    scene.addObject(grassObj);
+    }
 }
 
 

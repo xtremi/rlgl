@@ -1,5 +1,6 @@
 /.vs
 /output
+/build
 
 # Prerequisites
 *.d

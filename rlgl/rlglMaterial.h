@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <glad/glad.h>
+#include <glad/gl.h>
 
 namespace rlgl{
 

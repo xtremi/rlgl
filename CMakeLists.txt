@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.10)
 project(rlglPlayground VERSION 1.0)
 
 message("##################################################################")
-message("PROJECT_BINARY_DIR       = ${PROJECT_BINARY_DIR}")
-message("CMAKE_SOURCE_DIR         = ${CMAKE_SOURCE_DIR}")
-message("PROJECT_SOURCE_DIR       = ${PROJECT_SOURCE_DIR}")
-message("CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}")
+message("PROJECT_BINARY_DIR       = " ${PROJECT_BINARY_DIR})
+message("CMAKE_SOURCE_DIR         = " ${CMAKE_SOURCE_DIR})
+message("PROJECT_SOURCE_DIR       = " ${PROJECT_SOURCE_DIR})
+message("CMAKE_CURRENT_SOURCE_DIR = " ${CMAKE_CURRENT_SOURCE_DIR})
 message("CMAKE_SYSTEM_PROCESSOR   = " ${CMAKE_SYSTEM_PROCESSOR})
 message("CMAKE_GENERATOR          = " ${CMAKE_GENERATOR})
 message("CMAKE_VS_PLATFORM_NAME   = " ${CMAKE_VS_PLATFORM_NAME})
@@ -15,6 +15,7 @@ message("CMAKE_SYSTEM_NAME        = " ${CMAKE_SYSTEM_NAME})
 message("UNIX                     = " ${UNIX})
 message("WIN32                    = " ${WIN32})
 message("MSVC                     = " ${MSVC})
+message("PYTHON_EXECUTABLE        = " ${PYTHON_EXECUTABLE})
 message("##################################################################")
 
 
@@ -29,22 +30,16 @@ endif()
 
 #configure_file(rlLearnCMakeConfig.h.in rlLearnCMakeConfig.h)
 
-add_executable(${PROJECT_NAME} OpenGL_rela/MyApp.cpp OpenGL_rela/OpenGL_rela.cpp)
-target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_BINARY_DIR})
-
 message(STATUS "Locating OpenGL using find_package")
 find_package(OpenGL REQUIRED)
 message("OPENGL_INCLUDE_DIR = " ${OPENGL_INCLUDE_DIR})
 message("OPENGL_glu_LIBRARY = " ${OPENGL_glu_LIBRARY})
 message("OPENGL_gl_LIBRARY  = " ${OPENGL_gl_LIBRARY})
 message("OPENGL_LIBRARIES   = " ${OPENGL_LIBRARIES})
-message("##################################################")
-message(STATUS "OpenGL found")
 
-
-find_package(Git QUIET)
 
 #DOWNLOAD GIT SUBMODULES
+find_package(Git QUIET)
 message("Retreiving submodules (GLFW, GLAD, GLM, STB)")
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
     option(GIT_SUBMODULE "Check submodules during build" ON)
@@ -61,39 +56,14 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
 endif()
 
 
-add_subdirectory(rlgl)
-add_subdirectory(rlCommon)
-add_subdirectory(rlOctree)
-#add_subdirectory(OpenGL_rela)
-list(APPEND EXTRA_LIBS rlgl rlCommon rlOctree)
-list(APPEND EXTRA_LIB_DIRS useless rlgl rlCommon rlOctree)
-list(APPEND EXTRA_INCLUDE_DIRS rlgl rlCommon rlOctree)
-
 add_subdirectory(submodules/glfw)
 add_subdirectory(submodules/glm)
 add_subdirectory(submodules/glad/cmake)
+add_subdirectory(rlgl)
+add_subdirectory(rlCommon)
+add_subdirectory(rlOctree)
+add_subdirectory(OpenGL_rela)
 
-
-message("Calling glad_add_library to generate GLAD opengl interface:")
-glad_add_library(
-	glad_gl_core_40
-	SHARED
-	LOCATION ${PROJECT_BINARY_DIR}/glad-gen
-	API gl:core=4.0)
-	
-
-target_include_directories(${PROJECT_NAME} 
-    PUBLIC submodule/glfw/include
-    PUBLIC submodule/stb
-    PUBLIC ${EXTRA_INCLUDE_DIRS})
-
-target_link_libraries(${PROJECT_NAME} PUBLIC 
-	glad_gl_core_40         #submodule
-    glfw                    #submodule
-    glm::glm                #submodule
-    ${OPENGL_LIBRARIES}     #opengl found by find_package
-    ${EXTRA_LIBS}           #integrated lib - optional	
-    )
 
 #install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 #install(FILES "${PROJECT_BINARY_DIR}/rlLearnCMakeConfig.h" DESTINATION include)

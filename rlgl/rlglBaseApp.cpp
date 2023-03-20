@@ -203,8 +203,10 @@ int BaseApp::initializeWindow() {
         return (int)error_code::GLFW_CREATE_WINDOW;
     }
     glfwMakeContextCurrent(_window);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+   
+    
+    //if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    if (!gladLoadGL(glfwGetProcAddress))
     {
         errmsg = "gladLoadGLLoader() - Failed to initialize GLAD";
         return (int)error_code::GLAD_LOAD_GL_LOADER;

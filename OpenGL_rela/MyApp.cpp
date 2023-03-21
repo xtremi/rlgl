@@ -4,6 +4,8 @@
 
 const float MyApp::BOX_WIDTH = 2.5f;
 
+MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory){}
+
 void MyApp::prepareAssets() {
 
     cubeTexInstMesh = rlgl::primitive_mesh::cube_tex;
@@ -48,24 +50,24 @@ void MyApp::prepareAssets() {
 
 
     rlgl::Material materialChecker, materialBox, materialBoxMetal;
-    materialChecker.initialize("..\\data\\textures\\checker_grey.jpg", true);
-    materialBox.initialize("..\\data\\textures\\box-texture.png", false);
-    materialBoxMetal.initialize("..\\data\\textures\\box_metal.jpg", false);
+    materialChecker.initialize(_assetDirectory + "\\textures\\checker_grey.jpg", true);
+    materialBox.initialize(_assetDirectory + "\\textures\\box-texture.png", false);
+    materialBoxMetal.initialize(_assetDirectory + "\\textures\\box_metal.jpg", false);
 
     assetIDs.material.checker = scene.addMaterial(materialChecker);
     assetIDs.material.box = scene.addMaterial(materialBox);
     assetIDs.material.boxMetal = scene.addMaterial(materialBoxMetal);
 
     rlgl::Shader shaderTextured, shaderColored, shaderInst, shaderGrass;
-    shaderTextured.initialize("..\\data\\shaders\\object.vs", "..\\data\\shaders\\object.fs");
+    shaderTextured.initialize(_assetDirectory + "\\shaders\\object.vs", _assetDirectory + "\\shaders\\object.fs");
     shaderTextured.setInt("textureID", materialChecker.glID);
-    shaderColored.initialize("..\\data\\shaders\\object_col.vs", "..\\data\\shaders\\object_col.fs"); 
-    shaderInst.initialize("..\\data\\shaders\\object_inst.vs", "..\\data\\shaders\\object_inst.fs");
-	shaderGrass.initialize("..\\data\\shaders\\grass.vs", "..\\data\\shaders\\grass.fs");
+    shaderColored.initialize(_assetDirectory + "\\shaders\\object_col.vs", _assetDirectory + "\\shaders\\object_col.fs");
+    shaderInst.initialize(_assetDirectory + "\\shaders\\object_inst.vs", _assetDirectory + "\\shaders\\object_inst.fs");
+	shaderGrass.initialize(_assetDirectory + "\\shaders\\grass.vs", _assetDirectory + "\\shaders\\grass.fs");
 
     assetIDs.shader.textured = scene.addShader(shaderTextured);
     assetIDs.shader.colored = scene.addShader(shaderColored);
-    assetIDs.shader.colored = scene.addShader(shaderColored);
+    assetIDs.shader.inst = scene.addShader(shaderInst);
     assetIDs.shader.grass = scene.addShader(shaderGrass);
 
 
@@ -74,13 +76,15 @@ void MyApp::prepareAssets() {
     assetIDs.mesh.square = uiScene.addMesh(&rlgl::primitive_mesh::square);
 
     rlgl::Shader uiShader;
-    uiShader.initialize("..\\data\\shaders\\ui_element.vs", "..\\data\\shaders\\ui_element.fs");
+    uiShader.initialize(_assetDirectory + "\\shaders\\ui_element.vs", _assetDirectory + "\\shaders\\ui_element.fs");
 
     assetIDs.shader.ui = uiScene.addShader(uiShader);
 }
 
 
 int MyApp::prepareScene() {
+
+    glClearColor(135.f/255.f, 206.f / 255.f, 250.f / 255.f, 1.0f);
 
     lodControl = rlgl::LODcontroller(glm::vec3(0.f), 10.f, 4, 0.5);
 
@@ -95,7 +99,7 @@ int MyApp::prepareScene() {
     prepareAssets();
     createWorld();
     //createLODterrain();
-    //createBoxes();
+    createBoxes();
     createCSYS();
     createUI();
     //createFrustumObject();
@@ -115,7 +119,7 @@ void MyApp::createGrass() {
 
     glm::vec3 gpos(4., 4., 0.);
 
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < 1; i++){
 	    rlgl::Object* grassObj = new rlgl::Object(assetIDs.mesh.grass, assetIDs.shader.grass, NO_MATERIAL);
 	    grassObj->setPosition(glm::vec3(
             gpos.x + rl::rand(0.0, 2.0), 
@@ -154,7 +158,7 @@ void MyApp::createBoxes() {
     rl::OctreeStruct octStruct({ 0.f, 0.f, 0.f }, 100.f, 4);
     octTree = rl::Octree(octStruct);
 
-    int nBoxes = 2e3;
+    int nBoxes = 1e3;
     glm::vec3 boxPos;
     rl::BoundingBox bbox;
     float boxSize = BOX_WIDTH/5.f;
@@ -187,7 +191,7 @@ void MyApp::createBoxes() {
     //octTree.callOnAllOctTreeObjectWithAddress(OctTreeFunc::setHighlightColorGreen,"8", true);
 
 
-    int nInstances = 1e5;
+    int nInstances = 1e4;
     for (int i = 0; i < nInstances; i++) {
         boxPos = glm::vec3(rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f), rl::rand(-50.f, 50.f));
 
@@ -301,7 +305,7 @@ int MyApp::updateScene() {
     }
 
     updateHitTestOctTree();
-    //updateBoxes();
+    updateBoxes();
     updateTerrainLOD();
 
     return 0;

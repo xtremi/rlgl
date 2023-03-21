@@ -27,7 +27,6 @@ namespace rlgl{
 	struct WindowParams {
 		std::string label = "rlgl BaseApp v1.0.0";
 		glm::ivec2  size = glm::ivec2(800, 600);
-		glm::vec3   backgroundColor = glm::vec3(0.f);
 
 		float aspect() {
 			return (float)size.x / (float)size.y;
@@ -53,7 +52,7 @@ private:
 class BaseApp {
 
 public:
-	BaseApp();
+	BaseApp(const std::string& assetDirectory);
 
 	int init(int windowSizeX, int windowSizeY);
 	int loopIteration();
@@ -76,6 +75,7 @@ protected:
 	GLFWparams	   _glfwParams;
 	WindowParams   _windowParams;
 	GLFWwindow*	   _window = nullptr;
+	std::string	   _assetDirectory = "";
 	rlgl::Renderer renderer;
 	rlgl::Camera*  activeCamera;
 	rlgl::Camera   camera;
@@ -83,7 +83,6 @@ protected:
 	rlgl::Scene	   scene;
 	rlgl::Scene	   uiScene;
 	std::string    errmsg = "";
-
 
 
 	void handleMouse(double xposIn, double yposIn);

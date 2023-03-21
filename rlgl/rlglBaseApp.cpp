@@ -7,7 +7,7 @@ void rlgl::framebuffer_size_callback(GLFWwindow* window, int width, int height) 
     glViewport(0, 0, width, height);
 }
 
-BaseApp::BaseApp() {}
+BaseApp::BaseApp(const std::string& assetDirectory) : _assetDirectory{ assetDirectory } {}
 
 
 /*!*/
@@ -190,7 +190,7 @@ int BaseApp::initializeWindow() {
 		errmsg = "glfwGetMonitors() - found 0 monitors";
 		return (int)error_code::GLFW_NO_MONITORS;
 	}
-
+    
     _window = glfwCreateWindow(
 		windowParams().size.x, windowParams().size.y, 
 		windowParams().label.c_str(), 
@@ -216,12 +216,10 @@ int BaseApp::initializeWindow() {
     glfwSetCursorPos(_window, windowParams().size.x /2, windowParams().size.y / 2);
     glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-
-    glClearColor(windowParams().backgroundColor.r, windowParams().backgroundColor.g, windowParams().backgroundColor.b, 1.0f);
     glEnable(GL_DEPTH_TEST);
     
     //For transperancy:
-    glDisable(GL_CULL_FACE);
+    //glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
@@ -258,22 +256,22 @@ int DemoApp::prepareScene() {
 
 
     rlgl::Material material1;
-    material1.initialize("..\\data\\textures\\checker_grey.jpg", true);
+    material1.initialize(_assetDirectory + "\\textures\\checker_grey.jpg", true);
     uint64_t material1ID = scene.addMaterial(material1);
 
     rlgl::Material material2;
-    material2.initialize("..\\data\\textures\\box-texture.png", false);
+    material2.initialize(_assetDirectory + "\\textures\\box-texture.png", false);
     uint64_t material2ID = scene.addMaterial(material2);
 
 
     rlgl::Shader shader1;
-    shader1.initialize("..\\data\\shaders\\object.vs", "..\\data\\shaders\\object.fs");
+    shader1.initialize(_assetDirectory + "\\shaders\\object.vs", "\\shaders\\object.fs");
     shader1.setInt("textureID", material1.glID);
     uint64_t shader1ID = scene.addShader(shader1);
 
 
     rlgl::Shader shader2;
-    shader1.initialize("..\\data\\shaders\\object_col.vs", "..\\data\\shaders\\object_col.fs");
+    shader1.initialize(_assetDirectory + "\\shaders\\object_col.vs", "\\shaders\\object_col.fs");
     uint64_t shader2ID = scene.addShader(shader1);
 
 

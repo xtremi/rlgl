@@ -50,6 +50,7 @@ struct UIobjects {
 class MyApp : public rlgl::BaseApp
 {
 public:
+	MyApp(const std::string& assetDirectory);
 
 protected:
 	rl::Octree			octTree;

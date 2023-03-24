@@ -1,12 +1,12 @@
-set(EXE_NAME rlglPlayground)
+set(EXE_NAME Example1_single_cube)
 
 set(SOURCE_FILES
-    MyApp.cpp
-    OpenGL_rela.cpp
+    main.cpp
+    Example1_App.cpp
 )
 
 set(HEADER_FILES
-    MyApp.h
+    Example1_App.h
 )
 
 add_executable(${EXE_NAME} 
@@ -17,11 +17,14 @@ add_executable(${EXE_NAME}
 target_include_directories(${EXE_NAME}  
     PUBLIC ${PROJECT_SOURCE_DIR}/rlgl
 )
-#target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_BINARY_DIR})
 
 target_link_libraries(${EXE_NAME}  
     PUBLIC rlgl
 )
+
+set_target_properties(${EXE_NAME} PROPERTIES FOLDER "Examples")
+set_property(TARGET ${EXE_NAME} PROPERTY VS_DEBUGGER_COMMAND_ARGUMENTS "C:/code/C++/rlgl/data")
+
 
 
 #install(TARGETS rlgl DESTINATION lib)

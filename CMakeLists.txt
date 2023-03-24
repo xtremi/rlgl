@@ -56,13 +56,19 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
 endif()
 
 
+#Submodules (dependencies):
 add_subdirectory(submodules/glfw)
 add_subdirectory(submodules/glm)
 add_subdirectory(submodules/glad/cmake)
+
+#Libraries (rl/rlgl):
 add_subdirectory(rlgl)
 add_subdirectory(rlCommon)
 add_subdirectory(rlOctree)
-add_subdirectory(OpenGL_rela)
+
+#Executables
+add_subdirectory(Examples/rlglPlayground)
+add_subdirectory(Examples/Example1_single_cube)
 
 
 #install(TARGETS ${PROJECT_NAME} DESTINATION bin)

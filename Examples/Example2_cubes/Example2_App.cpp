@@ -49,6 +49,7 @@ int MyApp::prepareScene() {
 
     prepareAssets();
     createWorld();
+    createLight();
     createBoxes();
     createCSYS();
     createUI();
@@ -75,6 +76,19 @@ void MyApp::createUI() {
     uiScene.addObject(uiObjects.aimCross[1]);
 }
 
+LightBox::LightBox(float intensity, uint64_t meshID, uint64_t shaderID) 
+    : rlgl::Object(meshID, shaderID, NO_MATERIAL), _intensity{intensity}
+{
+    
+}
+
+void MyApp::createLight() {
+    
+    rlgl::Object* box = new rlgl::Object(assetIDs.mesh.cube, assetIDs.shader.colored, NO_MATERIAL);
+
+
+
+}
 void MyApp::createBoxes() {
 
     float boxSize = BOX_WIDTH;

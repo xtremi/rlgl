@@ -69,6 +69,7 @@ add_subdirectory(rlOctree)
 #Executables
 add_subdirectory(Examples/rlglPlayground)
 add_subdirectory(Examples/Example1_single_cube)
+add_subdirectory(Examples/Example2_cubes)
 
 
 #install(TARGETS ${PROJECT_NAME} DESTINATION bin)

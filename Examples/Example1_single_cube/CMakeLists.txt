@@ -23,7 +23,7 @@ target_link_libraries(${EXE_NAME}
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES FOLDER "Examples")
-set_property(TARGET ${EXE_NAME} PROPERTY VS_DEBUGGER_COMMAND_ARGUMENTS "C:/code/C++/rlgl/data")
+set_property(TARGET ${EXE_NAME} PROPERTY VS_DEBUGGER_COMMAND_ARGUMENTS "../../../data")
 
 
 

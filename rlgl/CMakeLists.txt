@@ -23,6 +23,7 @@ set(HEADER_FILES
     rlglRenderer.h
     rlglScene.h
     rlglShader.h
+    rlglWorldEnv.h
 )
 
 add_library(${LIB_NAME} 

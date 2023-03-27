@@ -9,7 +9,7 @@ struct AssetIDs {
 		uint64_t checker, box;
 	};
 	struct Shaders {
-		uint64_t textured, colored, ui;
+		uint64_t textured, texturedLight, colored, ui;
 
 	};
 	Meshes	  mesh;

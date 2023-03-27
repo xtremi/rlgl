@@ -156,15 +156,20 @@ void StandardLightShader::setWorldUniforms(
 {
     StandardShader::setWorldUniforms(pvMat, worldEnv);
     setLightPos(worldEnv.lights[0].pos);
-    setLightIntensity(worldEnv.lights[0].intensity);
+    setLightAmbientIntensity(worldEnv.lights[0].ambientIntensity);
+    setLightColor(worldEnv.lights[0].color);
 }
 
 
 void StandardLightShader::setLightPos(const glm::vec3& position) const {
     setVec3("lightPos", position);
 }
-void StandardLightShader::setLightIntensity(float intensity) const {
-    setFloat("lightIntensity", intensity);
+void StandardLightShader::setLightAmbientIntensity(float intensity) const {
+    setFloat("lightAmbientIntensity", intensity);
 }
+void StandardLightShader::setLightColor(const glm::vec3& color) const {
+    setVec3("lightColor", color);
+}
+
 
 

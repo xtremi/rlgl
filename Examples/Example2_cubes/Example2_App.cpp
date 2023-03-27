@@ -27,14 +27,19 @@ void MyApp::prepareAssets() {
 
     //Shaders:
     rlgl::StandardShader* shaderTextured = new rlgl::StandardShader();
-    rlgl::StandardLightShader* shaderTexturedLight = new rlgl::StandardLightShader();
-    rlgl::StandardShader* shaderColored = new rlgl::StandardShader();
-    shaderTextured->initialize(_assetDirectory + "\\shaders\\object.vs", _assetDirectory + "\\shaders\\object.fs");
-    shaderTextured->setInt("textureID", materialChecker.glID);
-    shaderColored->initialize(_assetDirectory + "\\shaders\\object_col.vs", _assetDirectory + "\\shaders\\object_col.fs");
-
+    shaderTextured->initialize(_assetDirectory + "\\shaders\\object_tex.vs", _assetDirectory + "\\shaders\\object_tex.fs");
+    shaderTextured->setInt("textureID", materialChecker.glID); //remove?
     assetIDs.shader.textured = scene.addShader(shaderTextured);
+
+    rlgl::StandardLightShader* shaderTexturedLight = new rlgl::StandardLightShader();
+    shaderTexturedLight->initialize(_assetDirectory + "\\shaders\\object_tex_light.vs", _assetDirectory + "\\shaders\\object_tex_light.fs");
+    shaderTexturedLight->setInt("textureID", materialChecker.glID);//remove?
+    assetIDs.shader.texturedLight = scene.addShader(shaderTexturedLight);
+
+    rlgl::StandardShader* shaderColored = new rlgl::StandardShader();
+    shaderColored->initialize(_assetDirectory + "\\shaders\\object_col.vs", _assetDirectory + "\\shaders\\object_col.fs");
     assetIDs.shader.colored = scene.addShader(shaderColored);
+
 
 
     //UI:
@@ -81,13 +86,25 @@ void MyApp::createUI() {
     uiScene.addObject(uiObjects.aimCross[1]);
 }
 
+void MyApp::updateLight() {
+
+    double curTime = glfwGetTime();
+
+    scene.worldEnv.lights[0].ambientIntensity = 0.5f * (glm::sin(curTime/1.0f) + 1.0f);
+    scene.worldEnv.lights[0].color.r = 0.5f * (glm::sin(curTime/2.0f) + 1.0f);
+    scene.worldEnv.lights[0].color.g = 1.0f - scene.worldEnv.lights[0].color.r;
+    scene.worldEnv.lights[0].color.b = 1.0f - scene.worldEnv.lights[0].color.r;
+}
+
+
 void MyApp::createLight() {
     glm::vec3 lightPos(10.f, 10.f, 10.f);
+    glm::vec3 lightColor(1.f, 1.f, 1.f);
 
-    scene.worldEnv.lights.push_back({ lightPos, 1.0f });
+    scene.worldEnv.lights.push_back({ lightPos, lightColor, 1.0f });
     rlgl::Object* lightBox = new rlgl::Object(assetIDs.mesh.cube, assetIDs.shader.colored, NO_MATERIAL);
     lightBox->setPosition(lightPos);
-    lightBox->setColor(glm::vec3(1.f, 1.f, 1.f));
+    lightBox->setColor(lightColor);
     lightBox->setScale(1.25f);
 
     scene.addObject(lightBox);
@@ -99,7 +116,11 @@ void MyApp::createBoxes() {
     glm::vec3 boxPos = glm::vec3(10.f, boxSize, 4.f);
 
 	for (int i = 0; i < 5; i++){
-		rlgl::Object* box = new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.textured, assetIDs.material.box);
+		rlgl::Object* box = new rlgl::Object(
+                assetIDs.mesh.cubeTex, 
+                (i%2 == 0) ? assetIDs.shader.textured : assetIDs.shader.texturedLight,
+                assetIDs.material.box);
+
 		box->setPosition(boxPos);
         box->setScale(boxSize);
 		scene.addObject(box);	
@@ -129,6 +150,7 @@ static rlgl::Object* lastHitObj = nullptr;
 int MyApp::updateScene() {
     camera.position.z = 2.f;
     updateBoxes();
+    updateLight();
     return 0;
 }
 

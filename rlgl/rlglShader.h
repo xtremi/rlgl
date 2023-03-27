@@ -66,7 +66,8 @@ public:
 
 protected:
     void setLightPos(const glm::vec3& position) const;
-    void setLightIntensity(float intensity) const;
+    void setLightAmbientIntensity(float intensity) const;
+    void setLightColor(const glm::vec3& color) const;
 };
 
 }

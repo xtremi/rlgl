@@ -7,7 +7,8 @@ namespace rlgl {
 	class StandardLight{
 	public:
 		glm::vec3 pos;
-		float     intensity;
+		glm::vec3 color;
+		float     ambientIntensity;
 	};
 
 	class WorldEnv {

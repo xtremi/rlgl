@@ -27,6 +27,10 @@ rl::Plane& Frustum::right() {
 
 /***************************************************/
 
+glm::mat4 Camera::pvMatrix() const {
+	return projectionMatrix() * viewMatrix();
+}
+
 glm::mat4 Camera::projectionMatrix() const {
 	if(!isOrthoGraphic){
 		return glm::perspective(glm::radians(fov), aspectRatio, near, far);

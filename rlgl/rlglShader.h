@@ -1,14 +1,14 @@
 #pragma once
 #include <glad/gl.h>
 #include <glm/glm.hpp>
-
+#include "rlglWorldEnv.h"
+#include "rlglObject.h"
 #include <string>
 
 
 namespace rlgl{
 
 std::string readFile(const std::string& filePath);
-
 
 class Shader
 {
@@ -28,6 +28,45 @@ public:
     void setUint(const std::string& name, GLuint value) const;
     void setInt(const std::string& name, GLint value) const;
     void setBool(const std::string& name, GLboolean value) const;
+
+
+    virtual void setWorldUniforms(
+        const glm::mat4x4& pvMat,
+        const rlgl::WorldEnv& worldEnv) const {}
+
+    virtual void setObjectUniforms(rlgl::Object* obj) const {}
+};
+
+
+class StandardShader : public Shader {
+public:
+    void setWorldUniforms(
+        const glm::mat4x4& pvMat,
+        const rlgl::WorldEnv& worldEnv) const;
+
+    void setObjectUniforms(rlgl::Object* obj) const;
+
+protected:
+    void setProjectViewMatrix(const glm::mat4x4& mat) const;
+    void setColor(const glm::vec4& color) const;
+    void setHighlight(bool highlight) const;
+    void setModelMatrix(const glm::mat4x4& mat) const;
+
+
+};
+
+
+class StandardLightShader : public StandardShader {
+public:  
+    void setWorldUniforms(
+        const glm::mat4x4& pvMat,
+        const rlgl::WorldEnv& worldEnv) const;
+
+    void setObjectUniforms(rlgl::Object* obj) const;
+
+protected:
+    void setLightPos(const glm::vec3& position) const;
+    void setLightIntensity(float intensity) const;
 };
 
 }

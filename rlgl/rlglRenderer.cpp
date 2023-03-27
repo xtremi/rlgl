@@ -11,46 +11,45 @@ using namespace rlgl;
 
 Renderer::Renderer() {}
 
-void Renderer::render(Scene& scene, const Camera& cam) {
-	
+void Renderer::render(Scene& scene, const Camera& cam) 
+{
+	glm::mat4 PVmat = cam.pvMatrix();
+
 	rlgl::cObjectIt it = scene.cbeginObject();
-
-	glm::mat4 PVmat = cam.projectionMatrix() * cam.viewMatrix();
-
-
 	for (rlgl::cObjectIt it = scene.cbeginObject(); it != scene.cendObject(); it++) {
 		if((*it)->isInView()){
 			render(scene, PVmat, *it);
 		}
 	}
 
+	lastUsedShaderID = UINT32_MAX;
+	lastUsedMeshID = UINT32_MAX;
+	lastUsedMaterialID = UINT32_MAX;
 }
 
 
 void Renderer::render(
 	const Scene&	 scene, 
 	const glm::mat4& projViewMat, 
-	Object*			 obj) {
-
+	Object*			 obj) 
+{
 	const Shader*	currentShader	= scene.shader(obj->shaderID);
 	const Material* currentMaterial = scene.material(obj->materialID);
 	const Mesh*		currentMesh		= scene.mesh(obj->meshID);
+
 	if (!currentMesh) {
 		throw("Renderer::render - Mesh does not exist");
 	}
 	if (!currentShader) {
-		throw("Renderer::render - Shader does not exist");
+		throw("Renderer::render - Shader does not exist");		
 	}
+
 
 	if(currentShader->glID != lastUsedShaderID){
 		currentShader->use();
+		currentShader->setWorldUniforms(projViewMat, scene.worldEnv);
 	}
-	if(obj->hasColor()){
-		currentShader->setVec4("color", obj->getColor());
-	}
-	currentShader->setBool("highlight", obj->hasHighlight());
-	currentShader->setMat4x4("projView", projViewMat);
-	currentShader->setMat4x4("model", obj->modelMatrix());
+	currentShader->setObjectUniforms(obj);
 
 	if (currentMaterial) {
 		if(currentMaterial->glID != lastUsedMaterialID){

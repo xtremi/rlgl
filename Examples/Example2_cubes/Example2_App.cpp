@@ -8,6 +8,7 @@ MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory){}
 
 void MyApp::prepareAssets() {
 
+    //Meshes:
     rlgl::primitive_mesh::cube_tex.initialize();
     rlgl::primitive_mesh::cube.initialize();
     rlgl::primitive_mesh::plane_textureX10.initialize();
@@ -16,6 +17,7 @@ void MyApp::prepareAssets() {
     assetIDs.mesh.cubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
     assetIDs.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
 
+    //Materials (Textures):
     rlgl::Material materialChecker, materialBox;
     materialChecker.initialize(_assetDirectory + "\\textures\\checker_grey.jpg", true);
     materialBox.initialize(_assetDirectory + "\\textures\\box-texture.png", false);
@@ -23,10 +25,13 @@ void MyApp::prepareAssets() {
     assetIDs.material.checker = scene.addMaterial(materialChecker);
     assetIDs.material.box = scene.addMaterial(materialBox);
 
-    rlgl::Shader shaderTextured, shaderColored, shaderInst, shaderGrass;
-    shaderTextured.initialize(_assetDirectory + "\\shaders\\object.vs", _assetDirectory + "\\shaders\\object.fs");
-    shaderTextured.setInt("textureID", materialChecker.glID);
-    shaderColored.initialize(_assetDirectory + "\\shaders\\object_col.vs", _assetDirectory + "\\shaders\\object_col.fs");
+    //Shaders:
+    rlgl::StandardShader* shaderTextured = new rlgl::StandardShader();
+    rlgl::StandardLightShader* shaderTexturedLight = new rlgl::StandardLightShader();
+    rlgl::StandardShader* shaderColored = new rlgl::StandardShader();
+    shaderTextured->initialize(_assetDirectory + "\\shaders\\object.vs", _assetDirectory + "\\shaders\\object.fs");
+    shaderTextured->setInt("textureID", materialChecker.glID);
+    shaderColored->initialize(_assetDirectory + "\\shaders\\object_col.vs", _assetDirectory + "\\shaders\\object_col.fs");
 
     assetIDs.shader.textured = scene.addShader(shaderTextured);
     assetIDs.shader.colored = scene.addShader(shaderColored);
@@ -36,8 +41,8 @@ void MyApp::prepareAssets() {
     rlgl::primitive_mesh::square.initialize();
     assetIDs.mesh.square = uiScene.addMesh(&rlgl::primitive_mesh::square);
 
-    rlgl::Shader uiShader;
-    uiShader.initialize(_assetDirectory + "\\shaders\\ui_element.vs", _assetDirectory + "\\shaders\\ui_element.fs");
+    rlgl::StandardShader* uiShader = new rlgl::StandardShader();
+    uiShader->initialize(_assetDirectory + "\\shaders\\ui_element.vs", _assetDirectory + "\\shaders\\ui_element.fs");
 
     assetIDs.shader.ui = uiScene.addShader(uiShader);
 }
@@ -48,8 +53,8 @@ int MyApp::prepareScene() {
     glClearColor(135.f/255.f, 206.f / 255.f, 250.f / 255.f, 1.0f);
 
     prepareAssets();
-    createWorld();
     createLight();
+    createWorld();
     createBoxes();
     createCSYS();
     createUI();
@@ -76,19 +81,18 @@ void MyApp::createUI() {
     uiScene.addObject(uiObjects.aimCross[1]);
 }
 
-LightBox::LightBox(float intensity, uint64_t meshID, uint64_t shaderID) 
-    : rlgl::Object(meshID, shaderID, NO_MATERIAL), _intensity{intensity}
-{
-    
-}
-
 void MyApp::createLight() {
-    
-    rlgl::Object* box = new rlgl::Object(assetIDs.mesh.cube, assetIDs.shader.colored, NO_MATERIAL);
+    glm::vec3 lightPos(10.f, 10.f, 10.f);
 
+    scene.worldEnv.lights.push_back({ lightPos, 1.0f });
+    rlgl::Object* lightBox = new rlgl::Object(assetIDs.mesh.cube, assetIDs.shader.colored, NO_MATERIAL);
+    lightBox->setPosition(lightPos);
+    lightBox->setColor(glm::vec3(1.f, 1.f, 1.f));
+    lightBox->setScale(1.25f);
 
-
+    scene.addObject(lightBox);
 }
+
 void MyApp::createBoxes() {
 
     float boxSize = BOX_WIDTH;

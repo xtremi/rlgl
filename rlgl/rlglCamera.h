@@ -20,6 +20,7 @@ public:
 class Camera
 {
 public:
+	glm::mat4 pvMatrix() const;
 	glm::mat4 projectionMatrix() const;
 	glm::mat4 viewMatrix() const;
 	glm::vec3 lookVec() const;

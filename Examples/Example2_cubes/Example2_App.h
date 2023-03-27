@@ -17,12 +17,6 @@ struct AssetIDs {
 	Shaders   shader;
 };
 
-class LightBox : public rlgl::Object {
-public:
-	LightBox(float intensity, uint64_t meshID, uint64_t shaderID);
-protected:
-	float _intensity = 1.0f;
-};
 
 struct WorldObjects {
 	rlgl::Object*			   worldPlane;

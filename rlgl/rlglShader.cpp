@@ -109,3 +109,62 @@ std::string rlgl::readFile(const std::string& filePath) {
         std::istreambuf_iterator<char>());
     return fileContent;
 }
+
+
+/*****STANDARD SHADER ****************************************************************/
+void StandardShader::setObjectUniforms(rlgl::Object* obj) const 
+{
+    setModelMatrix(obj->modelMatrix());
+    if (obj->hasColor()) {
+        setColor(obj->getColor());
+    }
+    setHighlight(obj->hasHighlight());
+}
+
+void StandardShader::setWorldUniforms(
+    const glm::mat4x4& pvMat,
+    const rlgl::WorldEnv& worldEnv) const
+{
+    setProjectViewMatrix(pvMat);
+}
+
+void StandardShader::setModelMatrix(const glm::mat4x4& mat) const {
+    setMat4x4("model", mat);
+}
+void StandardShader::setProjectViewMatrix(const glm::mat4x4& mat) const {
+    setMat4x4("projView", mat);
+}
+void StandardShader::setColor(const glm::vec4& color) const {
+    setVec4("color", color);
+}
+void StandardShader::setHighlight(bool highlight) const {
+    setBool("highlight", highlight);
+}
+
+
+
+
+/*****STANDARD SHADER WITH LIGHT ****************************************************************/
+void StandardLightShader::setObjectUniforms(rlgl::Object* obj) const
+{
+    StandardShader::setObjectUniforms(obj);
+}
+
+void StandardLightShader::setWorldUniforms(
+    const glm::mat4x4& pvMat,
+    const rlgl::WorldEnv& worldEnv) const
+{
+    StandardShader::setWorldUniforms(pvMat, worldEnv);
+    setLightPos(worldEnv.lights[0].pos);
+    setLightIntensity(worldEnv.lights[0].intensity);
+}
+
+
+void StandardLightShader::setLightPos(const glm::vec3& position) const {
+    setVec3("lightPos", position);
+}
+void StandardLightShader::setLightIntensity(float intensity) const {
+    setFloat("lightIntensity", intensity);
+}
+
+

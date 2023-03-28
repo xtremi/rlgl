@@ -67,7 +67,7 @@ int MyApp::prepareScene() {
 }
 
 void MyApp::createWorld() {
-    objects.worldPlane = new rlgl::Object(assetIDs.mesh.world, assetIDs.shader.textured, assetIDs.material.checker);
+    objects.worldPlane = new rlgl::Object(assetIDs.mesh.world, assetIDs.shader.texturedLight, assetIDs.material.checker);
     objects.worldPlane->setPosition(glm::vec3(0.f));
     objects.worldPlane->setScale(glm::vec3(100.f));
     scene.addObject(objects.worldPlane);
@@ -90,24 +90,29 @@ void MyApp::updateLight() {
 
     double curTime = glfwGetTime();
 
-    scene.worldEnv.lights[0].ambientIntensity = 0.5f * (glm::sin(curTime/1.0f) + 1.0f);
-    scene.worldEnv.lights[0].color.r = 0.5f * (glm::sin(curTime/2.0f) + 1.0f);
-    scene.worldEnv.lights[0].color.g = 1.0f - scene.worldEnv.lights[0].color.r;
-    scene.worldEnv.lights[0].color.b = 1.0f - scene.worldEnv.lights[0].color.r;
+    scene.worldEnv.lights[0].pos.y = -5.0f + 5.0f * glm::sin(curTime / 1.0f);
+    scene.worldEnv.lights[0].pos.z = 6.0f + 2.0f * 0.5f * (glm::sin(curTime / 1.0f) + 1.0f);
+
+    objects.lightBox->setPosition(scene.worldEnv.lights[0].pos);
+
+    //scene.worldEnv.lights[0].ambientIntensity = 0.5f * (glm::sin(curTime/1.0f) + 1.0f);
+    //scene.worldEnv.lights[0].color.r = 0.5f * (glm::sin(curTime/2.0f) + 1.0f);
+    //scene.worldEnv.lights[0].color.g = 1.0f - scene.worldEnv.lights[0].color.r;
+    //scene.worldEnv.lights[0].color.b = 1.0f - scene.worldEnv.lights[0].color.r;
 }
 
 
 void MyApp::createLight() {
-    glm::vec3 lightPos(10.f, 10.f, 10.f);
+    glm::vec3 lightPos(5.f, 5.f, 10.f);
     glm::vec3 lightColor(1.f, 1.f, 1.f);
 
-    scene.worldEnv.lights.push_back({ lightPos, lightColor, 1.0f });
-    rlgl::Object* lightBox = new rlgl::Object(assetIDs.mesh.cube, assetIDs.shader.colored, NO_MATERIAL);
-    lightBox->setPosition(lightPos);
-    lightBox->setColor(lightColor);
-    lightBox->setScale(1.25f);
+    scene.worldEnv.lights.push_back({ lightPos, lightColor, 0.2f });
+    objects.lightBox = new rlgl::Object(assetIDs.mesh.cube, assetIDs.shader.colored, NO_MATERIAL);
+    objects.lightBox->setPosition(lightPos);
+    objects.lightBox->setColor(lightColor);
+    objects.lightBox->setScale(1.25f);
 
-    scene.addObject(lightBox);
+    scene.addObject(objects.lightBox);
 }
 
 void MyApp::createBoxes() {

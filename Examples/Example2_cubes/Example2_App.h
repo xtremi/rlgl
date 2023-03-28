@@ -22,7 +22,7 @@ struct WorldObjects {
 	rlgl::Object*			   worldPlane;
 	std::vector<rlgl::Object*> boxes;
 	std::vector<rlgl::Object*> axes;
-	rlgl::Object*			   instObj;
+	rlgl::Object*			   lightBox;
 };
 
 struct UIobjects {

@@ -12,11 +12,13 @@ bool Shader::initialize(const std::string& vertexPath, const std::string& fragme
     std::string errmsg;
     GLuint vShader = compileShader(vertexPath, GL_VERTEX_SHADER, errmsg);
     if (!vShader) {
+        std::cout << "Error while compiling vertex shader from \"" + vertexPath + "\"" << std::endl;
         std::cout << errmsg << std::endl;
         return false;
     }
     GLuint fShader = compileShader(fragmentPath, GL_FRAGMENT_SHADER, errmsg);
     if (!fShader) {
+        std::cout << "Error while compiling fragment shader from \"" + fragmentPath + "\"" << std::endl;
         std::cout << errmsg << std::endl;
         return false;
     }

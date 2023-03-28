@@ -16,12 +16,10 @@ uniform float lightAmbientIntensity;
 
 void main()
 {
-    //FragColor = vec4(vertexColor, 1.0);
-	if(!highlight){
-		FragColor = texture(textureID, texCoords);// * vec4(vertexColor, 1.0);
-	}
-	else{
-		FragColor = texture(textureID, texCoords) * color;
+	FragColor = texture(textureID, texCoords);
+
+	if(highlight){
+		FragColor *= color;
 	}
 
 
@@ -32,6 +30,6 @@ void main()
 	float diffuse = max(dot(normal, lightDir), 0.0);
 
 	vec4 lightContribution = vec4((ambient + diffuse) * lightColor, 1.0);
-	
+
 	FragColor = FragColor * lightContribution;
 } 

@@ -14,10 +14,13 @@ out vec3 fragPos; //in world space
 
 void main()
 {
-    gl_Position = projView * model * vec4(aPos.xyz, 1.0);
-    vertexColor = aColor;
-    texCoords = aTexCoords;
-    normal = aNormal;
+    vec4 vertPos = model * vec4(aPos.xyz, 1.0);
 
-    fragPos = vec3(model * vec4(aPos.xyz, 1.0));
+    gl_Position = projView * vertPos;
+    
+    vertexColor = aColor;
+    texCoords   = aTexCoords;
+    normal      = aNormal;
+
+    fragPos = vec3(vertPos);
 }

@@ -9,6 +9,7 @@ namespace rlgl {
 		glm::vec3 pos;
 		glm::vec3 color;
 		float     ambientIntensity;
+		float     specularIntensity;
 	};
 
 	class WorldEnv {

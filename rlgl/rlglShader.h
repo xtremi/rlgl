@@ -32,6 +32,7 @@ public:
 
     virtual void setWorldUniforms(
         const glm::mat4x4& pvMat,
+        const glm::vec3& camPos,
         const rlgl::WorldEnv& worldEnv) const {}
 
     virtual void setObjectUniforms(rlgl::Object* obj) const {}
@@ -42,6 +43,7 @@ class StandardShader : public Shader {
 public:
     void setWorldUniforms(
         const glm::mat4x4& pvMat,
+        const glm::vec3& camPos,
         const rlgl::WorldEnv& worldEnv) const;
 
     void setObjectUniforms(rlgl::Object* obj) const;
@@ -60,6 +62,7 @@ class StandardLightShader : public StandardShader {
 public:  
     void setWorldUniforms(
         const glm::mat4x4& pvMat,
+        const glm::vec3& camPos,
         const rlgl::WorldEnv& worldEnv) const;
 
     void setObjectUniforms(rlgl::Object* obj) const;
@@ -67,7 +70,9 @@ public:
 protected:
     void setLightPos(const glm::vec3& position) const;
     void setLightAmbientIntensity(float intensity) const;
+    void setLightSpecularIntensity(float intensity) const;
     void setLightColor(const glm::vec3& color) const;
+    void setCameraPos(const glm::vec3& position) const;
 };
 
 }

@@ -125,6 +125,7 @@ void StandardShader::setObjectUniforms(rlgl::Object* obj) const
 
 void StandardShader::setWorldUniforms(
     const glm::mat4x4& pvMat,
+    const glm::vec3& camPos,
     const rlgl::WorldEnv& worldEnv) const
 {
     setProjectViewMatrix(pvMat);
@@ -154,12 +155,15 @@ void StandardLightShader::setObjectUniforms(rlgl::Object* obj) const
 
 void StandardLightShader::setWorldUniforms(
     const glm::mat4x4& pvMat,
+    const glm::vec3& camPos,
     const rlgl::WorldEnv& worldEnv) const
 {
-    StandardShader::setWorldUniforms(pvMat, worldEnv);
+    StandardShader::setWorldUniforms(pvMat, camPos, worldEnv);
     setLightPos(worldEnv.lights[0].pos);
     setLightAmbientIntensity(worldEnv.lights[0].ambientIntensity);
+    setLightSpecularIntensity(worldEnv.lights[0].specularIntensity);
     setLightColor(worldEnv.lights[0].color);
+    setCameraPos(camPos);
 }
 
 
@@ -169,8 +173,14 @@ void StandardLightShader::setLightPos(const glm::vec3& position) const {
 void StandardLightShader::setLightAmbientIntensity(float intensity) const {
     setFloat("lightAmbientIntensity", intensity);
 }
+void StandardLightShader::setLightSpecularIntensity(float intensity) const {
+    setFloat("lightSpecularIntensity", intensity);
+}
 void StandardLightShader::setLightColor(const glm::vec3& color) const {
     setVec3("lightColor", color);
+}
+void StandardLightShader::setCameraPos(const glm::vec3& position) const {
+    setVec3("camPos", position);
 }
 
 

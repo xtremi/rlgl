@@ -18,7 +18,7 @@ void Renderer::render(Scene& scene, const Camera& cam)
 	rlgl::cObjectIt it = scene.cbeginObject();
 	for (rlgl::cObjectIt it = scene.cbeginObject(); it != scene.cendObject(); it++) {
 		if((*it)->isInView()){
-			render(scene, PVmat, *it);
+			render(scene, PVmat, cam.position, *it);
 		}
 	}
 
@@ -31,6 +31,7 @@ void Renderer::render(Scene& scene, const Camera& cam)
 void Renderer::render(
 	const Scene&	 scene, 
 	const glm::mat4& projViewMat, 
+	const glm::vec3& camPos,
 	Object*			 obj) 
 {
 	const Shader*	currentShader	= scene.shader(obj->shaderID);
@@ -47,7 +48,10 @@ void Renderer::render(
 
 	if(currentShader->glID != lastUsedShaderID){
 		currentShader->use();
-		currentShader->setWorldUniforms(projViewMat, scene.worldEnv);
+		currentShader->setWorldUniforms(
+			projViewMat, 
+			camPos,
+			scene.worldEnv);
 	}
 	currentShader->setObjectUniforms(obj);
 

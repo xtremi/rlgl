@@ -18,22 +18,24 @@ void MyApp::prepareAssets() {
     assetIDs.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
 
     //Materials (Textures):
-    rlgl::Material materialChecker, materialBox;
-    materialChecker.initialize(_assetDirectory + "\\textures\\checker_grey.jpg", true);
-    materialBox.initialize(_assetDirectory + "\\textures\\box-texture.png", false);
-
+    rlgl::TextureLightPropMaterial* materialChecker = new rlgl::TextureLightPropMaterial();
+    materialChecker->defineTexture(_assetDirectory + "\\textures\\checker_grey.jpg", true);
+    //materialChecker->setProperties();
     assetIDs.material.checker = scene.addMaterial(materialChecker);
+    
+    rlgl::TextureLightPropMaterial* materialBox = new rlgl::TextureLightPropMaterial();
+    materialBox->defineTexture(_assetDirectory + "\\textures\\box-texture.png", false);
+    //materialChecker->setProperties();
     assetIDs.material.box = scene.addMaterial(materialBox);
+
 
     //Shaders:
     rlgl::StandardShader* shaderTextured = new rlgl::StandardShader();
     shaderTextured->initialize(_assetDirectory + "\\shaders\\object_tex.vs", _assetDirectory + "\\shaders\\object_tex.fs");
-    shaderTextured->setInt("textureID", materialChecker.glID); //remove?
     assetIDs.shader.textured = scene.addShader(shaderTextured);
 
     rlgl::StandardLightShader* shaderTexturedLight = new rlgl::StandardLightShader();
     shaderTexturedLight->initialize(_assetDirectory + "\\shaders\\object_tex_light.vs", _assetDirectory + "\\shaders\\object_tex_light.fs");
-    shaderTexturedLight->setInt("textureID", materialChecker.glID);//remove?
     assetIDs.shader.texturedLight = scene.addShader(shaderTexturedLight);
 
     rlgl::StandardShader* shaderColored = new rlgl::StandardShader();

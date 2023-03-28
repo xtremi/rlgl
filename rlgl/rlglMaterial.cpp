@@ -5,7 +5,20 @@
 
 using namespace rlgl;
 
-void Material::initialize(const std::string& texturePath, bool repeatTexture) {
+void LightProperties::setProperties(
+	glm::vec3 _ambientStrength,
+	glm::vec3 _diffuseStrength,
+	glm::vec3 _specularStrength,
+	float	  _shininess)
+{
+	ambientStrength = _ambientStrength;
+	diffuseStrength = _diffuseStrength;
+	specularStrength = _specularStrength;
+	shininess = _shininess;
+}
+
+
+void TexturedMaterial::defineTexture(const std::string& texturePath, bool repeatTexture) {
 
 	int width, height, nrChannels;
 	unsigned char* imgData = stbi_load(

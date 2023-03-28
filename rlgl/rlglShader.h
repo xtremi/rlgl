@@ -36,6 +36,8 @@ public:
         const rlgl::WorldEnv& worldEnv) const {}
 
     virtual void setObjectUniforms(rlgl::Object* obj) const {}
+
+    virtual void setMaterialUniforms(rlgl::Material* material) const {}
 };
 
 

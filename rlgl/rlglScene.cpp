@@ -9,5 +9,8 @@ void Scene::cleanUp() {
 	for (const Shader* shader : shaders) {
 		delete shader;
 	}
+	for (const Material* material : materials) {
+		delete material;
+	}
 	objects.clear();
 }

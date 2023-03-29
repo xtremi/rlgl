@@ -5,8 +5,12 @@
 namespace rlgl{
 
 
+	extern int OBJECT_COUNT;
+
 class Object
 {
+public:
+	int id = 0;
 public:
 	Object(uint64_t meshID, uint64_t shaderID, uint64_t materialID);
 	bool hasColor() const;
@@ -56,6 +60,7 @@ protected:
 	
 	
 	bool needMatrixRecalculation = true;
+
 };
 
 

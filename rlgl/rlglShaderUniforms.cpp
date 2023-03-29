@@ -72,21 +72,39 @@ void TextureUniforms::setTexture(GLuint sID, const rlgl::Material* material) con
 
 
 
+/*****MATERIAL LIGHT PROPERTIES UNIFORMS ****************************************************************/
+void MaterialLightPropertiesUniforms::setMaterialLightProperties(GLuint sID, const rlgl::LightProperties& properties) const {
+    setMaterialAmbientProp(sID, properties.ambientStrength);
+    setMaterialDiffuseProp(sID, properties.diffuseStrength);
+    setMaterialSpecularProp(sID, properties.specularStrength);
+    setMaterialShininessProp(sID, properties.shininess);
+}
+
+void MaterialLightPropertiesUniforms::setMaterialAmbientProp(GLuint sID, const glm::vec3& factor) const {
+    setVec3(sID, "materialAmbientFactor", factor);
+}
+void MaterialLightPropertiesUniforms::setMaterialDiffuseProp(GLuint sID, const glm::vec3& factor) const {
+    setVec3(sID, "materialDiffuseFactor", factor);
+}
+void MaterialLightPropertiesUniforms::setMaterialSpecularProp(GLuint sID, const glm::vec3& factor) const {
+    setVec3(sID, "materialSpecularFactor", factor);
+}
+void MaterialLightPropertiesUniforms::setMaterialShininessProp(GLuint sID, float factor) const {
+    setFloat(sID, "materialShininessFactor", factor);
+}
+
 /*****LIGHT UNIFORMS ****************************************************************/
-/*void LightUniforms::setWorldUniforms(
+void LightUniforms::setLightProperties(
     GLuint sID,
-    const glm::mat4x4& pvMat,
-    const glm::vec3& camPos,
-    const rlgl::WorldEnv& worldEnv) const
+    const rlgl::StandardLight& light,
+    const glm::vec3& camPos) const
 {
-    setLightPos(sID, worldEnv.lights[0].pos);
-    setLightAmbientIntensity(sID, worldEnv.lights[0].ambientIntensity);
-    setLightSpecularIntensity(sID, worldEnv.lights[0].specularIntensity);
-    setLightColor(sID, worldEnv.lights[0].color);
+    setLightPos(sID, light.pos);
+    setLightAmbientIntensity(sID, light.ambientIntensity);
+    setLightSpecularIntensity(sID, light.specularIntensity);
+    setLightColor(sID, light.color);
     setCameraPos(sID, camPos);
-}*/
-
-
+}
 void LightUniforms::setLightPos(GLuint sID, const glm::vec3& position) const {
     setVec3(sID, "lightPos", position);
 }

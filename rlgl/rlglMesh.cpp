@@ -220,6 +220,7 @@ Mesh rlgl::primitive_mesh::cube_tex{
 
 Mesh rlgl::primitive_mesh::cube{
 	 rlgl::GLBuffer<float>({
+		//Positions,		   Normals
 		-0.5f, -0.5f, -0.5f,   0.f, 0.f, -1.f,
 		 0.5f, -0.5f, -0.5f,   0.f, 0.f, -1.f,
 		 0.5f,  0.5f, -0.5f,   0.f, 0.f, -1.f,

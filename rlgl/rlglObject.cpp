@@ -3,10 +3,15 @@
 
 using namespace rlgl;
 
+int rlgl::OBJECT_COUNT = 0;
+
+
 Object::Object(uint64_t _meshID, uint64_t _shaderID, uint64_t _materialID) :
 	meshID{ _meshID }, shaderID{ _shaderID }, materialID{_materialID}
 {
 	_modelMatrix = glm::mat4(1.f);
+	OBJECT_COUNT++;
+	id = OBJECT_COUNT;
 }
 
 bool Object::hasColor() const {

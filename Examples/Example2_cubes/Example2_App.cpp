@@ -18,38 +18,93 @@ void MyApp::prepareAssets() {
     assetIDs.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
 
     //Materials (Textures):
-    rlgl::TextureLightPropMaterial* materialChecker = new rlgl::TextureLightPropMaterial();
+    rlgl::TexturedMaterial* materialChecker = new rlgl::TextureLightPropMaterial();
     materialChecker->defineTexture(_assetDirectory + "\\textures\\checker_grey.jpg", true);
-    //materialChecker->setProperties();
     assetIDs.material.checker = scene.addMaterial(materialChecker);
     
-    rlgl::TextureLightPropMaterial* materialBox = new rlgl::TextureLightPropMaterial();
-    materialBox->defineTexture(_assetDirectory + "\\textures\\box-texture.png", false);
-    //materialChecker->setProperties();
-    assetIDs.material.box = scene.addMaterial(materialBox);
+    rlgl::TextureLightPropMaterial* materialBox1 = new rlgl::TextureLightPropMaterial();
+    materialBox1->defineTexture(_assetDirectory + "\\textures\\box-texture.png", false);
+    materialBox1->setProperties(
+        glm::vec3(0.1f, 0.1f, 0.1f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        128.0f
+    );
+    assetIDs.material.box = scene.addMaterial(materialBox1);
 
+    rlgl::TextureLightPropMaterial* materialBox2 = new rlgl::TextureLightPropMaterial();
+    materialBox2->defineTexture(_assetDirectory + "\\textures\\box-texture.png", false);
+    materialBox2->setProperties(/*jade*/
+        glm::vec3(0.135, 0.2225, 0.1575),
+        glm::vec3(0.54, 0.89, 0.63),
+        glm::vec3(0.316228, 0.316228, 0.316228),
+        128.0f * 0.1f
+    );
+    assetIDs.material.boxJade = scene.addMaterial(materialBox2);
+
+    rlgl::TextureLightPropMaterial* materialBox3 = new rlgl::TextureLightPropMaterial();
+    materialBox3->defineTexture(_assetDirectory + "\\textures\\box-texture.png", false);
+    materialBox3->setProperties(/*gold*/
+        glm::vec3(0.24725, 0.1995, 0.0745),
+        glm::vec3(0.75164, 0.60648, 0.22648),
+        glm::vec3(0.628281, 0.555802, 0.366065),
+        128.0f * 0.4f
+    );
+    assetIDs.material.boxGold = scene.addMaterial(materialBox3);
+
+    rlgl::LightPropMaterial* materialBox4 = new rlgl::LightPropMaterial();
+    materialBox2->setProperties(/*jade*/
+        glm::vec3(0.135, 0.2225, 0.1575),
+        glm::vec3(0.54, 0.89, 0.63),
+        glm::vec3(0.316228, 0.316228, 0.316228),
+        128.0f * 0.1f
+    );
+    assetIDs.material.jade = scene.addMaterial(materialBox4);
+
+    rlgl::LightPropMaterial* materialBox5 = new rlgl::LightPropMaterial();
+    materialBox5->setProperties(/*gold*/
+        glm::vec3(0.24725, 0.1995, 0.0745),
+        glm::vec3(0.75164, 0.60648, 0.22648),
+        glm::vec3(0.628281, 0.555802, 0.366065),
+        128.0f * 0.4f
+    );    
+    assetIDs.material.gold = scene.addMaterial(materialBox5);
 
     //Shaders:
-    rlgl::TextureShader* shaderTextured = new rlgl::TextureShader();
-    shaderTextured->initialize(_assetDirectory + "\\shaders\\object_tex.vs", _assetDirectory + "\\shaders\\object_tex.fs");
+    rlgl::TextureShader* shaderTextured = new rlgl::TextureShader(
+        _assetDirectory + "\\shaders\\object_tex.vs", 
+        _assetDirectory + "\\shaders\\object_tex.fs"
+    );
     assetIDs.shader.textured = scene.addShader(shaderTextured);
 
-    rlgl::TextureLightShader* shaderTexturedLight = new rlgl::TextureLightShader();
-    shaderTexturedLight->initialize(_assetDirectory + "\\shaders\\object_tex_light.vs", _assetDirectory + "\\shaders\\object_tex_light.fs");
+    rlgl::TextureLightShader* shaderTexturedLight = new rlgl::TextureLightShader(
+        _assetDirectory + "\\shaders\\object_tex_light.vs", 
+        _assetDirectory + "\\shaders\\object_tex_light.fs");
     assetIDs.shader.texturedLight = scene.addShader(shaderTexturedLight);
 
-    rlgl::StandardShader* shaderColored = new rlgl::StandardShader();
-    shaderColored->initialize(_assetDirectory + "\\shaders\\object_col.vs", _assetDirectory + "\\shaders\\object_col.fs");
-    assetIDs.shader.colored = scene.addShader(shaderColored);
+    rlgl::TextureLightMaterialShader* shaderTexturedLightMat = new rlgl::TextureLightMaterialShader(
+        _assetDirectory + "\\shaders\\object_tex_light_mat.vs", 
+        _assetDirectory + "\\shaders\\object_tex_light_mat.fs");
+    assetIDs.shader.texturedLightMat = scene.addShader(shaderTexturedLightMat);
 
+    rlgl::LightMaterialShader* shaderLightMat = new rlgl::LightMaterialShader(
+        _assetDirectory + "\\shaders\\object_col_light_mat.vs",
+        _assetDirectory + "\\shaders\\object_col_light_mat.fs");
+    assetIDs.shader.coloredLightMat = scene.addShader(shaderLightMat);
+
+    rlgl::StandardShader* shaderColored = new rlgl::StandardShader(
+        _assetDirectory + "\\shaders\\object_col.vs", 
+        _assetDirectory + "\\shaders\\object_col.fs");
+    assetIDs.shader.colored = scene.addShader(shaderColored);
 
 
     //UI:
     rlgl::primitive_mesh::square.initialize();
     assetIDs.mesh.square = uiScene.addMesh(&rlgl::primitive_mesh::square);
 
-    rlgl::StandardShader* uiShader = new rlgl::StandardShader();
-    uiShader->initialize(_assetDirectory + "\\shaders\\ui_element.vs", _assetDirectory + "\\shaders\\ui_element.fs");
+    rlgl::StandardShader* uiShader = new rlgl::StandardShader(
+        _assetDirectory + "\\shaders\\ui_element.vs", 
+        _assetDirectory + "\\shaders\\ui_element.fs");
 
     assetIDs.shader.ui = uiScene.addShader(uiShader);
 }
@@ -69,7 +124,11 @@ int MyApp::prepareScene() {
 }
 
 void MyApp::createWorld() {
-    objects.worldPlane = new rlgl::Object(assetIDs.mesh.world, assetIDs.shader.texturedLight, assetIDs.material.checker);
+    objects.worldPlane = new rlgl::Object(
+        assetIDs.mesh.world, 
+        assetIDs.shader.texturedLight, 
+        assetIDs.material.checker);
+
     objects.worldPlane->setPosition(glm::vec3(0.f));
     objects.worldPlane->setScale(glm::vec3(100.f));
     scene.addObject(objects.worldPlane);
@@ -95,7 +154,7 @@ void MyApp::updateLight() {
     double speed = 0.2f;
     double rad = 15.0f;
     scene.worldEnv.lights[0].pos =
-        glm::vec3(10.0f, -5.0f, 5.0f) + glm::vec3(rad * glm::sin(speed * curTime), rad * glm::cos(speed * curTime), 0.f);
+        glm::vec3(4.0f, -5.0f, 5.0f) + glm::vec3(0.f * glm::sin(speed * curTime), rad * glm::cos(speed * curTime), 0.f);
 
 
     objects.lightBox->setPosition(scene.worldEnv.lights[0].pos);
@@ -111,7 +170,7 @@ void MyApp::createLight() {
     glm::vec3 lightPos(5.f, 5.f, 10.f);
     glm::vec3 lightColor(1.f, 1.f, 1.f);
 
-    scene.worldEnv.lights.push_back({ lightPos, lightColor, 0.2f, 0.5f });
+    scene.worldEnv.lights.push_back({ lightPos, lightColor, 1.0f, 1.0f });
     objects.lightBox = new rlgl::Object(assetIDs.mesh.cube, assetIDs.shader.colored, NO_MATERIAL);
     objects.lightBox->setPosition(lightPos);
     objects.lightBox->setColor(lightColor);
@@ -125,17 +184,21 @@ void MyApp::createBoxes() {
     float boxSize = BOX_WIDTH;
     glm::vec3 boxPos = glm::vec3(10.f, boxSize, 4.f);
 
-	for (int i = 0; i < 5; i++){
-		rlgl::Object* box = new rlgl::Object(
-                assetIDs.mesh.cubeTex, 
-                assetIDs.shader.texturedLight,
-                //(i%2 == 0) ? assetIDs.shader.textured : assetIDs.shader.texturedLight,
-                assetIDs.material.box);
+    objects.boxes = std::vector<rlgl::Object*>({
+        new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.texturedLightMat, assetIDs.material.box),
+        new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.texturedLightMat, assetIDs.material.boxJade),
+        new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.texturedLightMat, assetIDs.material.boxGold),
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.jade),
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,   assetIDs.material.gold)
+        });
 
-		box->setPosition(boxPos);
-        box->setScale(boxSize);
-		scene.addObject(box);	
-        objects.boxes.push_back(box);
+	for (int i = 0; i < 5; i++){
+
+        objects.boxes[i]->setColor(glm::vec3(0.f, 0.659f, 0.42f));   //jade
+        //objects.boxes[i]->setColor(glm::vec3(1.f, 0.843f, 0.3f));  //gold
+		objects.boxes[i]->setPosition(boxPos);
+        objects.boxes[i]->setScale(boxSize);
+        scene.addObject(objects.boxes[i]);
 		boxPos.y -= boxSize * 1.5f; 
 	}
 

@@ -23,11 +23,10 @@ class Shader
 public:
     GLuint glID;
 
-    Shader();
-    bool initialize(const std::string& vertexPath, const std::string& fragmentPath);
-    GLuint compileShader(const std::string& filePath, GLenum shaderType, std::string& err);
-
+    Shader(const std::string& vertexPath = "", const std::string& fragmentPath = "");
     void use() const;
+    bool create(const std::string& vertexPath, const std::string& fragmentPath);
+
 
     virtual void setWorldUniforms(
         const glm::mat4x4& pvMat,
@@ -35,10 +34,15 @@ public:
         const rlgl::WorldEnv& worldEnv) const {};
     virtual void setObjectUniforms(rlgl::Object* obj) const {};
     virtual void setMaterialUniforms(const rlgl::Material* material) const {};
+
+private:
+    GLuint compileShader(const std::string& filePath, GLenum shaderType, std::string& err);
 };
 
 class StandardShader : public Shader, public StandardUniforms {
 public:
+    using Shader::Shader;
+
     virtual void setWorldUniforms(
         const glm::mat4x4& pvMat,
         const glm::vec3& camPos,
@@ -56,15 +60,29 @@ public:
     }
 };
 
+/*!
+    Standard shader
+        + Texture
+*/
 class TextureShader : public StandardShader, public TextureUniforms {
 public:
+    using StandardShader::StandardShader;
+
     virtual void setMaterialUniforms(const rlgl::Material* material) const {
         TextureUniforms::setTexture(glID, material);
     }
 };
 
+
+
+/*!
+    Standard shader
+        + Light uniforms
+*/
 class LightShader : public StandardShader, public LightUniforms {
 public:
+    using StandardShader::StandardShader;
+
     virtual void setWorldUniforms(
         const glm::mat4x4& pvMat,
         const glm::vec3& camPos,
@@ -80,12 +98,52 @@ public:
 
 };
 
-class TextureLightShader : public LightShader, public virtual TextureUniforms {
+/*!
+    Standard shader
+        + Light uniforms
+        + Material light properties uniforms
+*/
+class LightMaterialShader : public LightShader, public MaterialLightPropertiesUniforms {
 public:
+    using LightShader::LightShader;
+
+    virtual void setMaterialUniforms(const rlgl::Material* material) const {
+        MaterialLightPropertiesUniforms::setMaterialLightProperties(glID, *((LightProperties*)material));
+    }
+};
+
+/*!
+    Standard shader
+        + Light uniforms
+        + Texture
+*/
+class TextureLightShader : public LightShader, public TextureUniforms {
+public:
+    using LightShader::LightShader;
+
     virtual void setMaterialUniforms(const rlgl::Material* material) const {
         TextureUniforms::setTexture(glID, material);
-    }
-    
+    }    
 };
+
+/*!
+    Standard shader
+        + Light uniforms
+        + Material light properties uniforms
+        + Texture
+*/
+class TextureLightMaterialShader : public TextureLightShader, public MaterialLightPropertiesUniforms {
+public:
+    using TextureLightShader::TextureLightShader;
+
+    virtual void setMaterialUniforms(const rlgl::Material* material) const {
+        TextureLightShader::setMaterialUniforms(material);
+
+        MaterialLightPropertiesUniforms::setMaterialLightProperties(glID, *((LightProperties*)material));
+    }
+
+
+};
+
 
 }

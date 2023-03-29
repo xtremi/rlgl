@@ -6,10 +6,11 @@ struct AssetIDs {
 		uint64_t cube, cubeTex, world, square;
 	};
 	struct Materials {
-		uint64_t checker, box;
+		uint64_t checker; 
+		uint64_t box, boxJade, boxGold, jade, gold;
 	};
 	struct Shaders {
-		uint64_t textured, texturedLight, colored, ui;
+		uint64_t textured, texturedLight, texturedLightMat, colored, coloredLightMat, ui;
 
 	};
 	Meshes	  mesh;

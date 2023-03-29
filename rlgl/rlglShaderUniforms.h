@@ -41,8 +41,23 @@ protected:
     void setTexture(GLuint sID, const rlgl::Material* material) const;
 };
 
+class MaterialLightPropertiesUniforms : public ShaderUniforms {
+protected:
+    void setMaterialLightProperties(GLuint sID, const rlgl::LightProperties& properties) const;
+
+    void setMaterialAmbientProp(GLuint sID, const glm::vec3& factor) const;
+    void setMaterialDiffuseProp(GLuint sID, const glm::vec3& factor) const;
+    void setMaterialSpecularProp(GLuint sID, const glm::vec3& factor) const;
+    void setMaterialShininessProp(GLuint sID, float factor) const;
+};
+
 class LightUniforms : public ShaderUniforms {
 protected:
+    void setLightProperties(
+        GLuint sID,
+        const rlgl::StandardLight& light,
+        const glm::vec3& cameraPosition) const;
+
     void setLightPos(GLuint sID, const glm::vec3& position) const;
     void setLightAmbientIntensity(GLuint sID, float intensity) const;
     void setLightSpecularIntensity(GLuint sID, float intensity) const;

@@ -5,9 +5,15 @@
 
 using namespace rlgl;
 
-Shader::Shader() {}
+Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
 
-bool Shader::initialize(const std::string& vertexPath, const std::string& fragmentPath) {
+    if (!vertexPath.empty() && !fragmentPath.empty()) {
+        create(vertexPath, fragmentPath);
+    }
+
+}
+
+bool Shader::create(const std::string& vertexPath, const std::string& fragmentPath) {
     std::string errmsg;
     GLuint vShader = compileShader(vertexPath, GL_VERTEX_SHADER, errmsg);
     if (!vShader) {

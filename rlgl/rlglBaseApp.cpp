@@ -264,14 +264,16 @@ int DemoApp::prepareScene() {
     uint64_t material2ID = scene.addMaterial(material2);
 
 
-    rlgl::StandardShader* shader1 = new StandardShader();
-    shader1->initialize(_assetDirectory + "\\shaders\\object.vs", "\\shaders\\object.fs");
+    rlgl::StandardShader* shader1 = new StandardShader(
+        _assetDirectory + "\\shaders\\object.vs", 
+        _assetDirectory + "\\shaders\\object.fs");
     //shader1->setInt("textureID", material1->glID); //remove ?
     uint64_t shader1ID = scene.addShader(shader1);
 
 
-    rlgl::StandardShader* shader2 = new StandardShader();
-    shader1->initialize(_assetDirectory + "\\shaders\\object_col.vs", "\\shaders\\object_col.fs");
+    rlgl::StandardShader* shader2 = new StandardShader(
+        _assetDirectory + "\\shaders\\object_col.vs", 
+        _assetDirectory + "\\shaders\\object_col.fs");
     uint64_t shader2ID = scene.addShader(shader1);
 
 

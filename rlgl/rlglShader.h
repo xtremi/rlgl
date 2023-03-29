@@ -66,17 +66,16 @@ public:
 class LightShader : public StandardShader, public LightUniforms {
 public:
     virtual void setWorldUniforms(
-        GLuint sID,
         const glm::mat4x4& pvMat,
         const glm::vec3& camPos,
         const rlgl::WorldEnv& worldEnv) const
     {
         StandardShader::setWorldUniforms(pvMat, camPos, worldEnv);
-        setLightPos(sID, worldEnv.lights[0].pos);
-        setLightAmbientIntensity(sID, worldEnv.lights[0].ambientIntensity);
-        setLightSpecularIntensity(sID, worldEnv.lights[0].specularIntensity);
-        setLightColor(sID, worldEnv.lights[0].color);
-        setCameraPos(sID, camPos);
+        setLightPos(glID, worldEnv.lights[0].pos);
+        setLightAmbientIntensity(glID, worldEnv.lights[0].ambientIntensity);
+        setLightSpecularIntensity(glID, worldEnv.lights[0].specularIntensity);
+        setLightColor(glID, worldEnv.lights[0].color);
+        setCameraPos(glID, camPos);
     }
 
 };

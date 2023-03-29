@@ -266,7 +266,7 @@ int DemoApp::prepareScene() {
 
     rlgl::StandardShader* shader1 = new StandardShader();
     shader1->initialize(_assetDirectory + "\\shaders\\object.vs", "\\shaders\\object.fs");
-    shader1->setInt("textureID", material1->glID); //remove ?
+    //shader1->setInt("textureID", material1->glID); //remove ?
     uint64_t shader1ID = scene.addShader(shader1);
 
 

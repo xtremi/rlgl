@@ -30,11 +30,11 @@ void MyApp::prepareAssets() {
 
 
     //Shaders:
-    rlgl::StandardShader* shaderTextured = new rlgl::StandardShader();
+    rlgl::TextureShader* shaderTextured = new rlgl::TextureShader();
     shaderTextured->initialize(_assetDirectory + "\\shaders\\object_tex.vs", _assetDirectory + "\\shaders\\object_tex.fs");
     assetIDs.shader.textured = scene.addShader(shaderTextured);
 
-    rlgl::LightShader* shaderTexturedLight = new rlgl::LightShader();
+    rlgl::TextureLightShader* shaderTexturedLight = new rlgl::TextureLightShader();
     shaderTexturedLight->initialize(_assetDirectory + "\\shaders\\object_tex_light.vs", _assetDirectory + "\\shaders\\object_tex_light.fs");
     assetIDs.shader.texturedLight = scene.addShader(shaderTexturedLight);
 

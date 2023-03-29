@@ -18,6 +18,7 @@ void MyApp::prepareAssets() {
     assetIDs.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
 
     //Materials (Textures):
+    //http://devernay.free.fr/cours/opengl/materials.html
     rlgl::TexturedMaterial* materialChecker = new rlgl::TextureLightPropMaterial();
     materialChecker->defineTexture(_assetDirectory + "\\textures\\checker_grey.jpg", true);
     assetIDs.material.checker = scene.addMaterial(materialChecker);
@@ -69,6 +70,16 @@ void MyApp::prepareAssets() {
         128.0f * 0.4f
     );    
     assetIDs.material.gold = scene.addMaterial(materialBox5);
+
+    rlgl::TextureLightPropMaterial* materialBox6 = new rlgl::TextureLightPropMaterial();
+    materialBox6->defineTexture(_assetDirectory + "\\textures\\metal-texture-1.jpg", false);
+    materialBox6->setProperties(/*silver*/
+        glm::vec3(0.19225, 0.19225, 0.19225),
+        glm::vec3(0.50754, 0.50754, 0.50754),
+        glm::vec3(0.508273, 0.508273, 0.508273),
+        128.0f * 0.5f
+    );
+    assetIDs.material.metalic = scene.addMaterial(materialBox6);
 
     //Shaders:
     rlgl::TextureShader* shaderTextured = new rlgl::TextureShader(
@@ -154,10 +165,12 @@ void MyApp::updateLight() {
     double speed = 0.2f;
     double rad = 15.0f;
     scene.worldEnv.lights[0].pos =
-        glm::vec3(4.0f, -5.0f, 5.0f) + glm::vec3(0.f * glm::sin(speed * curTime), rad * glm::cos(speed * curTime), 0.f);
+        glm::vec3(4.0f, -5.0f, 15.0f) + glm::vec3(0.f * glm::sin(speed * curTime), rad * glm::cos(speed * curTime), 0.f);
 
 
     objects.lightBox->setPosition(scene.worldEnv.lights[0].pos);
+    //scene.worldEnv.lights[0].ambientIntensity = 0.0f; // 0.5f * (glm::sin(curTime * speed * 10.0f) + 1.0f);
+    //scene.worldEnv.lights[0].specularIntensity = 0.5f * (glm::sin(curTime * speed * 10.0f) + 1.0f);
 
     //scene.worldEnv.lights[0].ambientIntensity = 0.5f * (glm::sin(curTime/1.0f) + 1.0f);
     //scene.worldEnv.lights[0].color.r = 0.5f * (glm::sin(curTime/2.0f) + 1.0f);
@@ -181,26 +194,66 @@ void MyApp::createLight() {
 
 void MyApp::createBoxes() {
 
-    float boxSize = BOX_WIDTH;
-    glm::vec3 boxPos = glm::vec3(10.f, boxSize, 4.f);
-
     objects.boxes = std::vector<rlgl::Object*>({
         new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.texturedLightMat, assetIDs.material.box),
         new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.texturedLightMat, assetIDs.material.boxJade),
         new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.texturedLightMat, assetIDs.material.boxGold),
         new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.jade),
-        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,   assetIDs.material.gold)
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.gold),
+
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.gold),
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.gold),
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.gold),
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.gold),
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.gold),
+        
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.jade),
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.jade),
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.jade),
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.jade),
+        new rlgl::Object(assetIDs.mesh.cube,    assetIDs.shader.coloredLightMat,  assetIDs.material.jade),
+
+        new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.texturedLightMat, assetIDs.material.metalic),
+        new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.texturedLightMat, assetIDs.material.metalic),
+        new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.texturedLightMat, assetIDs.material.metalic),
+        new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.texturedLightMat, assetIDs.material.metalic),
+        new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.texturedLightMat, assetIDs.material.metalic)
         });
 
-	for (int i = 0; i < 5; i++){
 
-        objects.boxes[i]->setColor(glm::vec3(0.f, 0.659f, 0.42f));   //jade
-        //objects.boxes[i]->setColor(glm::vec3(1.f, 0.843f, 0.3f));  //gold
-		objects.boxes[i]->setPosition(boxPos);
-        objects.boxes[i]->setScale(boxSize);
-        scene.addObject(objects.boxes[i]);
+    objects.boxes[3]->setColor(glm::vec3(0.f, 0.659f, 0.42f)); //jade
+    objects.boxes[4]->setColor(glm::vec3(1.f, 0.843f, 0.3f));  //gold
+    
+    objects.boxes[5]->setColor(glm::vec3(1.f, 0.f, 0.f));
+    objects.boxes[6]->setColor(glm::vec3(0.f, 1.f, 0.f)); 
+    objects.boxes[7]->setColor(glm::vec3(0.f, 0.f, 1.f)); 
+    objects.boxes[8]->setColor(glm::vec3(0.9f, 0.9f, 0.1f)); 
+    objects.boxes[9]->setColor(glm::vec3(0.9f, 0.1f, 0.9f)); 
+
+    objects.boxes[10]->setColor(glm::vec3(1.f, 0.f, 0.f));
+    objects.boxes[11]->setColor(glm::vec3(0.f, 1.f, 0.f));
+    objects.boxes[12]->setColor(glm::vec3(0.f, 0.f, 1.f));
+    objects.boxes[13]->setColor(glm::vec3(0.9f, 0.9f, 0.1f));
+    objects.boxes[14]->setColor(glm::vec3(0.9f, 0.1f, 0.9f));
+
+    int i = 0;
+    float boxSize = BOX_WIDTH;
+    glm::vec3 boxPos_0 = glm::vec3(10.f, boxSize, 4.f);
+    glm::vec3 boxPos = boxPos_0;
+
+	for (rlgl::Object* box : objects.boxes){
+		box->setPosition(boxPos);
+        box->setScale(boxSize);
+        scene.addObject(box);
+
 		boxPos.y -= boxSize * 1.5f; 
+        if ((i + 1) % 5 == 0) {
+            boxPos.z += boxSize * 1.5f;
+            boxPos.y = boxPos_0.y;
+        }
+        i++;
 	}
+
 
 }
 
@@ -222,7 +275,7 @@ void MyApp::createCSYS() {
 
 static rlgl::Object* lastHitObj = nullptr;
 int MyApp::updateScene() {
-    camera.position.z = 2.f;
+    //camera.position.z = 2.f;
     updateBoxes();
     updateLight();
     return 0;

@@ -8,6 +8,7 @@ struct AssetIDs {
 	struct Materials {
 		uint64_t checker; 
 		uint64_t box, boxJade, boxGold, jade, gold;
+		uint64_t metalic;
 	};
 	struct Shaders {
 		uint64_t textured, texturedLight, texturedLightMat, colored, coloredLightMat, ui;

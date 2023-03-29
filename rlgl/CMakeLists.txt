@@ -10,6 +10,7 @@ set(SOURCE_FILES
     rlglRenderer.cpp
     rlglScene.cpp
     rlglShader.cpp
+    rlglShaderUniforms.cpp
 )
 
 set(HEADER_FILES
@@ -24,6 +25,7 @@ set(HEADER_FILES
     rlglScene.h
     rlglShader.h
     rlglWorldEnv.h
+    rlglShaderUniforms.h
 )
 
 add_library(${LIB_NAME} 

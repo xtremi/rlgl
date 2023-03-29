@@ -1,5 +1,4 @@
 #include "rlglShader.h"
-#include <glm/gtc/type_ptr.hpp>
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -71,31 +70,6 @@ void Shader::use() const {
     glUseProgram(glID);
 }
 
-void Shader::setBool(const std::string& name, bool value) const {
-    glUniform1i(glGetUniformLocation(glID, name.c_str()), (int)value);
-}
-void Shader::setFloat(const std::string& name, float value) const {
-    glUniform1f(glGetUniformLocation(glID, name.c_str()), value);
-}
-void Shader::setMat4x4(const std::string& name, const glm::mat4x4& value) const {
-    glUniformMatrix4fv(glGetUniformLocation(glID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
-}
-void Shader::setVec3(const std::string& name, const glm::vec3& value) const {
-    glUniform3f(glGetUniformLocation(glID, name.c_str()), value.x, value.y, value.z);
-}
-void Shader::setVec4(const std::string& name, const glm::vec4& value) const {
-    glUniform4f(glGetUniformLocation(glID, name.c_str()), value.x, value.y, value.z, value.w);
-}
-void Shader::setUint(const std::string& name, GLuint value) const {
-    glUniform1ui(glGetUniformLocation(glID, name.c_str()), value);
-}
-void Shader::setInt(const std::string& name, GLint value) const {
-    glUniform1i(glGetUniformLocation(glID, name.c_str()), value);
-}
-void Shader::setBool(const std::string& name, GLboolean value) const {
-	glUniform1i(glGetUniformLocation(glID, name.c_str()), value);
-}
-
 
 
 
@@ -113,75 +87,6 @@ std::string rlgl::readFile(const std::string& filePath) {
 }
 
 
-/*****STANDARD SHADER ****************************************************************/
-void StandardShader::setObjectUniforms(rlgl::Object* obj) const 
-{
-    setModelMatrix(obj->modelMatrix());
-    if (obj->hasColor()) {
-        setColor(obj->getColor());
-    }
-    setHighlight(obj->hasHighlight());
-}
-
-void StandardShader::setWorldUniforms(
-    const glm::mat4x4& pvMat,
-    const glm::vec3& camPos,
-    const rlgl::WorldEnv& worldEnv) const
-{
-    setProjectViewMatrix(pvMat);
-}
-
-void StandardShader::setModelMatrix(const glm::mat4x4& mat) const {
-    setMat4x4("model", mat);
-}
-void StandardShader::setProjectViewMatrix(const glm::mat4x4& mat) const {
-    setMat4x4("projView", mat);
-}
-void StandardShader::setColor(const glm::vec4& color) const {
-    setVec4("color", color);
-}
-void StandardShader::setHighlight(bool highlight) const {
-    setBool("highlight", highlight);
-}
-
-
-
-
-/*****STANDARD SHADER WITH LIGHT ****************************************************************/
-void StandardLightShader::setObjectUniforms(rlgl::Object* obj) const
-{
-    StandardShader::setObjectUniforms(obj);
-}
-
-void StandardLightShader::setWorldUniforms(
-    const glm::mat4x4& pvMat,
-    const glm::vec3& camPos,
-    const rlgl::WorldEnv& worldEnv) const
-{
-    StandardShader::setWorldUniforms(pvMat, camPos, worldEnv);
-    setLightPos(worldEnv.lights[0].pos);
-    setLightAmbientIntensity(worldEnv.lights[0].ambientIntensity);
-    setLightSpecularIntensity(worldEnv.lights[0].specularIntensity);
-    setLightColor(worldEnv.lights[0].color);
-    setCameraPos(camPos);
-}
-
-
-void StandardLightShader::setLightPos(const glm::vec3& position) const {
-    setVec3("lightPos", position);
-}
-void StandardLightShader::setLightAmbientIntensity(float intensity) const {
-    setFloat("lightAmbientIntensity", intensity);
-}
-void StandardLightShader::setLightSpecularIntensity(float intensity) const {
-    setFloat("lightSpecularIntensity", intensity);
-}
-void StandardLightShader::setLightColor(const glm::vec3& color) const {
-    setVec3("lightColor", color);
-}
-void StandardLightShader::setCameraPos(const glm::vec3& position) const {
-    setVec3("camPos", position);
-}
 
 
 

@@ -34,7 +34,7 @@ void MyApp::prepareAssets() {
     shaderTextured->initialize(_assetDirectory + "\\shaders\\object_tex.vs", _assetDirectory + "\\shaders\\object_tex.fs");
     assetIDs.shader.textured = scene.addShader(shaderTextured);
 
-    rlgl::StandardLightShader* shaderTexturedLight = new rlgl::StandardLightShader();
+    rlgl::LightShader* shaderTexturedLight = new rlgl::LightShader();
     shaderTexturedLight->initialize(_assetDirectory + "\\shaders\\object_tex_light.vs", _assetDirectory + "\\shaders\\object_tex_light.fs");
     assetIDs.shader.texturedLight = scene.addShader(shaderTexturedLight);
 

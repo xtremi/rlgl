@@ -255,18 +255,18 @@ int DemoApp::prepareScene() {
     uint64_t meshCube = scene.addMesh(&rlgl::primitive_mesh::cube);
 
 
-    rlgl::Material material1;
-    material1.initialize(_assetDirectory + "\\textures\\checker_grey.jpg", true);
+    rlgl::TexturedMaterial* material1 = new rlgl::TexturedMaterial();
+    material1->defineTexture(_assetDirectory + "\\textures\\checker_grey.jpg", true);
     uint64_t material1ID = scene.addMaterial(material1);
 
-    rlgl::Material material2;
-    material2.initialize(_assetDirectory + "\\textures\\box-texture.png", false);
+    rlgl::TexturedMaterial* material2 = new rlgl::TexturedMaterial();
+    material2->defineTexture(_assetDirectory + "\\textures\\box-texture.png", false);
     uint64_t material2ID = scene.addMaterial(material2);
 
 
     rlgl::StandardShader* shader1 = new StandardShader();
     shader1->initialize(_assetDirectory + "\\shaders\\object.vs", "\\shaders\\object.fs");
-    shader1->setInt("textureID", material1.glID);
+    shader1->setInt("textureID", material1->glID); //remove ?
     uint64_t shader1ID = scene.addShader(shader1);
 
 

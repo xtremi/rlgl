@@ -8,6 +8,9 @@ namespace rlgl{
 	class Scene;
 	class Camera;
 	class Frustum;
+	class Shader;
+	class Material;
+	class Mesh;
 
 	bool isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox, bool strict = false);
 
@@ -23,9 +26,9 @@ protected:
 		const glm::vec3& camPos,
 		Object*			 obj);
 
-	uint32_t lastUsedShaderID = UINT32_MAX;
-	uint32_t lastUsedMaterialID = UINT32_MAX;
-	uint32_t lastUsedMeshID = UINT32_MAX;
+	const Shader* lastUsedShader = nullptr;
+	const Material* lastUsedMaterial = nullptr;
+	const Mesh* lastUsedMesh = nullptr;
 };
 
 

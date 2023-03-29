@@ -22,9 +22,9 @@ void Renderer::render(Scene& scene, const Camera& cam)
 		}
 	}
 
-	lastUsedShaderID = UINT32_MAX;
-	lastUsedMeshID = UINT32_MAX;
-	lastUsedMaterialID = UINT32_MAX;
+	lastUsedShader = nullptr;
+	lastUsedMesh = nullptr;
+	lastUsedMaterial = nullptr;
 }
 
 
@@ -46,33 +46,29 @@ void Renderer::render(
 	}
 
 
-	if(currentShader->glID != lastUsedShaderID){
+	if(currentShader != lastUsedShader){
 		currentShader->use();
 		currentShader->setWorldUniforms(
 			projViewMat, 
 			camPos,
 			scene.worldEnv);
 	}
-	currentShader->setObjectUniforms(obj);
 
-	if (currentMaterial) {
-		if(currentMaterial->glID != lastUsedMaterialID){
-			glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
-			glBindTexture(GL_TEXTURE_2D, currentMaterial->glID);
-		}
+	if(currentMaterial != lastUsedMaterial){
+		currentShader->setMaterialUniforms(currentMaterial);
 	}
 
-	if(currentMesh->VAO != lastUsedMeshID){
+	currentShader->setObjectUniforms(obj);
+
+	if(currentMesh != lastUsedMesh){
 		currentMesh->bind();
 	}
 	currentMesh->draw(obj->nInstances());
 
 
-	lastUsedShaderID = currentShader->glID;
-	lastUsedMeshID   = currentMesh->VAO;
-	if(currentMaterial){
-		lastUsedMaterialID = currentMaterial->glID;
-	}
+	lastUsedShader = currentShader;
+	lastUsedMesh   = currentMesh;
+	lastUsedMaterial = currentMaterial;
 }
 
 

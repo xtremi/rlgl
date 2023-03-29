@@ -1,8 +1,12 @@
 #pragma once
 #include <glad/gl.h>
 #include <glm/glm.hpp>
+
+#include "rlglShaderUniforms.h"
 #include "rlglWorldEnv.h"
 #include "rlglObject.h"
+#include "rlglMaterial.h"
+
 #include <string>
 
 
@@ -10,6 +14,10 @@ namespace rlgl{
 
 std::string readFile(const std::string& filePath);
 
+/*!
+    Defines a GLSL shader
+    Currently has to be composed of vertex and fragment shader
+*/
 class Shader
 {
 public:
@@ -20,61 +28,65 @@ public:
     GLuint compileShader(const std::string& filePath, GLenum shaderType, std::string& err);
 
     void use() const;
-    void setBool(const std::string& name, bool value) const;
-    void setFloat(const std::string& name, float value) const;
-    void setMat4x4(const std::string& name, const glm::mat4x4& value) const;
-    void setVec3(const std::string& name, const glm::vec3& value) const;
-    void setVec4(const std::string& name, const glm::vec4& value) const;
-    void setUint(const std::string& name, GLuint value) const;
-    void setInt(const std::string& name, GLint value) const;
-    void setBool(const std::string& name, GLboolean value) const;
-
 
     virtual void setWorldUniforms(
         const glm::mat4x4& pvMat,
         const glm::vec3& camPos,
-        const rlgl::WorldEnv& worldEnv) const {}
-
-    virtual void setObjectUniforms(rlgl::Object* obj) const {}
-
-    virtual void setMaterialUniforms(rlgl::Material* material) const {}
+        const rlgl::WorldEnv& worldEnv) const {};
+    virtual void setObjectUniforms(rlgl::Object* obj) const {};
+    virtual void setMaterialUniforms(const rlgl::Material* material) const {};
 };
 
-
-class StandardShader : public Shader {
+class StandardShader : public Shader, public StandardUniforms {
 public:
-    void setWorldUniforms(
+    virtual void setWorldUniforms(
         const glm::mat4x4& pvMat,
         const glm::vec3& camPos,
-        const rlgl::WorldEnv& worldEnv) const;
+        const rlgl::WorldEnv& worldEnv) const 
+    {
+        StandardUniforms::setProjectViewMatrix(glID, pvMat);
+    }
 
-    void setObjectUniforms(rlgl::Object* obj) const;
+    virtual void setObjectUniforms(rlgl::Object* obj) const {
+        StandardUniforms::setModelMatrix(glID, obj->modelMatrix());
+        StandardUniforms::setHighlight(glID, obj->hasHighlight());
+        if (obj->hasColor()) {
+            StandardUniforms::setColor(glID, obj->getColor());
+        }
+    }
+};
 
-protected:
-    void setProjectViewMatrix(const glm::mat4x4& mat) const;
-    void setColor(const glm::vec4& color) const;
-    void setHighlight(bool highlight) const;
-    void setModelMatrix(const glm::mat4x4& mat) const;
+class TextureShader : public StandardShader, public TextureUniforms {
+public:
+    virtual void setMaterialUniforms(const rlgl::Material* material) const {
+        TextureUniforms::setTexture(glID, material);
+    }
+};
 
+class LightShader : public StandardShader, public LightUniforms {
+public:
+    virtual void setWorldUniforms(
+        GLuint sID,
+        const glm::mat4x4& pvMat,
+        const glm::vec3& camPos,
+        const rlgl::WorldEnv& worldEnv) const
+    {
+        StandardShader::setWorldUniforms(pvMat, camPos, worldEnv);
+        setLightPos(sID, worldEnv.lights[0].pos);
+        setLightAmbientIntensity(sID, worldEnv.lights[0].ambientIntensity);
+        setLightSpecularIntensity(sID, worldEnv.lights[0].specularIntensity);
+        setLightColor(sID, worldEnv.lights[0].color);
+        setCameraPos(sID, camPos);
+    }
 
 };
 
-
-class StandardLightShader : public StandardShader {
-public:  
-    void setWorldUniforms(
-        const glm::mat4x4& pvMat,
-        const glm::vec3& camPos,
-        const rlgl::WorldEnv& worldEnv) const;
-
-    void setObjectUniforms(rlgl::Object* obj) const;
-
-protected:
-    void setLightPos(const glm::vec3& position) const;
-    void setLightAmbientIntensity(float intensity) const;
-    void setLightSpecularIntensity(float intensity) const;
-    void setLightColor(const glm::vec3& color) const;
-    void setCameraPos(const glm::vec3& position) const;
+class TextureLightShader : public LightShader, public virtual TextureUniforms {
+public:
+    virtual void setMaterialUniforms(const rlgl::Material* material) const {
+        TextureUniforms::setTexture(glID, material);
+    }
+    
 };
 
 }

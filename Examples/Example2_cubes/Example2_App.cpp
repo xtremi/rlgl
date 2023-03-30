@@ -9,13 +9,13 @@ MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory){}
 void MyApp::prepareAssets() {
 
     //Meshes:
-    rlgl::primitive_mesh::cube_tex.initialize();
-    rlgl::primitive_mesh::cube.initialize();
-    rlgl::primitive_mesh::plane_textureX10.initialize();
+    rlgl::primitive_mesh::cube_tex->initialize();
+    rlgl::primitive_mesh::cube->initialize();
+    rlgl::primitive_mesh::plane_textureX10->initialize();
 
-    assetIDs.mesh.world = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
-    assetIDs.mesh.cubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
-    assetIDs.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
+    assetIDs.mesh.world = rlgl::primitive_mesh::plane_textureX10;
+    assetIDs.mesh.cubeTex = rlgl::primitive_mesh::cube_tex;
+    assetIDs.mesh.cube = rlgl::primitive_mesh::cube;
 
     //Materials (Textures):
     //http://devernay.free.fr/cours/opengl/materials.html
@@ -110,8 +110,8 @@ void MyApp::prepareAssets() {
 
 
     //UI:
-    rlgl::primitive_mesh::square.initialize();
-    assetIDs.mesh.square = uiScene.addMesh(&rlgl::primitive_mesh::square);
+    rlgl::primitive_mesh::square->initialize();
+    assetIDs.mesh.square = rlgl::primitive_mesh::square;
 
     rlgl::StandardShader* uiShader = new rlgl::StandardShader(
         _assetDirectory + "\\shaders\\ui_element.vs", 

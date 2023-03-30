@@ -3,7 +3,7 @@
 
 struct AssetIDs {
 	struct Meshes {
-		uint64_t cube, cubeTex, world, square;
+		rlgl::MeshPtr cube, cubeTex, world, square;
 	};
 	struct Materials {
 		uint64_t checker; 

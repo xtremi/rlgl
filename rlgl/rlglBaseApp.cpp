@@ -244,15 +244,15 @@ void DemoApp::processInput(GLFWwindow* window) {
 
 int DemoApp::prepareScene() {
 
-    rlgl::primitive_mesh::plane_textureX10.initialize();
-    rlgl::primitive_mesh::plane.initialize();
-    rlgl::primitive_mesh::cube_tex.initialize();
-    rlgl::primitive_mesh::cube.initialize();
+    rlgl::primitive_mesh::plane_textureX10->initialize();
+    rlgl::primitive_mesh::plane->initialize();
+    rlgl::primitive_mesh::cube_tex->initialize();
+    rlgl::primitive_mesh::cube->initialize();
 
-    uint64_t meshWorld = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
-    uint64_t meshCubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
-    uint64_t meshPlane = scene.addMesh(&rlgl::primitive_mesh::plane);
-    uint64_t meshCube = scene.addMesh(&rlgl::primitive_mesh::cube);
+    rlgl::MeshPtr meshWorld = rlgl::primitive_mesh::plane_textureX10;
+    rlgl::MeshPtr meshCubeTex = rlgl::primitive_mesh::cube_tex;
+    rlgl::MeshPtr meshPlane = rlgl::primitive_mesh::plane;
+    rlgl::MeshPtr meshCube = rlgl::primitive_mesh::cube;
 
 
     rlgl::TexturedMaterial* material1 = new rlgl::TexturedMaterial();

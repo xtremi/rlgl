@@ -36,7 +36,7 @@ void Renderer::render(
 {
 	const Shader*	currentShader	= scene.shader(obj->shaderID);
 	const Material* currentMaterial = scene.material(obj->materialID);
-	const Mesh*		currentMesh		= scene.mesh(obj->meshID);
+	const MeshPtr	currentMesh		= obj->mesh;
 
 	if (!currentMesh) {
 		throw("Renderer::render - Mesh does not exist");

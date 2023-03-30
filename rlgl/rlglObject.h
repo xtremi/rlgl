@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "rlGeometry.h"
+#include "rlglMesh.h"
 
 namespace rlgl{
 
@@ -12,7 +13,7 @@ class Object
 public:
 	int id = 0;
 public:
-	Object(uint64_t meshID, uint64_t shaderID, uint64_t materialID);
+	Object(const MeshPtr mesh, uint64_t shaderID, uint64_t materialID);
 	bool hasColor() const;
 	void setColor(const glm::vec4& col);
 	void setColor(const glm::vec3& col);
@@ -42,7 +43,7 @@ public:
 	void setNinstances(int32_t n) { _nInstances = n; }
 
 public:
-	uint64_t meshID;
+	MeshPtr mesh;
 	uint64_t shaderID;
 	uint64_t materialID;	
 

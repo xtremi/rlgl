@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "rlGeometry.h"
+#include "rlglMesh.h"
 
 namespace rlgl{
 
@@ -10,7 +11,6 @@ namespace rlgl{
 	class Frustum;
 	class Shader;
 	class Material;
-	class Mesh;
 
 	bool isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox, bool strict = false);
 
@@ -28,7 +28,7 @@ protected:
 
 	const Shader* lastUsedShader = nullptr;
 	const Material* lastUsedMaterial = nullptr;
-	const Mesh* lastUsedMesh = nullptr;
+	MeshPtr lastUsedMesh = nullptr;
 };
 
 

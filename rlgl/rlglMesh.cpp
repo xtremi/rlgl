@@ -2,6 +2,33 @@
 using namespace rlgl;
 
 
+Mesh::Mesh(
+	const GLBuffer<float>& _vertices,
+	bool _hasNormals,
+	bool _hasColours,
+	bool _hasTexCoords)
+	: vertices{ _vertices }, hasNormals{ _hasNormals }, hasColours{ _hasColours }, hasTexCoords {
+	_hasTexCoords
+}
+{
+	hasIndices = false;
+	nVertices = vertices.size() / strideSize();
+}
+
+Mesh::Mesh(
+	const GLBuffer<float>& _vertices,
+	const GLBuffer<GLuint>& _indices,
+	bool _hasNormals,
+	bool _hasColours,
+	bool _hasTexCoords)
+	: vertices{ _vertices }, indices{ _indices }, hasNormals{ _hasNormals }, hasColours{ _hasColours }, hasTexCoords{ _hasTexCoords }
+{
+	hasIndices = true;
+	nVertices = vertices.size() / strideSize();
+	nIndices = indices.size();
+}
+
+
 void Mesh::bind() const {
 	glBindVertexArray(VAO);
 }
@@ -16,8 +43,19 @@ void Mesh::draw(int32_t nInst) const {
 		}
 	}
 	else{
-		glDrawElements(GL_TRIANGLES, nElements, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
 	}
+}
+
+/*!
+	Stride = number of values for each vertices in a buffer
+*/
+int Mesh::strideSize() {
+	int stride = 3;
+	if (hasNormals) stride += 3;
+	if (hasColours) stride += 3;
+	if (hasTexCoords) stride += 2;
+	return stride;
 }
 
 void Mesh::initialize() {
@@ -28,12 +66,7 @@ void Mesh::initialize() {
 	vertices.bindBuffer(GL_ARRAY_BUFFER);
 	vertices.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 
-	int stride = 3;
-	if (hasNormals) stride += 3;
-	if (hasColours) stride += 3;
-	if (hasTexCoords) stride += 2;
-	//if (hasInstances) stride += 3;
-
+	int stride = strideSize();
 	int startIndex = 0;
 
 	//position:
@@ -92,11 +125,17 @@ void Mesh::initialize() {
 		glVertexAttribDivisor(6, 1);
 		glVertexAttribDivisor(7, 1);
 	}
-
 }
 
+/*!
+	Quad mesh composed two triangles.
+	Has Normals, colours and texture coordinates
+	Has indices.
+	Texture coordinates are going from 0.0,0.0 to 10.0, 10.0
 
-Mesh rlgl::primitive_mesh::plane_textureX10 = {
+	nVertices = 4, nElements = 6
+*/
+MeshPtr rlgl::primitive_mesh::plane_textureX10 = std::make_shared<Mesh>(
 
     rlgl::GLBuffer<float>({
 		//Positions,			 Normals,		 Colours,		    Texcoords
@@ -105,36 +144,49 @@ Mesh rlgl::primitive_mesh::plane_textureX10 = {
         -0.5f, -0.5f, 0.0f,  0.f, 0.f, 1.f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f,	 // bottom left
         -0.5f,  0.5f, 0.0f,  0.f, 0.f, 1.f,  1.0f, 1.0f, 0.0f,  0.0f, 10.0f   // top left 
     }),
+
     rlgl::GLBuffer<GLuint>({
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
     }),
-	rlgl::GLBuffer<float>({}),
-	0, true, true, true, true, false, 4, 6
-	
-};
+	true, true, true);
 
-Mesh rlgl::primitive_mesh::terrainDummy = {
 
-	 rlgl::GLBuffer<float>({
-		 0.5f,  0.5f, 0.0f,  0.f, 0.f, 1.f, // top right
-		 0.5f, -0.5f, 0.0f,  0.f, 0.f, 1.f, // bottom right
-		-0.5f, -0.5f, 0.0f,  0.f, 0.f, 1.f, // bottom left
-		-0.5f,  0.5f, 0.0f,  0.f, 0.f, 1.f  // top left 
-	}),
+/*!
+	Quad mesh composed two triangles.
+	Has Normals
+	Has indices.
+
+	nVertices = 4, nElements = 6
+*/
+MeshPtr rlgl::primitive_mesh::terrainDummy = std::make_shared<Mesh>(
+
+	rlgl::GLBuffer<float>({
+		//Positions,        Normals
+		0.5f,  0.5f, 0.0f,  0.f, 0.f, 1.f, // top right
+		0.5f, -0.5f, 0.0f,  0.f, 0.f, 1.f, // bottom right
+	   -0.5f, -0.5f, 0.0f,  0.f, 0.f, 1.f, // bottom left
+	   -0.5f,  0.5f, 0.0f,  0.f, 0.f, 1.f  // top left 
+		}),
 	rlgl::GLBuffer<GLuint>({
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
-	}),
-	rlgl::GLBuffer<float>({}),
-	0, true, true, false, false, false, 4, 6
+		}),
+	true, false, false 
 
-};
+);
 
+/*!
+	Quad mesh composed two triangles.
+	Has colours and texture coordinates
+	Has indices.
 
-Mesh rlgl::primitive_mesh::plane = {
+	nVertices = 4, nElements = 6
+*/
+MeshPtr rlgl::primitive_mesh::plane = std::make_shared<Mesh>(
 
     rlgl::GLBuffer<float>({
+		//Positions,		 Colours,          Texture
          0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
          0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
         -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
@@ -144,14 +196,20 @@ Mesh rlgl::primitive_mesh::plane = {
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
     }),
-	rlgl::GLBuffer<float>({}),
-    0, true, false, true, true, false, 4, 6
+    false, true, true
+);
 
-};
+/*!
+	Quad mesh composed two triangles.
+	Has only positions
+	Has indices.
 
-Mesh rlgl::primitive_mesh::square = {
+	nVertices = 4, nElements = 6
+*/
+MeshPtr rlgl::primitive_mesh::square = std::make_shared<Mesh>(
 
 	rlgl::GLBuffer<float>({
+		 //Positions
 		 0.5f,  0.5f, 0.0f, // top right
 		 0.5f, -0.5f, 0.0f, // bottom right
 		-0.5f, -0.5f, 0.0f, // bottom left
@@ -161,12 +219,16 @@ Mesh rlgl::primitive_mesh::square = {
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
 	}),
-	rlgl::GLBuffer<float>({}),
-	0, true, false, false, false, false, 4, 6
+	false, false, false
+);
 
-};
+/*!
+	Cube mesh (W=H=L = 1.0, center in 0,0,0)
+	Has normals, colours and texture coordinates
 
-Mesh rlgl::primitive_mesh::cube_tex{
+	nVertices = 36, nElements = 12
+*/
+MeshPtr rlgl::primitive_mesh::cube_tex = std::make_shared<Mesh>(
      rlgl::GLBuffer<float>({
 		//Positions,		   Normals,		    Colours,		Texcoords
 		//Bottom plane (Z-):				    
@@ -212,13 +274,16 @@ Mesh rlgl::primitive_mesh::cube_tex{
         -0.5f,  0.5f,  0.5f,   0.f, 1.f, 0.f,   1.f, 0.f, 0.f,   0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,   0.f, 1.f, 0.f,   1.f, 0.f, 0.f,   0.0f, 1.0f
      }),
-    rlgl::GLBuffer<GLuint>({}),
-	rlgl::GLBuffer<float>({}),
-	0, false, true, true, true, false, 36, 12
-};
+	true, true, true
+);
 
+/*!
+	Cube mesh (W=H=L = 1.0, center in 0,0,0)
+	Has normals
 
-Mesh rlgl::primitive_mesh::cube{
+	nVertices = 36, nElements = 12
+*/
+MeshPtr rlgl::primitive_mesh::cube = std::make_shared<Mesh>(
 	 rlgl::GLBuffer<float>({
 		//Positions,		   Normals
 		-0.5f, -0.5f, -0.5f,   0.f, 0.f, -1.f,
@@ -263,33 +328,37 @@ Mesh rlgl::primitive_mesh::cube{
 		-0.5f,  0.5f,  0.5f,   0.f, 1.f, 0.f,
 		-0.5f,  0.5f, -0.5f,   0.f, 1.f, 0.f,
 	 }),
-	rlgl::GLBuffer<GLuint>({}),
-	rlgl::GLBuffer<float>({}),
-	0, false, true, false, false, false, 36, 12
-};
+	true, false, false
+);
 
 
-//x, y, z, u, v (*8)
-Mesh rlgl::primitive_mesh::grass{
-	 rlgl::GLBuffer<float>({
-		-0.5f,  0.0f,  0.0f,    -1.f, 0.f,
-		 0.5f,  0.0f,  0.0f,     1.f,  0.f,
-		 0.5f,  0.0f,  1.0f,     1.f,  1.f,
-		-0.5f,  0.0f,  1.0f,    -1.f, 1.f,
-							    
-		 0.0f, -0.5f,  0.0f,    -1.f, 0.f,
-		 0.0f,  0.5f,  0.0f,     1.f,  0.f,
-		 0.0f,  0.5f,  1.0f,     1.f,  1.f,
-		 0.0f, -0.5f,  1.0f,    -1.f, 1.f,
-	 }),
+//TODO: this mesh probably doesn't belong here, move to application/example
+/*!
+	Two planes mesh (used for grass leaf)
+		- One in face XZ, one in face YZ		
+	Has texture coordinates
+
+	nVertices = 8, nElements = 12
+*/
+
+MeshPtr rlgl::primitive_mesh::grass = std::make_shared<Mesh>(
+	rlgl::GLBuffer<float>({
+	   -0.5f,  0.0f,  0.0f,    -1.f, 0.f,
+		0.5f,  0.0f,  0.0f,     1.f,  0.f,
+		0.5f,  0.0f,  1.0f,     1.f,  1.f,
+	   -0.5f,  0.0f,  1.0f,    -1.f, 1.f,
+
+		0.0f, -0.5f,  0.0f,    -1.f, 0.f,
+		0.0f,  0.5f,  0.0f,     1.f,  0.f,
+		0.0f,  0.5f,  1.0f,     1.f,  1.f,
+		0.0f, -0.5f,  1.0f,    -1.f, 1.f,
+		}),
 	rlgl::GLBuffer<GLuint>({
 		0,1,2, 0,2,3,
 		4,5,6, 4,6,7
 		}),
-	rlgl::GLBuffer<float>({}),
-	0, true, false, false, true, false, 8, 3*4
-};
-
+	false, false, true
+);
 
 /*
   

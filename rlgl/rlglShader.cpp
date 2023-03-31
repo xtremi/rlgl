@@ -1,4 +1,6 @@
 #include "rlglShader.h"
+#include "rlglObject.h"
+#include "rlglMaterial.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -77,8 +79,6 @@ void Shader::use() const {
 }
 
 
-
-
 std::string rlgl::readFile(const std::string& filePath) {
     std::ifstream file;
     file.open(filePath);
@@ -94,5 +94,52 @@ std::string rlgl::readFile(const std::string& filePath) {
 
 
 
+void StandardShader::setWorldUniforms(
+    const glm::mat4x4& pvMat,
+    const glm::vec3& camPos,
+    const rlgl::WorldEnv& worldEnv) const
+{
+    StandardUniforms::setProjectViewMatrix(glID, pvMat);
+}
+
+void StandardShader::setObjectUniforms(rlgl::Object* obj) const {
+    StandardUniforms::setModelMatrix(glID, obj->modelMatrix());
+    StandardUniforms::setHighlight(glID, obj->hasHighlight());
+    if (obj->hasColor()) {
+        StandardUniforms::setColor(glID, obj->getColor());
+    }
+}
+
+void TextureShader::setMaterialUniforms(const rlgl::MaterialPtr material) const {
+    TextureUniforms::setTexture(glID, material);
+}
+
+void LightShader::setWorldUniforms(
+    const glm::mat4x4& pvMat,
+    const glm::vec3& camPos,
+    const rlgl::WorldEnv& worldEnv) const
+{
+    StandardShader::setWorldUniforms(pvMat, camPos, worldEnv);
+    setLightPos(glID, worldEnv.lights[0].pos);
+    setLightAmbientIntensity(glID, worldEnv.lights[0].ambientIntensity);
+    setLightSpecularIntensity(glID, worldEnv.lights[0].specularIntensity);
+    setLightColor(glID, worldEnv.lights[0].color);
+    setCameraPos(glID, camPos);
+}
 
 
+void LightMaterialShader::setMaterialUniforms(const rlgl::MaterialPtr material) const {
+    MaterialLightPropertiesUniforms::setMaterialLightProperties(glID,
+        *std::static_pointer_cast<LightProperties>(material).get());
+}
+
+void TextureLightShader::setMaterialUniforms(const rlgl::MaterialPtr material) const {
+    TextureUniforms::setTexture(glID, material);
+}
+
+void TextureLightMaterialShader::setMaterialUniforms(const rlgl::MaterialPtr material) const {
+    TextureLightShader::setMaterialUniforms(material);
+
+    MaterialLightPropertiesUniforms::setMaterialLightProperties(glID, 
+        *std::static_pointer_cast<LightProperties>(material).get());
+}

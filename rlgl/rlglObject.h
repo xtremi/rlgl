@@ -2,10 +2,10 @@
 #include <glm/glm.hpp>
 #include "rlGeometry.h"
 #include "rlglMesh.h"
+#include "rlglShader.h"
+#include "rlglMaterial.h"
 
 namespace rlgl{
-
-
 	extern int OBJECT_COUNT;
 
 class Object
@@ -13,7 +13,11 @@ class Object
 public:
 	int id = 0;
 public:
-	Object(const MeshPtr mesh, uint64_t shaderID, uint64_t materialID);
+	Object(
+		const MeshPtr mesh, 
+		const ShaderPtr shader, 
+		const MaterialPtr material);
+
 	bool hasColor() const;
 	void setColor(const glm::vec4& col);
 	void setColor(const glm::vec3& col);
@@ -43,9 +47,9 @@ public:
 	void setNinstances(int32_t n) { _nInstances = n; }
 
 public:
-	MeshPtr mesh;
-	uint64_t shaderID;
-	uint64_t materialID;	
+	MeshPtr		mesh;
+	ShaderPtr	shader;
+	MaterialPtr material;
 
 protected:
 	bool _isInView		   = true;

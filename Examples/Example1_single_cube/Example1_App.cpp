@@ -12,34 +12,34 @@ void MyApp::prepareAssets() {
     rlgl::primitive_mesh::cube.initialize();
     rlgl::primitive_mesh::plane_textureX10.initialize();
 
-    assetIDs.mesh.world = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
-    assetIDs.mesh.cubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
-    assetIDs.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
+    assets.mesh.world = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
+    assets.mesh.cubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
+    assets.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
 
     rlgl::Material materialChecker, materialBox;
     materialChecker.initialize(_assetDirectory + "\\textures\\checker_grey.jpg", true);
     materialBox.initialize(_assetDirectory + "\\textures\\box-texture.png", false);
 
-    assetIDs.material.checker = scene.addMaterial(materialChecker);
-    assetIDs.material.box = scene.addMaterial(materialBox);
+    assets.material.checker = scene.addMaterial(materialChecker);
+    assets.material.box = scene.addMaterial(materialBox);
 
     rlgl::Shader shaderTextured, shaderColored, shaderInst, shaderGrass;
     shaderTextured.initialize(_assetDirectory + "\\shaders\\object.vs", _assetDirectory + "\\shaders\\object.fs");
     shaderTextured.setInt("textureID", materialChecker.glID);
     shaderColored.initialize(_assetDirectory + "\\shaders\\object_col.vs", _assetDirectory + "\\shaders\\object_col.fs");
 
-    assetIDs.shader.textured = scene.addShader(shaderTextured);
-    assetIDs.shader.colored = scene.addShader(shaderColored);
+    assets.shader.textured = scene.addShader(shaderTextured);
+    assets.shader.colored = scene.addShader(shaderColored);
 
 
     //UI:
     rlgl::primitive_mesh::square.initialize();
-    assetIDs.mesh.square = uiScene.addMesh(&rlgl::primitive_mesh::square);
+    assets.mesh.square = uiScene.addMesh(&rlgl::primitive_mesh::square);
 
     rlgl::Shader uiShader;
     uiShader.initialize(_assetDirectory + "\\shaders\\ui_element.vs", _assetDirectory + "\\shaders\\ui_element.fs");
 
-    assetIDs.shader.ui = uiScene.addShader(uiShader);
+    assets.shader.ui = uiScene.addShader(uiShader);
 }
 
 
@@ -56,15 +56,15 @@ int MyApp::prepareScene() {
 }
 
 void MyApp::createWorld() {
-    objects.worldPlane = new rlgl::Object(assetIDs.mesh.world, assetIDs.shader.textured, assetIDs.material.checker);
+    objects.worldPlane = new rlgl::Object(assets.mesh.world, assets.shader.textured, assets.material.checker);
     objects.worldPlane->setPosition(glm::vec3(0.f));
     objects.worldPlane->setScale(glm::vec3(100.f));
     scene.addObject(objects.worldPlane);
 }
 
 void MyApp::createUI() {
-    uiObjects.aimCross.push_back(new rlgl::Object(assetIDs.mesh.square, assetIDs.shader.ui, NO_MATERIAL));
-    uiObjects.aimCross.push_back(new rlgl::Object(assetIDs.mesh.square, assetIDs.shader.ui, NO_MATERIAL));
+    uiObjects.aimCross.push_back(new rlgl::Object(assets.mesh.square, assets.shader.ui, NO_MATERIAL));
+    uiObjects.aimCross.push_back(new rlgl::Object(assets.mesh.square, assets.shader.ui, NO_MATERIAL));
     uiObjects.aimCross[0]->setPosition(glm::vec3(0.f, 0.f, 0.2f));
     uiObjects.aimCross[0]->setScale(glm::vec3(0.2f, 0.01f, 1.f));
     uiObjects.aimCross[1]->setPosition(glm::vec3(0.0f, 0.0f, 0.2f));
@@ -80,7 +80,7 @@ void MyApp::createBox() {
     glm::vec3 boxPos = glm::vec3(10.f, 10.f, 5.f);
     float boxSize = BOX_WIDTH/5.f;
 
-    objects.cube = new rlgl::Object(assetIDs.mesh.cubeTex, assetIDs.shader.textured, assetIDs.material.box);
+    objects.cube = new rlgl::Object(assets.mesh.cubeTex, assets.shader.textured, assets.material.box);
     objects.cube->setPosition(boxPos);
     scene.addObject(objects.cube);
 }
@@ -92,7 +92,7 @@ void MyApp::createCSYS() {
     std::vector<glm::vec3> axesScales({ glm::vec3(axesL, axesW, axesW),glm::vec3(axesW, axesL, axesW), glm::vec3(axesW, axesW, axesL) });
     std::vector<glm::vec4> axesColor({ glm::vec4(1.f, 0.f, 0.f, 1.f),glm::vec4(0.f, 1.f, 0.f, 1.f), glm::vec4(0.f, 0.f, 1.f, 1.f) });
     for (int i = 0; i < axesDir.size(); i++) {
-        objects.axes.push_back(new rlgl::Object(assetIDs.mesh.cube, assetIDs.shader.colored, UINT32_MAX));
+        objects.axes.push_back(new rlgl::Object(assets.mesh.cube, assets.shader.colored, UINT32_MAX));
         objects.axes[i]->setColor(axesColor[i]);
         objects.axes[i]->setPosition(axesDir[i] * axesL / 2.f);
         objects.axes[i]->setScale(axesScales[i]);

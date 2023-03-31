@@ -3,8 +3,12 @@
 #include <string>
 #include <glm/glm.hpp>
 #include "rlglWorldEnv.h"
-#include "rlglObject.h"
 #include "rlglMaterial.h"
+
+namespace rlgl {
+    class Object;
+    class LightProperties;
+}
 
 class ShaderUniforms {
 public:
@@ -38,7 +42,7 @@ protected:
 
 class TextureUniforms : public ShaderUniforms {
 protected:
-    void setTexture(GLuint sID, const rlgl::Material* material) const;
+    void setTexture(GLuint sID, const rlgl::MaterialPtr material) const;
 };
 
 class MaterialLightPropertiesUniforms : public ShaderUniforms {

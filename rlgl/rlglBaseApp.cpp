@@ -255,30 +255,17 @@ int DemoApp::prepareScene() {
     rlgl::MeshPtr meshCube = rlgl::primitive_mesh::cube;
 
 
-    rlgl::TexturedMaterial* material1 = new rlgl::TexturedMaterial();
-    material1->defineTexture(_assetDirectory + "\\textures\\checker_grey.jpg", true);
-    uint64_t material1ID = scene.addMaterial(material1);
+    MaterialPtr material1 = std::make_shared<TexturedMaterial>(_assetDirectory + "\\textures\\checker_grey.jpg", true);
+    MaterialPtr material2 = std::make_shared<TexturedMaterial>(_assetDirectory + "\\textures\\box-texture.png", false);
 
-    rlgl::TexturedMaterial* material2 = new rlgl::TexturedMaterial();
-    material2->defineTexture(_assetDirectory + "\\textures\\box-texture.png", false);
-    uint64_t material2ID = scene.addMaterial(material2);
-
-
-    rlgl::StandardShader* shader1 = new StandardShader(
+    rlgl::ShaderPtr shader1 = std::make_shared<StandardShader>(
         _assetDirectory + "\\shaders\\object.vs", 
         _assetDirectory + "\\shaders\\object.fs");
-    //shader1->setInt("textureID", material1->glID); //remove ?
-    uint64_t shader1ID = scene.addShader(shader1);
-
-
-    rlgl::StandardShader* shader2 = new StandardShader(
+    rlgl::ShaderPtr shader2 = std::make_shared<StandardShader>(
         _assetDirectory + "\\shaders\\object_col.vs", 
         _assetDirectory + "\\shaders\\object_col.fs");
-    uint64_t shader2ID = scene.addShader(shader1);
 
-
-
-    objects.worldPlane = new rlgl::Object(meshWorld, shader1ID, material1ID);
+    objects.worldPlane = new rlgl::Object(meshWorld, shader1, material1);
 
     objects.worldPlane->setPosition(glm::vec3(0.f, 0.f, 0.f));
     objects.worldPlane->setScale(glm::vec3(100.0f));
@@ -286,11 +273,11 @@ int DemoApp::prepareScene() {
 
 
     for (int i = 0; i < 4; i++) {
-        objects.squares.push_back(new rlgl::Object(meshPlane, shader1ID, material2ID));
+        objects.squares.push_back(new rlgl::Object(meshPlane, shader1, material2));
         scene.addObject(objects.squares[i]);
     }
     for (int i = 0; i < 4; i++) {
-        objects.cubes.push_back(new rlgl::Object(meshCubeTex, shader1ID, material2ID));
+        objects.cubes.push_back(new rlgl::Object(meshCubeTex, shader1, material2));
         scene.addObject(objects.cubes[i]);
     }
 

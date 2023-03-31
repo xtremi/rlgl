@@ -6,8 +6,11 @@ using namespace rlgl;
 int rlgl::OBJECT_COUNT = 0;
 
 
-Object::Object(const MeshPtr _mesh, uint64_t _shaderID, uint64_t _materialID) :
-	mesh{ _mesh }, shaderID{ _shaderID }, materialID{_materialID}
+Object::Object(
+	const MeshPtr     _mesh, 
+	const ShaderPtr   _shader, 
+	const MaterialPtr _material) :
+	mesh{ _mesh }, shader{ _shader }, material{_material}
 {
 	_modelMatrix = glm::mat4(1.f);
 	OBJECT_COUNT++;

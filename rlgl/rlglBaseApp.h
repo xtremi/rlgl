@@ -16,7 +16,7 @@
 
 namespace rlgl{
 
-	#define NO_MATERIAL INT64_MAX
+	#define NO_MATERIAL nullptr
 
 	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 

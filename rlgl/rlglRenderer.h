@@ -2,6 +2,8 @@
 #include <glm/glm.hpp>
 #include "rlGeometry.h"
 #include "rlglMesh.h"
+#include "rlglShader.h"
+#include "rlglMaterial.h"
 
 namespace rlgl{
 
@@ -9,8 +11,6 @@ namespace rlgl{
 	class Scene;
 	class Camera;
 	class Frustum;
-	class Shader;
-	class Material;
 
 	bool isInFrustum(const Frustum& frustum, const rl::BoundingBox& bbox, bool strict = false);
 
@@ -26,9 +26,9 @@ protected:
 		const glm::vec3& camPos,
 		Object*			 obj);
 
-	const Shader* lastUsedShader = nullptr;
-	const Material* lastUsedMaterial = nullptr;
 	MeshPtr lastUsedMesh = nullptr;
+	ShaderPtr lastUsedShader = nullptr;
+	MaterialPtr lastUsedMaterial = nullptr;
 };
 
 

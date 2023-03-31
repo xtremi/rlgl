@@ -22,8 +22,8 @@ void Renderer::render(Scene& scene, const Camera& cam)
 		}
 	}
 
-	lastUsedShader = nullptr;
-	lastUsedMesh = nullptr;
+	lastUsedShader	 = nullptr;
+	lastUsedMesh	 = nullptr;
 	lastUsedMaterial = nullptr;
 }
 
@@ -34,9 +34,9 @@ void Renderer::render(
 	const glm::vec3& camPos,
 	Object*			 obj) 
 {
-	const Shader*	currentShader	= scene.shader(obj->shaderID);
-	const Material* currentMaterial = scene.material(obj->materialID);
 	const MeshPtr	currentMesh		= obj->mesh;
+	const ShaderPtr	currentShader	= obj->shader;
+	const MaterialPtr currentMaterial = obj->material;
 
 	if (!currentMesh) {
 		throw("Renderer::render - Mesh does not exist");
@@ -44,7 +44,6 @@ void Renderer::render(
 	if (!currentShader) {
 		throw("Renderer::render - Shader does not exist");		
 	}
-
 
 	if(currentShader != lastUsedShader){
 		currentShader->use();

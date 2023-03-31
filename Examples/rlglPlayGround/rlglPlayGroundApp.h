@@ -13,7 +13,7 @@ public:
 };
 
 
-struct AssetIDs {
+struct Assets {
 	struct Meshes {
 		uint64_t world, cubeTex, cube, square, cubeInst, terrainDummy, frustum;
 		uint64_t grass;
@@ -59,7 +59,7 @@ protected:
 
 	WorldObjects objects;
 	UIobjects	 uiObjects;
-	AssetIDs	 assetIDs;
+	Assets	 assets;
 	rlgl::Mesh	 cubeTexInstMesh;
 	rlgl::Mesh	 frustumMesh;
 

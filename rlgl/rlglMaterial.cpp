@@ -1,7 +1,6 @@
 #include "rlglMaterial.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include <glad/gl.h>
 
 using namespace rlgl;
 
@@ -17,6 +16,10 @@ void LightProperties::setProperties(
 	shininess = _shininess;
 }
 
+
+TexturedMaterial::TexturedMaterial(const std::string& texturePath, bool repeatTexture) {
+	defineTexture(texturePath, repeatTexture);
+}
 
 void TexturedMaterial::defineTexture(const std::string& texturePath, bool repeatTexture) {
 
@@ -45,3 +48,22 @@ void TexturedMaterial::defineTexture(const std::string& texturePath, bool repeat
 }
 
 
+LightPropMaterial::LightPropMaterial(
+	glm::vec3		   ambientStrength,
+	glm::vec3		   diffuseStrength,
+	glm::vec3		   specularStrength,
+	float			   shininess)
+{
+	setProperties(ambientStrength, diffuseStrength, specularStrength, shininess);
+}
+
+TextureLightPropMaterial::TextureLightPropMaterial(
+	const std::string& texturePath,
+	bool			   repeatTexture,
+	glm::vec3		   ambientStrength,
+	glm::vec3		   diffuseStrength,
+	glm::vec3		   specularStrength,
+	float			   shininess) : TexturedMaterial(texturePath, repeatTexture)
+{
+	setProperties(ambientStrength, diffuseStrength, specularStrength, shininess);
+}

@@ -1,19 +1,21 @@
 #pragma once
 #include "rlglBaseApp.h"
 
-struct AssetIDs {
+struct Assets {
 	struct Meshes {
 		rlgl::MeshPtr cube, cubeTex, world, square;
 	};
-	struct Materials {
-		uint64_t checker; 
-		uint64_t box, boxJade, boxGold, jade, gold;
-		uint64_t metalic;
-	};
 	struct Shaders {
-		uint64_t textured, texturedLight, texturedLightMat, colored, coloredLightMat, ui;
-
+		rlgl::ShaderPtr textured, texturedLight, texturedLightMat;
+		rlgl::ShaderPtr colored, coloredLightMat;
+		rlgl::ShaderPtr ui;
 	};
+	struct Materials {
+		rlgl::MaterialPtr checker; 
+		rlgl::MaterialPtr box, boxJade, boxGold, jade, gold;
+		rlgl::MaterialPtr metalic;
+	};
+	
 	Meshes	  mesh;
 	Materials material;
 	Shaders   shader;
@@ -39,7 +41,7 @@ public:
 protected:
 	WorldObjects objects;
 	UIobjects	 uiObjects;
-	AssetIDs	 assetIDs;
+	Assets		 assets;
 
 	int prepareScene();						//inherited from BaseApp
 	int updateScene();						//inherited from BaseApp

@@ -1,7 +1,7 @@
 #pragma once
 #include "rlglBaseApp.h"
 
-struct AssetIDs {
+struct Assets {
 	struct Meshes {
 		uint64_t cube, cubeTex, world, square;
 	};
@@ -36,7 +36,7 @@ public:
 protected:
 	WorldObjects objects;
 	UIobjects	 uiObjects;
-	AssetIDs	 assetIDs;
+	Assets	 assets;
 
 	int prepareScene();						//inherited from BaseApp
 	int updateScene();						//inherited from BaseApp

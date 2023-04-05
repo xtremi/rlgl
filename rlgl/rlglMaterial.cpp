@@ -4,28 +4,6 @@
 
 using namespace rlgl;
 
-LightProperties::LightProperties(
-	glm::vec3 _ambientStrength,
-	glm::vec3 _diffuseStrength,
-	glm::vec3 _specularStrength,
-	float	  _shininess)
-{
-	setProperties(_ambientStrength, _diffuseStrength, _specularStrength, _shininess);
-}
-
-void LightProperties::setProperties(
-	glm::vec3 _ambientStrength,
-	glm::vec3 _diffuseStrength,
-	glm::vec3 _specularStrength,
-	float	  _shininess)
-{
-	ambientStrength = _ambientStrength;
-	diffuseStrength = _diffuseStrength;
-	specularStrength = _specularStrength;
-	shininess = _shininess;
-}
-
-
 TexturedMaterial::TexturedMaterial(const std::string& texturePath, bool repeatTexture) {
 	defineTexture(texturePath, repeatTexture);
 }

@@ -40,38 +40,17 @@ void MyApp::prepareAssets() {
     assets.material.checker = std::make_shared<rlgl::TexturedMaterial>(
         _assetDirectory + "\\textures\\checker_grey.jpg", true);
 
-    rlgl::LightProperties lightPropWhite(
-        glm::vec3(0.1f, 0.1f, 0.1f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        128.0f);
-    rlgl::LightProperties lightPropJade(
-        glm::vec3(0.135, 0.2225, 0.1575),
-        glm::vec3(0.54, 0.89, 0.63),
-        glm::vec3(0.316228, 0.316228, 0.316228),
-        128.0f * 0.1f);
-    rlgl::LightProperties lightPropGold(
-        glm::vec3(0.24725, 0.1995, 0.0745),
-        glm::vec3(0.75164, 0.60648, 0.22648),
-        glm::vec3(0.628281, 0.555802, 0.366065),
-        128.0f * 0.4f);
-    rlgl::LightProperties lightPropMetallic(
-        glm::vec3(0.19225, 0.19225, 0.19225),
-        glm::vec3(0.50754, 0.50754, 0.50754),
-        glm::vec3(0.508273, 0.508273, 0.508273),
-        128.0f * 0.5f);
-
-    assets.material.jade = std::make_shared<rlgl::LightPropMaterial>(lightPropJade);
-    assets.material.gold = std::make_shared<rlgl::LightPropMaterial>(lightPropGold);
+    assets.material.jade = std::make_shared<rlgl::LightPropMaterial>(rlgl::LightProperties::jade());
+    assets.material.gold = std::make_shared<rlgl::LightPropMaterial>(rlgl::LightProperties::gold());
 
     assets.material.box = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\box-texture.png", false, lightPropWhite);
+        _assetDirectory + "\\textures\\box-texture.png", false, rlgl::LightProperties::standard());
     assets.material.boxJade = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\box-texture.png", false, lightPropJade);
+        _assetDirectory + "\\textures\\box-texture.png", false, rlgl::LightProperties::jade());
     assets.material.boxGold = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\box-texture.png", false, lightPropGold);
+        _assetDirectory + "\\textures\\box-texture.png", false, rlgl::LightProperties::gold());
     assets.material.metalic = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\metal-texture-1.jpg", false, lightPropMetallic);
+        _assetDirectory + "\\textures\\metal-texture-1.jpg", false, rlgl::LightProperties::mettalic());
  
     
     //############## UI ##########################################
@@ -128,10 +107,11 @@ void MyApp::updateLight() {
 
     double curTime = glfwGetTime();
 
-    double speed = 0.2f;
+    double speed = 2.2f;
     double rad = 15.0f;
     scene.worldEnv.lights[0].pos =
-        glm::vec3(4.0f, -5.0f, 15.0f) + glm::vec3(0.f * glm::sin(speed * curTime), rad * glm::cos(speed * curTime), 0.f);
+        glm::vec3(10.0f, -5.0f, 15.0f) + 
+        glm::vec3(rad*0.5f * glm::sin(speed * curTime), rad * glm::cos(speed * curTime), 0.f);
 
 
     objects.lightBox->setPosition(scene.worldEnv.lights[0].pos);

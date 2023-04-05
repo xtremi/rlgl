@@ -130,7 +130,7 @@ void LightShader::setWorldUniforms(
 
 void LightMaterialShader::setMaterialUniforms(const rlgl::MaterialPtr material) const {
     MaterialLightPropertiesUniforms::setMaterialLightProperties(glID,
-        *std::static_pointer_cast<LightProperties>(material).get());
+        std::static_pointer_cast<LightPropMaterial>(material)->lightProperties);
 }
 
 void TextureLightShader::setMaterialUniforms(const rlgl::MaterialPtr material) const {
@@ -141,5 +141,5 @@ void TextureLightMaterialShader::setMaterialUniforms(const rlgl::MaterialPtr mat
     TextureLightShader::setMaterialUniforms(material);
 
     MaterialLightPropertiesUniforms::setMaterialLightProperties(glID, 
-        *std::static_pointer_cast<LightProperties>(material).get());
+        std::static_pointer_cast<TextureLightPropMaterial>(material)->lightProperties);
 }

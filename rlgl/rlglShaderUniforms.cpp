@@ -68,7 +68,7 @@ void StandardUniforms::setHighlight(GLuint sID, bool highlight) const {
 /*****TEXTURE UNIFORMS ****************************************************************/
 void TextureUniforms::setTexture(GLuint sID, const rlgl::MaterialPtr material) const {
     glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
-    glBindTexture(GL_TEXTURE_2D, std::dynamic_pointer_cast<rlgl::TexturedMaterial>(material)->glID);
+    glBindTexture(GL_TEXTURE_2D, std::static_pointer_cast<rlgl::TexturedMaterial>(material)->glID);
 }
 
 

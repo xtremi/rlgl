@@ -4,6 +4,15 @@
 
 using namespace rlgl;
 
+LightProperties::LightProperties(
+	glm::vec3 _ambientStrength,
+	glm::vec3 _diffuseStrength,
+	glm::vec3 _specularStrength,
+	float	  _shininess)
+{
+	setProperties(_ambientStrength, _diffuseStrength, _specularStrength, _shininess);
+}
+
 void LightProperties::setProperties(
 	glm::vec3 _ambientStrength,
 	glm::vec3 _diffuseStrength,
@@ -47,23 +56,3 @@ void TexturedMaterial::defineTexture(const std::string& texturePath, bool repeat
 	stbi_image_free(imgData);
 }
 
-
-LightPropMaterial::LightPropMaterial(
-	glm::vec3		   ambientStrength,
-	glm::vec3		   diffuseStrength,
-	glm::vec3		   specularStrength,
-	float			   shininess)
-{
-	setProperties(ambientStrength, diffuseStrength, specularStrength, shininess);
-}
-
-TextureLightPropMaterial::TextureLightPropMaterial(
-	const std::string& texturePath,
-	bool			   repeatTexture,
-	glm::vec3		   ambientStrength,
-	glm::vec3		   diffuseStrength,
-	glm::vec3		   specularStrength,
-	float			   shininess) : TexturedMaterial(texturePath, repeatTexture)
-{
-	setProperties(ambientStrength, diffuseStrength, specularStrength, shininess);
-}

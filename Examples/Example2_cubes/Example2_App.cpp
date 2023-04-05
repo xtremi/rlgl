@@ -40,40 +40,39 @@ void MyApp::prepareAssets() {
     assets.material.checker = std::make_shared<rlgl::TexturedMaterial>(
         _assetDirectory + "\\textures\\checker_grey.jpg", true);
 
-    assets.material.box = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\box-texture.png", false,
+    rlgl::LightProperties lightPropWhite(
         glm::vec3(0.1f, 0.1f, 0.1f),
         glm::vec3(1.0f, 1.0f, 1.0f),
         glm::vec3(1.0f, 1.0f, 1.0f),
         128.0f);
-    assets.material.boxJade = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\box-texture.png", false,
+    rlgl::LightProperties lightPropJade(
         glm::vec3(0.135, 0.2225, 0.1575),
         glm::vec3(0.54, 0.89, 0.63),
         glm::vec3(0.316228, 0.316228, 0.316228),
         128.0f * 0.1f);
-    assets.material.boxGold = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\box-texture.png", false,
+    rlgl::LightProperties lightPropGold(
         glm::vec3(0.24725, 0.1995, 0.0745),
         glm::vec3(0.75164, 0.60648, 0.22648),
         glm::vec3(0.628281, 0.555802, 0.366065),
         128.0f * 0.4f);
-    assets.material.metalic = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\metal-texture-1.jpg", false,
+    rlgl::LightProperties lightPropMetallic(
         glm::vec3(0.19225, 0.19225, 0.19225),
         glm::vec3(0.50754, 0.50754, 0.50754),
         glm::vec3(0.508273, 0.508273, 0.508273),
         128.0f * 0.5f);
-    assets.material.jade = std::make_shared<rlgl::LightPropMaterial>(
-        glm::vec3(0.135, 0.2225, 0.1575),
-        glm::vec3(0.54, 0.89, 0.63),
-        glm::vec3(0.316228, 0.316228, 0.316228),
-        128.0f * 0.1f);
-    assets.material.gold = std::make_shared<rlgl::LightPropMaterial>(
-        glm::vec3(0.24725, 0.1995, 0.0745),
-        glm::vec3(0.75164, 0.60648, 0.22648),
-        glm::vec3(0.628281, 0.555802, 0.366065),
-        128.0f * 0.4f);    
+
+    assets.material.jade = std::make_shared<rlgl::LightPropMaterial>(lightPropJade);
+    assets.material.gold = std::make_shared<rlgl::LightPropMaterial>(lightPropGold);
+
+    assets.material.box = std::make_shared<rlgl::TextureLightPropMaterial>(
+        _assetDirectory + "\\textures\\box-texture.png", false, lightPropWhite);
+    assets.material.boxJade = std::make_shared<rlgl::TextureLightPropMaterial>(
+        _assetDirectory + "\\textures\\box-texture.png", false, lightPropJade);
+    assets.material.boxGold = std::make_shared<rlgl::TextureLightPropMaterial>(
+        _assetDirectory + "\\textures\\box-texture.png", false, lightPropGold);
+    assets.material.metalic = std::make_shared<rlgl::TextureLightPropMaterial>(
+        _assetDirectory + "\\textures\\metal-texture-1.jpg", false, lightPropMetallic);
+ 
     
     //############## UI ##########################################
  

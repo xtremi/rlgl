@@ -9,6 +9,14 @@ namespace rlgl {
 	class LightProperties {
 
 	public:
+		LightProperties() = default;
+
+		LightProperties(
+			glm::vec3 _ambientStrength,
+			glm::vec3 _diffuseStrength,
+			glm::vec3 _specularStrength,
+			float	  _shininess);
+
 		void setProperties(
 			glm::vec3 _ambientStrength,
 			glm::vec3 _diffuseStrength,
@@ -37,26 +45,26 @@ namespace rlgl {
 	};
 
 	/*!Material with light properties*/
-	class LightPropMaterial : public Material, public LightProperties {
+	class LightPropMaterial : public Material{
 	public:
-		LightPropMaterial(
-			glm::vec3		   ambientStrength,
-			glm::vec3		   diffuseStrength,
-			glm::vec3		   specularStrength,
-			float			   shininess);
-
+		LightPropMaterial(const LightProperties& lightProps) 
+			: lightProperties{lightProps}{}
+	
+	public:
+		LightProperties lightProperties;
 	};
 
 	/*!Material with texture and light properties*/
-	class TextureLightPropMaterial : public TexturedMaterial, public LightProperties {
+	class TextureLightPropMaterial : public TexturedMaterial {
 	public:
 		TextureLightPropMaterial(
 			const std::string& texturePath,
 			bool			   repeatTexture,
-			glm::vec3		   ambientStrength,
-			glm::vec3		   diffuseStrength,
-			glm::vec3		   specularStrength,
-			float			   shininess);
+			const LightProperties& lightProps) 
+			: TexturedMaterial(texturePath, repeatTexture), lightProperties{lightProps}{}
+
+	public:
+		LightProperties lightProperties;
 	};
 
 }

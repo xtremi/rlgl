@@ -11,6 +11,7 @@ set(SOURCE_FILES
     rlglScene.cpp
     rlglShader.cpp
     rlglShaderUniforms.cpp
+    rlglLightProperties.cpp
 )
 
 set(HEADER_FILES
@@ -26,6 +27,7 @@ set(HEADER_FILES
     rlglShader.h
     rlglWorldEnv.h
     rlglShaderUniforms.h
+    rlglLightProperties.h
 )
 
 add_library(${LIB_NAME} 

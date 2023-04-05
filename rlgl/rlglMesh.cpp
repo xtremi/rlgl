@@ -209,17 +209,17 @@ MeshPtr rlgl::primitive_mesh::plane = std::make_shared<Mesh>(
 MeshPtr rlgl::primitive_mesh::square = std::make_shared<Mesh>(
 
 	rlgl::GLBuffer<float>({
-		 //Positions
-		 0.5f,  0.5f, 0.0f, // top right
-		 0.5f, -0.5f, 0.0f, // bottom right
-		-0.5f, -0.5f, 0.0f, // bottom left
-		-0.5f,  0.5f, 0.0f  // top left 
+		 //Positions,		  Texture
+		 0.5f,  0.5f, 0.0f,   1.0f,  1.0f, // top right
+		 0.5f, -0.5f, 0.0f,   1.0f, -1.0f, // bottom right
+		-0.5f, -0.5f, 0.0f,  -1.0f, -1.0f,  // bottom left
+		-0.5f,  0.5f, 0.0f,  -1.0f,  1.0f  // top left 
 	}),
 	rlgl::GLBuffer<GLuint>({
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
 	}),
-	false, false, false
+	false, false, true
 );
 
 /*!

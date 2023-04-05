@@ -23,7 +23,7 @@ protected:
 	void render(
 		const Scene&	 scene, 
 		const glm::mat4& projViewMat, 
-		const glm::vec3& camPos,
+		const rlgl::Camera& cam,
 		Object*			 obj);
 
 	MeshPtr lastUsedMesh = nullptr;

@@ -18,7 +18,7 @@ void Renderer::render(Scene& scene, const Camera& cam)
 	rlgl::cObjectIt it = scene.cbeginObject();
 	for (rlgl::cObjectIt it = scene.cbeginObject(); it != scene.cendObject(); it++) {
 		if((*it)->isInView()){
-			render(scene, PVmat, cam.position, *it);
+			render(scene, PVmat, cam, *it);
 		}
 	}
 
@@ -31,12 +31,18 @@ void Renderer::render(Scene& scene, const Camera& cam)
 void Renderer::render(
 	const Scene&	 scene, 
 	const glm::mat4& projViewMat, 
-	const glm::vec3& camPos,
+	const rlgl::Camera& cam,
 	Object*			 obj) 
 {
 	const MeshPtr	currentMesh		= obj->mesh;
 	const ShaderPtr	currentShader	= obj->shader;
 	const MaterialPtr currentMaterial = obj->material;
+
+	if (obj->id == 28) {
+		//glDisable(GL_DEPTH_TEST);
+		//glDepthMask(GL_TRUE);
+		//glDepthFunc(GL_ALWAYS);
+	}
 
 	if (!currentMesh) {
 		throw("Renderer::render - Mesh does not exist");
@@ -49,7 +55,7 @@ void Renderer::render(
 		currentShader->use();
 		currentShader->setWorldUniforms(
 			projViewMat, 
-			camPos,
+			cam,
 			scene.worldEnv);
 	}
 
@@ -64,6 +70,9 @@ void Renderer::render(
 	}
 	currentMesh->draw(obj->nInstances());
 
+	if (obj->id == 28) {
+		//glEnable(GL_DEPTH_TEST);
+	}
 
 	lastUsedShader = currentShader;
 	lastUsedMesh   = currentMesh;

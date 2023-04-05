@@ -9,6 +9,7 @@ struct Assets {
 		rlgl::ShaderPtr textured, texturedLight, texturedLightMat;
 		rlgl::ShaderPtr colored, coloredLightMat;
 		rlgl::ShaderPtr ui;
+		rlgl::ShaderPtr background;
 	};
 	struct Materials {
 		rlgl::MaterialPtr checker; 
@@ -27,6 +28,7 @@ struct WorldObjects {
 	std::vector<rlgl::Object*> boxes;
 	std::vector<rlgl::Object*> axes;
 	rlgl::Object*			   lightBox;
+	rlgl::Object*			   sky;
 };
 
 struct UIobjects {

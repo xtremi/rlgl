@@ -122,3 +122,6 @@ void LightUniforms::setCameraPos(GLuint sID, const glm::vec3& position) const {
     setVec3(sID, "camPos", position);
 }
 
+void CamDirUniforms::setCameraDirection(GLuint sID, const glm::vec3& direction) const {
+    setVec3(sID, "camDir", direction);
+}

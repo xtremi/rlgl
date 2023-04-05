@@ -96,7 +96,7 @@ std::string rlgl::readFile(const std::string& filePath) {
 
 void StandardShader::setWorldUniforms(
     const glm::mat4x4& pvMat,
-    const glm::vec3& camPos,
+    const rlgl::Camera& cam,
     const rlgl::WorldEnv& worldEnv) const
 {
     StandardUniforms::setProjectViewMatrix(glID, pvMat);
@@ -110,21 +110,30 @@ void StandardShader::setObjectUniforms(rlgl::Object* obj) const {
     }
 }
 
+void BackgroundShader::setWorldUniforms(
+    const glm::mat4x4& pvMat,
+    const rlgl::Camera& cam,
+    const rlgl::WorldEnv& worldEnv) const
+{
+    StandardShader::setWorldUniforms(pvMat, cam, worldEnv);
+    CamDirUniforms::setCameraDirection(glID, cam.front);
+}
+
 void TextureShader::setMaterialUniforms(const rlgl::MaterialPtr material) const {
     TextureUniforms::setTexture(glID, material);
 }
 
 void LightShader::setWorldUniforms(
     const glm::mat4x4& pvMat,
-    const glm::vec3& camPos,
+    const rlgl::Camera& cam,
     const rlgl::WorldEnv& worldEnv) const
 {
-    StandardShader::setWorldUniforms(pvMat, camPos, worldEnv);
+    StandardShader::setWorldUniforms(pvMat, cam, worldEnv);
     setLightPos(glID, worldEnv.lights[0].pos);
     setLightAmbientIntensity(glID, worldEnv.lights[0].ambientIntensity);
     setLightSpecularIntensity(glID, worldEnv.lights[0].specularIntensity);
     setLightColor(glID, worldEnv.lights[0].color);
-    setCameraPos(glID, camPos);
+    setCameraPos(glID, cam.position);
 }
 
 

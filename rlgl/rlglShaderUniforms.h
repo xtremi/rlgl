@@ -69,3 +69,8 @@ protected:
     void setCameraPos(GLuint sID, const glm::vec3& position) const;
 };
 
+class CamDirUniforms : public ShaderUniforms {
+protected:
+    void setCameraDirection(GLuint sID, const glm::vec3& direction) const;
+};
+

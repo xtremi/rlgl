@@ -1,6 +1,7 @@
 #pragma once
 #include "rlglShaderUniforms.h"
 #include "rlglWorldEnv.h"
+#include "rlglCamera.h"
 #include <glad/gl.h>
 #include <glm/glm.hpp>
 #include <string>
@@ -30,7 +31,7 @@ public:
 
     virtual void setWorldUniforms(
         const glm::mat4x4& pvMat,
-        const glm::vec3& camPos,
+        const rlgl::Camera& cam,
         const rlgl::WorldEnv& worldEnv) const {};
     virtual void setObjectUniforms(rlgl::Object* obj) const {};
     virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const {};
@@ -42,7 +43,6 @@ private:
 typedef std::shared_ptr<rlgl::Shader> ShaderPtr;
 
 
-
 /*!
     Standard shader
 */
@@ -51,11 +51,24 @@ public:
     using Shader::Shader;
 
     virtual void setWorldUniforms(
-        const glm::mat4x4& pvMat,
-        const glm::vec3& camPos,
+        const glm::mat4x4&    pvMat,
+        const rlgl::Camera&   cam,
         const rlgl::WorldEnv& worldEnv) const;
 
     virtual void setObjectUniforms(rlgl::Object* obj) const;
+};
+
+/*!
+    Background shader
+*/
+class BackgroundShader : public StandardShader, public CamDirUniforms {
+public:
+    using StandardShader::StandardShader;
+
+    virtual void setWorldUniforms(
+        const glm::mat4x4& pvMat,
+        const rlgl::Camera& cam,
+        const rlgl::WorldEnv& worldEnv) const;
 };
 
 /*!
@@ -81,7 +94,7 @@ public:
 
     virtual void setWorldUniforms(
         const glm::mat4x4& pvMat,
-        const glm::vec3& camPos,
+        const rlgl::Camera& cam,
         const rlgl::WorldEnv& worldEnv) const;
 };
 

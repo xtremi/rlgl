@@ -15,6 +15,8 @@ void MyApp::prepareAssets() {
     assets.mesh.cubeTex->initialize();
     assets.mesh.cube = rlgl::primitive_mesh::cube;
     assets.mesh.cube->initialize();
+    assets.mesh.cubeMap = rlgl::primitive_mesh::cubeMap;
+    assets.mesh.cubeMap->initialize();
 
     //Shaders:
     assets.shader.textured = std::make_shared<rlgl::TextureShader>(
@@ -33,6 +35,9 @@ void MyApp::prepareAssets() {
         _assetDirectory + "\\shaders\\object_col.vs",
         _assetDirectory + "\\shaders\\object_col.fs");
 
+    assets.shader.skyBox = std::make_shared<rlgl::CubeMapShader>(
+        _assetDirectory + "\\shaders\\sky_cubemap.vs",
+        _assetDirectory + "\\shaders\\sky_cubemap.fs");
 
     //Materials (Textures):
     //http://devernay.free.fr/cours/opengl/materials.html
@@ -55,7 +60,17 @@ void MyApp::prepareAssets() {
     assets.material.metalic = std::make_shared<rlgl::TextureLightPropMaterial>(
         _assetDirectory + "\\textures\\metal-texture-1.jpg", false, rlgl::LightProperties::mettalic());
  
-    
+    assets.material.skyCubeMap1 = std::make_shared<rlgl::TexturedCubeMapMaterial>(
+        std::vector<std::string>({
+            _assetDirectory + "\\textures\\skybox\\right.jpg",
+            _assetDirectory + "\\textures\\skybox\\left.jpg",
+            _assetDirectory + "\\textures\\skybox\\top.jpg",
+            _assetDirectory + "\\textures\\skybox\\bottom.jpg",
+            _assetDirectory + "\\textures\\skybox\\front.jpg",
+            _assetDirectory + "\\textures\\skybox\\back.jpg" })
+        );
+
+
     //############## UI ##########################################
  
     //Meshes:
@@ -66,9 +81,6 @@ void MyApp::prepareAssets() {
     assets.shader.ui = std::make_shared<rlgl::StandardShader>(
         _assetDirectory + "\\shaders\\ui_element.vs", 
         _assetDirectory + "\\shaders\\ui_element.fs");
-    assets.shader.background = std::make_shared<rlgl::BackgroundShader>(
-        _assetDirectory + "\\shaders\\background_shader.vs",
-        _assetDirectory + "\\shaders\\background_shader.fs");
 }
 
 
@@ -77,6 +89,13 @@ int MyApp::prepareScene() {
     glClearColor(135.f/255.f, 206.f / 255.f, 250.f / 255.f, 1.0f);
 
     prepareAssets();
+    
+    objects.skyBox = new rlgl::Object(
+        assets.mesh.cubeMap,
+        assets.shader.skyBox,
+        assets.material.skyCubeMap1);
+    scene.addObject(objects.skyBox);
+    
     createLight();
     createWorld();
     createBoxes();
@@ -94,6 +113,8 @@ void MyApp::createWorld() {
     objects.worldPlane->setPosition(glm::vec3(0.f));
     objects.worldPlane->setScale(glm::vec3(100.f));
     scene.addObject(objects.worldPlane);
+
+
 
     //objects.sky = new rlgl::Object(assets.mesh.square, assets.shader.background, NO_MATERIAL);
     //objects.sky->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));

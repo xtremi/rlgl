@@ -23,6 +23,7 @@ public:
 	glm::mat4 pvMatrix() const;
 	glm::mat4 projectionMatrix() const;
 	glm::mat4 viewMatrix() const;
+	glm::mat4 viewMatrix_noTranslation() const;
 	glm::vec3 lookVec() const;
 	glm::vec3 sideVec() const;
 	glm::vec3 correctedUpVector() const;

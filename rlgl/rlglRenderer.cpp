@@ -38,9 +38,9 @@ void Renderer::render(
 	const ShaderPtr	currentShader	= obj->shader;
 	const MaterialPtr currentMaterial = obj->material;
 
-	if (obj->id == 28) {
+	if (obj->id == 1) {
 		//glDisable(GL_DEPTH_TEST);
-		//glDepthMask(GL_TRUE);
+		glDepthMask(GL_FALSE);
 		//glDepthFunc(GL_ALWAYS);
 	}
 
@@ -70,8 +70,10 @@ void Renderer::render(
 	}
 	currentMesh->draw(obj->nInstances());
 
-	if (obj->id == 28) {
+	if (obj->id == 1) {
 		//glEnable(GL_DEPTH_TEST);
+		glDepthMask(GL_TRUE);
+
 	}
 
 	lastUsedShader = currentShader;

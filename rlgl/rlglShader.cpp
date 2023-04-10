@@ -123,6 +123,15 @@ void TextureShader::setMaterialUniforms(const rlgl::MaterialPtr material) const 
     TextureUniforms::setTexture(glID, material);
 }
 
+void CubeMapShader::setWorldUniforms(
+    const glm::mat4x4& pvMat,
+    const rlgl::Camera& cam,
+    const rlgl::WorldEnv& worldEnv) const
+{
+    glm::mat4 pvMatNoTransl = cam.projectionMatrix() * cam.viewMatrix_noTranslation();
+    StandardUniforms::setProjectViewMatrix(glID, pvMatNoTransl);
+}
+
 void LightShader::setWorldUniforms(
     const glm::mat4x4& pvMat,
     const rlgl::Camera& cam,

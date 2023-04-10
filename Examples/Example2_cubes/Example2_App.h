@@ -3,18 +3,20 @@
 
 struct Assets {
 	struct Meshes {
-		rlgl::MeshPtr cube, cubeTex, world, square;
+		rlgl::MeshPtr cube, cubeTex, cubeMap;
+		rlgl::MeshPtr world, square;
 	};
 	struct Shaders {
 		rlgl::ShaderPtr textured, texturedLight, texturedLightMat;
 		rlgl::ShaderPtr colored, coloredLightMat;
 		rlgl::ShaderPtr ui;
-		rlgl::ShaderPtr background;
+		rlgl::ShaderPtr skyBox;
 	};
 	struct Materials {
 		rlgl::MaterialPtr checker; 
 		rlgl::MaterialPtr box, boxJade, boxGold, jade, gold;
 		rlgl::MaterialPtr metalic;
+		rlgl::MaterialPtr skyCubeMap1;
 	};
 	
 	Meshes	  mesh;
@@ -24,11 +26,10 @@ struct Assets {
 
 
 struct WorldObjects {
-	rlgl::Object*			   worldPlane;
+	rlgl::Object*			   worldPlane, *skyBox;
 	std::vector<rlgl::Object*> boxes;
 	std::vector<rlgl::Object*> axes;
 	rlgl::Object*			   lightBox;
-	rlgl::Object*			   sky;
 };
 
 struct UIobjects {

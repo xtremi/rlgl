@@ -84,6 +84,23 @@ public:
 
 /*!
     Standard shader
+        + Texture
+        + Remove translation from view matrix
+*/
+class CubeMapShader : public TextureShader {
+public:
+    using TextureShader::TextureShader;
+
+    virtual void setWorldUniforms(
+        const glm::mat4x4& pvMat,
+        const rlgl::Camera& cam,
+        const rlgl::WorldEnv& worldEnv) const;
+};
+
+
+
+/*!
+    Standard shader
         + Light uniforms
 */
 class LightShader : public StandardShader, public LightUniforms {

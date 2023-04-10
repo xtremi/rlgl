@@ -32,10 +32,10 @@ namespace rlgl {
 	};
 
 	/*!Material with cubemap texture*/
-	class CubeMatTexturedMaterial : public TexturedMaterial {
+	class TexturedCubeMapMaterial : public TexturedMaterial {
 	public:
-		CubeMatTexturedMaterial() = default;
-		CubeMatTexturedMaterial(const std::vector<std::string>& texturePaths);
+		TexturedCubeMapMaterial() = default;
+		TexturedCubeMapMaterial(const std::vector<std::string>& texturePaths);
 
 		void defineTextures(const std::vector<std::string>& texturePaths);
 		virtual void bind();

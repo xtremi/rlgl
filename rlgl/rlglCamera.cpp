@@ -43,6 +43,14 @@ glm::mat4 Camera::projectionMatrix() const {
 glm::mat4 Camera::viewMatrix() const {
 	return glm::lookAt(position, position + front, upVector);
 }
+/*
+	Eliminates any translation in the view matrix
+	Used by sky cube map to keep centered.
+*/
+glm::mat4 Camera::viewMatrix_noTranslation() const {
+	return glm::mat4(glm::mat3(viewMatrix()));
+}
+
 glm::vec3 Camera::lookVec() const {
 	return front;
 }

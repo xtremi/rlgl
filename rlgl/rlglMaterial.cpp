@@ -39,11 +39,11 @@ void Textured2dMaterial::bind() {
 
 
 
-CubeMatTexturedMaterial::CubeMatTexturedMaterial(const std::vector<std::string>& texturePaths) {
+TexturedCubeMapMaterial::TexturedCubeMapMaterial(const std::vector<std::string>& texturePaths) {
 	defineTextures(texturePaths);
 }
 
-void CubeMatTexturedMaterial::defineTextures(const std::vector<std::string>& texturePaths) {
+void TexturedCubeMapMaterial::defineTextures(const std::vector<std::string>& texturePaths) {
 	static const size_t N_CUBEMAP_FACES = 6;
 	if (texturePaths.size() != N_CUBEMAP_FACES) {
 		throw("CubeMatTexturedMaterial::defineTextures expects 6 texture paths, got " + std::to_string(texturePaths.size()));
@@ -79,7 +79,7 @@ void CubeMatTexturedMaterial::defineTextures(const std::vector<std::string>& tex
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
-void CubeMatTexturedMaterial::bind() {
+void TexturedCubeMapMaterial::bind() {
 	glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
 	glBindTexture(GL_TEXTURE_CUBE_MAP, glID);
 }

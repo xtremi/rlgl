@@ -41,6 +41,8 @@ void Renderer::render(
 	if (obj->id == 1) {
 		//glDisable(GL_DEPTH_TEST);
 		glDepthMask(GL_FALSE);
+		glDepthFunc(GL_LEQUAL);
+
 		//glDepthFunc(GL_ALWAYS);
 	}
 
@@ -59,20 +61,23 @@ void Renderer::render(
 			scene.worldEnv);
 	}
 
-	if(currentMaterial != lastUsedMaterial){
-		currentShader->setMaterialUniforms(currentMaterial);
-	}
-
 	currentShader->setObjectUniforms(obj);
 
 	if(currentMesh != lastUsedMesh){
 		currentMesh->bind();
 	}
+
+	if (currentMaterial != lastUsedMaterial) {
+		currentShader->setMaterialUniforms(currentMaterial);
+	}
+
 	currentMesh->draw(obj->nInstances());
 
 	if (obj->id == 1) {
 		//glEnable(GL_DEPTH_TEST);
 		glDepthMask(GL_TRUE);
+		glDepthFunc(GL_LESS);
+
 
 	}
 

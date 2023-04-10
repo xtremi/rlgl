@@ -216,12 +216,12 @@ int BaseApp::initializeWindow() {
     glfwSetCursorPos(_window, windowParams().size.x /2, windowParams().size.y / 2);
     glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    glEnable(GL_DEPTH_TEST);
     
     //For transperancy:
+    glEnable(GL_DEPTH_TEST);
     //glDisable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     return 0;
 }

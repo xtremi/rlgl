@@ -52,6 +52,9 @@ void TexturedCubeMapMaterial::defineTextures(const std::vector<std::string>& tex
 	int width, height, nrChannels;
 	unsigned char* imgData = nullptr;
 
+	glGenTextures(1, &glID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, glID);
+
 	for(size_t i = 0; i < N_CUBEMAP_FACES; i++){
 		imgData = stbi_load(
 			texturePaths[i].c_str(), 
@@ -68,9 +71,6 @@ void TexturedCubeMapMaterial::defineTextures(const std::vector<std::string>& tex
 			throw("CubeMatTexturedMaterial::defineTextures failed to load image data from path " + texturePaths[i]);
 		}
 	}
-
-	glGenTextures(1, &glID);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, glID);
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

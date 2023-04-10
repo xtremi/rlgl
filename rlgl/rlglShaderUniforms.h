@@ -45,6 +45,7 @@ protected:
     void setTexture(GLuint sID, const rlgl::MaterialPtr material) const;
 };
 
+
 class MaterialLightPropertiesUniforms : public ShaderUniforms {
 protected:
     void setMaterialLightProperties(GLuint sID, const rlgl::LightProperties& properties) const;

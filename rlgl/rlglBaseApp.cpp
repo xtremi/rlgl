@@ -255,8 +255,8 @@ int DemoApp::prepareScene() {
     rlgl::MeshPtr meshCube = rlgl::primitive_mesh::cube;
 
 
-    MaterialPtr material1 = std::make_shared<TexturedMaterial>(_assetDirectory + "\\textures\\checker_grey.jpg", true);
-    MaterialPtr material2 = std::make_shared<TexturedMaterial>(_assetDirectory + "\\textures\\box-texture.png", false);
+    MaterialPtr material1 = std::make_shared<Textured2dMaterial>(_assetDirectory + "\\textures\\checker_grey.jpg", true);
+    MaterialPtr material2 = std::make_shared<Textured2dMaterial>(_assetDirectory + "\\textures\\box-texture.png", false);
 
     rlgl::ShaderPtr shader1 = std::make_shared<StandardShader>(
         _assetDirectory + "\\shaders\\object.vs", 

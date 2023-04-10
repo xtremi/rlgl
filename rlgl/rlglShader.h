@@ -82,8 +82,6 @@ public:
     virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const;
 };
 
-
-
 /*!
     Standard shader
         + Light uniforms

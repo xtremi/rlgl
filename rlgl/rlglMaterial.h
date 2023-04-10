@@ -1,9 +1,10 @@
 #pragma once
-#include <string>
-#include <memory>
+#include "rlglLightProperties.h"
 #include <glad/gl.h>
 #include <glm/glm.hpp>
-#include "rlglLightProperties.h"
+#include <string>
+#include <memory>
+#include <vector>
 
 namespace rlgl {
 
@@ -12,13 +13,32 @@ namespace rlgl {
 	typedef std::shared_ptr<Material> MaterialPtr;
 
 
-	/*!Material with a texture*/
 	class TexturedMaterial : public Material {
 	public:
-		TexturedMaterial(const std::string& texturePath, bool repeatTexture);
-
-		void defineTexture(const std::string& texturePath, bool repeatTexture);
+		TexturedMaterial() = default;
 		GLuint glID = 0;
+
+		virtual void bind() = 0;
+	};
+
+	/*!Material with a texture*/
+	class Textured2dMaterial : public TexturedMaterial {
+	public:
+		Textured2dMaterial() = default;
+		Textured2dMaterial(const std::string& texturePath, bool repeatTexture);
+
+		virtual void defineTexture(const std::string& texturePath, bool repeatTexture);
+		virtual void bind();
+	};
+
+	/*!Material with cubemap texture*/
+	class CubeMatTexturedMaterial : public TexturedMaterial {
+	public:
+		CubeMatTexturedMaterial() = default;
+		CubeMatTexturedMaterial(const std::vector<std::string>& texturePaths);
+
+		void defineTextures(const std::vector<std::string>& texturePaths);
+		virtual void bind();
 	};
 
 	/*!Material with light properties*/
@@ -32,13 +52,13 @@ namespace rlgl {
 	};
 
 	/*!Material with texture and light properties*/
-	class TextureLightPropMaterial : public TexturedMaterial {
+	class TextureLightPropMaterial : public Textured2dMaterial {
 	public:
 		TextureLightPropMaterial(
 			const std::string& texturePath,
 			bool			   repeatTexture,
 			const LightProperties& lightProps) 
-			: TexturedMaterial(texturePath, repeatTexture), lightProperties{lightProps}{}
+			: Textured2dMaterial(texturePath, repeatTexture), lightProperties{lightProps}{}
 
 	public:
 		LightProperties lightProperties;

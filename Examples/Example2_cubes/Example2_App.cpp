@@ -16,8 +16,6 @@ void MyApp::prepareAssets() {
     assets.mesh.cube = rlgl::primitive_mesh::cube;
     assets.mesh.cube->initialize();
 
-
-
     //Shaders:
     assets.shader.textured = std::make_shared<rlgl::TextureShader>(
         _assetDirectory + "\\shaders\\object_tex.vs",
@@ -42,7 +40,7 @@ void MyApp::prepareAssets() {
     rlgl::LightProperties f = rlgl::LightProperties::gold();
     f.ambientStrength += 1.0f;
 
-    assets.material.checker = std::make_shared<rlgl::TexturedMaterial>(
+    assets.material.checker = std::make_shared<rlgl::Textured2dMaterial>(
         _assetDirectory + "\\textures\\checker_grey.jpg", true);
 
     assets.material.jade = std::make_shared<rlgl::LightPropMaterial>(rlgl::LightProperties::jade());
@@ -97,11 +95,11 @@ void MyApp::createWorld() {
     objects.worldPlane->setScale(glm::vec3(100.f));
     scene.addObject(objects.worldPlane);
 
-    objects.sky = new rlgl::Object(assets.mesh.square, assets.shader.background, NO_MATERIAL);
-    objects.sky->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
-    objects.sky->setPosition(glm::vec3(0.f, 0.f, 0.0f));
-    objects.sky->setScale(2.f);
-    scene.addObject(objects.sky);
+    //objects.sky = new rlgl::Object(assets.mesh.square, assets.shader.background, NO_MATERIAL);
+    //objects.sky->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
+    //objects.sky->setPosition(glm::vec3(0.f, 0.f, 0.0f));
+    //objects.sky->setScale(2.f);
+    //scene.addObject(objects.sky);
 }
 
 void MyApp::createUI() {

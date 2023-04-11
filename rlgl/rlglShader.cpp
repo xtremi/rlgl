@@ -1,6 +1,8 @@
 #include "rlglShader.h"
 #include "rlglObject.h"
 #include "rlglMaterial.h"
+#include "rlglConfig.h"
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -132,6 +134,16 @@ void CubeMapShader::setWorldUniforms(
     StandardUniforms::setProjectViewMatrix(glID, pvMatNoTransl);
 }
 
+void CubeMapShader::preRender() const {
+    glDepthMask(GL_FALSE);
+    glDepthFunc(GL_LEQUAL);
+}
+
+void CubeMapShader::postRender() const {
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
+}
+
 void LightShader::setWorldUniforms(
     const glm::mat4x4& pvMat,
     const rlgl::Camera& cam,
@@ -160,4 +172,28 @@ void TextureLightMaterialShader::setMaterialUniforms(const rlgl::MaterialPtr mat
 
     MaterialLightPropertiesUniforms::setMaterialLightProperties(glID, 
         std::static_pointer_cast<TextureLightPropMaterial>(material)->lightProperties);
+}
+
+
+
+
+
+
+
+rlgl::ShaderPtr ShaderBank::getStandardColorShader() {
+    if (!standardColorShader) {
+        standardColorShader = std::make_shared<rlgl::StandardShader>(
+            GlobalConfig::assetDirectory + "\\shaders\\object_col.vs",
+            GlobalConfig::assetDirectory + "\\shaders\\object_col.fs");
+    }
+    return standardColorShader;
+}
+
+rlgl::ShaderPtr ShaderBank::getStandardTextureShader() {
+    if (!standardTexturedShader) {
+        standardTexturedShader = std::make_shared<rlgl::TextureShader>(
+            GlobalConfig::assetDirectory + "\\shaders\\object_tex.vs",
+            GlobalConfig::assetDirectory + "\\shaders\\object_tex.fs");
+    }
+    return standardTexturedShader;
 }

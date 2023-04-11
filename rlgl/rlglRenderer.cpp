@@ -22,6 +22,10 @@ void Renderer::render(Scene& scene, const Camera& cam)
 		}
 	}
 
+	if (lastUsedShader) {
+		lastUsedShader->postRender();
+	}
+
 	lastUsedShader	 = nullptr;
 	lastUsedMesh	 = nullptr;
 	lastUsedMaterial = nullptr;
@@ -38,14 +42,6 @@ void Renderer::render(
 	const ShaderPtr	currentShader	= obj->shader;
 	const MaterialPtr currentMaterial = obj->material;
 
-	if (obj->id == 1) {
-		//glDisable(GL_DEPTH_TEST);
-		glDepthMask(GL_FALSE);
-		glDepthFunc(GL_LEQUAL);
-
-		//glDepthFunc(GL_ALWAYS);
-	}
-
 	if (!currentMesh) {
 		throw("Renderer::render - Mesh does not exist");
 	}
@@ -54,7 +50,11 @@ void Renderer::render(
 	}
 
 	if(currentShader != lastUsedShader){
+		if (lastUsedShader) {
+			lastUsedShader->postRender();
+		}
 		currentShader->use();
+		currentShader->preRender();
 		currentShader->setWorldUniforms(
 			projViewMat, 
 			cam,
@@ -73,13 +73,6 @@ void Renderer::render(
 
 	currentMesh->draw(obj->nInstances());
 
-	if (obj->id == 1) {
-		//glEnable(GL_DEPTH_TEST);
-		glDepthMask(GL_TRUE);
-		glDepthFunc(GL_LESS);
-
-
-	}
 
 	lastUsedShader = currentShader;
 	lastUsedMesh   = currentMesh;

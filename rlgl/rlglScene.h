@@ -5,6 +5,7 @@
 #include "rlglMaterial.h"
 #include "rlglCamera.h"
 #include "rlglWorldEnv.h"
+#include "rlglBaseModel.h"
 
 namespace rlgl{
 
@@ -19,11 +20,8 @@ class Scene
 public:
 	WorldEnv worldEnv;
 
-	uint64_t addObject(Object* obj) { objects.push_back(obj); return objects.size() - 1; }
-
-	const Object*   object(uint64_t id) const { return objects[id]; }
-
-	Object* object(uint64_t id) { return objects[id]; }
+	void addObject(Object* obj) { objects.push_back(obj); }
+	void addModel(BaseModel* model);
 
 	cObjectIt cbeginObject() const { return objects.cbegin(); }
 	cObjectIt cendObject() const { return objects.cend(); }
@@ -32,7 +30,6 @@ public:
 
 protected:
 	std::vector<Object*> objects;
-	
 	std::vector<Object*>::const_iterator objectIterator;
 };
 

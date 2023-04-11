@@ -13,6 +13,7 @@
 #include "rlglMaterial.h"
 #include "rlglObject.h"
 #include "rlglErrors.h"
+#include "rlglConfig.h"
 
 namespace rlgl{
 
@@ -75,7 +76,6 @@ protected:
 	GLFWparams	   _glfwParams;
 	WindowParams   _windowParams;
 	GLFWwindow*	   _window = nullptr;
-	std::string	   _assetDirectory = "";
 	rlgl::Renderer renderer;
 	rlgl::Camera*  activeCamera;
 	rlgl::Camera   camera;

@@ -3,14 +3,13 @@
 
 struct Assets {
 	struct Meshes {
-		uint64_t cube, cubeTex, world, square;
-	};
-	struct Materials {
-		uint64_t checker, box;
+		rlgl::MeshPtr cube, cubeTex, world, square;
 	};
 	struct Shaders {
-		uint64_t textured, colored, ui;
-
+		rlgl::ShaderPtr textured, colored, ui;
+	};
+	struct Materials {
+		rlgl::MaterialPtr checker, box;
 	};
 	Meshes	  mesh;
 	Materials material;
@@ -36,7 +35,7 @@ public:
 protected:
 	WorldObjects objects;
 	UIobjects	 uiObjects;
-	Assets	 assets;
+	Assets		 assets;
 
 	int prepareScene();						//inherited from BaseApp
 	int updateScene();						//inherited from BaseApp
@@ -52,7 +51,6 @@ protected:
 
 	//Update:
 	void updateBox();
-
 
 private:
 	static const float BOX_WIDTH;

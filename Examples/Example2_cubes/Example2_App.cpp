@@ -8,6 +8,8 @@ MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory){}
 
 void MyApp::prepareAssets() {
 
+    std::string assetDirectory = rlgl::GlobalConfig::assetDirectory;
+
     //Meshes:
     assets.mesh.world = rlgl::primitive_mesh::plane_textureX10;
     assets.mesh.world->initialize();
@@ -20,24 +22,24 @@ void MyApp::prepareAssets() {
 
     //Shaders:
     assets.shader.textured = std::make_shared<rlgl::TextureShader>(
-        _assetDirectory + "\\shaders\\object_tex.vs",
-        _assetDirectory + "\\shaders\\object_tex.fs");
+        assetDirectory + "\\shaders\\object_tex.vs",
+        assetDirectory + "\\shaders\\object_tex.fs");
     assets.shader.texturedLight = std::make_shared<rlgl::TextureLightShader>(
-        _assetDirectory + "\\shaders\\object_tex_light.vs",
-        _assetDirectory + "\\shaders\\object_tex_light.fs");
+        assetDirectory + "\\shaders\\object_tex_light.vs",
+        assetDirectory + "\\shaders\\object_tex_light.fs");
     assets.shader.texturedLightMat = std::make_shared<rlgl::TextureLightMaterialShader>(
-        _assetDirectory + "\\shaders\\object_tex_light_mat.vs",
-        _assetDirectory + "\\shaders\\object_tex_light_mat.fs");
+        assetDirectory + "\\shaders\\object_tex_light_mat.vs",
+        assetDirectory + "\\shaders\\object_tex_light_mat.fs");
     assets.shader.coloredLightMat = std::make_shared<rlgl::LightMaterialShader>(
-        _assetDirectory + "\\shaders\\object_col_light_mat.vs",
-        _assetDirectory + "\\shaders\\object_col_light_mat.fs");
+        assetDirectory + "\\shaders\\object_col_light_mat.vs",
+        assetDirectory + "\\shaders\\object_col_light_mat.fs");
     assets.shader.colored = std::make_shared<rlgl::StandardShader>(
-        _assetDirectory + "\\shaders\\object_col.vs",
-        _assetDirectory + "\\shaders\\object_col.fs");
+        assetDirectory + "\\shaders\\object_col.vs",
+        assetDirectory + "\\shaders\\object_col.fs");
 
     assets.shader.skyBox = std::make_shared<rlgl::CubeMapShader>(
-        _assetDirectory + "\\shaders\\sky_cubemap.vs",
-        _assetDirectory + "\\shaders\\sky_cubemap.fs");
+        assetDirectory + "\\shaders\\sky_cubemap.vs",
+        assetDirectory + "\\shaders\\sky_cubemap.fs");
 
     //Materials (Textures):
     //http://devernay.free.fr/cours/opengl/materials.html
@@ -46,28 +48,28 @@ void MyApp::prepareAssets() {
     f.ambientStrength += 1.0f;
 
     assets.material.checker = std::make_shared<rlgl::Textured2dMaterial>(
-        _assetDirectory + "\\textures\\checker_grey.jpg", true);
+        assetDirectory + "\\textures\\checker_grey.jpg", true);
 
     assets.material.jade = std::make_shared<rlgl::LightPropMaterial>(rlgl::LightProperties::jade());
     assets.material.gold = std::make_shared<rlgl::LightPropMaterial>(rlgl::LightProperties::gold());
 
     assets.material.box = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\box-texture.png", false, rlgl::LightProperties::standard());
+        assetDirectory + "\\textures\\box-texture.png", false, rlgl::LightProperties::standard());
     assets.material.boxJade = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\box-texture.png", false, rlgl::LightProperties::jade());
+        assetDirectory + "\\textures\\box-texture.png", false, rlgl::LightProperties::jade());
     assets.material.boxGold = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\box-texture.png", false, rlgl::LightProperties::gold());
+        assetDirectory + "\\textures\\box-texture.png", false, rlgl::LightProperties::gold());
     assets.material.metalic = std::make_shared<rlgl::TextureLightPropMaterial>(
-        _assetDirectory + "\\textures\\metal-texture-1.jpg", false, rlgl::LightProperties::mettalic());
+        assetDirectory + "\\textures\\metal-texture-1.jpg", false, rlgl::LightProperties::mettalic());
  
     assets.material.skyCubeMap1 = std::make_shared<rlgl::TexturedCubeMapMaterial>(
         std::vector<std::string>({
-            _assetDirectory + "\\textures\\skybox\\back.jpg",
-            _assetDirectory + "\\textures\\skybox\\front.jpg",
-            _assetDirectory + "\\textures\\skybox\\right.jpg",
-            _assetDirectory + "\\textures\\skybox\\left.jpg",       //ok
-            _assetDirectory + "\\textures\\skybox\\top.jpg",        //ok
-            _assetDirectory + "\\textures\\skybox\\bottom.jpg"      //ok
+            assetDirectory + "\\textures\\skybox\\right.jpg",
+            assetDirectory + "\\textures\\skybox\\left.jpg",
+            assetDirectory + "\\textures\\skybox\\top.jpg",
+            assetDirectory + "\\textures\\skybox\\bottom.jpg",
+            assetDirectory + "\\textures\\skybox\\front.jpg",
+            assetDirectory + "\\textures\\skybox\\back.jpg",
             })
         );
 
@@ -80,8 +82,8 @@ void MyApp::prepareAssets() {
 
     //Shaders:
     assets.shader.ui = std::make_shared<rlgl::StandardShader>(
-        _assetDirectory + "\\shaders\\ui_element.vs", 
-        _assetDirectory + "\\shaders\\ui_element.fs");
+        assetDirectory + "\\shaders\\ui_element.vs", 
+        assetDirectory + "\\shaders\\ui_element.fs");
 }
 
 
@@ -89,19 +91,19 @@ int MyApp::prepareScene() {
 
     glClearColor(135.f/255.f, 206.f / 255.f, 250.f / 255.f, 1.0f);
 
-    prepareAssets();
-    
-    objects.skyBox = new rlgl::Object(
-        assets.mesh.cubeMap,
-        assets.shader.skyBox,
-        assets.material.skyCubeMap1);
-    scene.addObject(objects.skyBox);
-    
+    prepareAssets();        
     createLight();
     createWorld();
     createBoxes();
     createCSYS();
     createUI();
+
+    objects.skyBox = new rlgl::Object(
+        assets.mesh.cubeMap,
+        assets.shader.skyBox,
+        assets.material.skyCubeMap1);
+    scene.addObject(objects.skyBox);
+
     return 0;
 }
 

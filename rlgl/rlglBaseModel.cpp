@@ -1,4 +1,8 @@
 #include "rlglBaseModel.h"
+#include "rlglShaderBank.h"
+#include "rlglColors.h"
+#include "rlglMesh.h"
+
 using namespace rlgl;
 
 CSYSmodel::CSYSmodel(
@@ -13,7 +17,7 @@ CSYSmodel::CSYSmodel(
 	for (int i = 0; i < 3; i++) {
 		objects.push_back(new rlgl::Object(
 			rlgl::primitive_mesh::cube,
-			rlgl::ShaderBank::getStandardColorShader()));
+			rlgl::ShaderBank::standardColorShader()));
 	}
 
 	setColors(rlgl::color::red, rlgl::color::blue, rlgl::color::green);

@@ -21,7 +21,7 @@ public:
 	WorldEnv worldEnv;
 
 	void addObject(Object* obj) { objects.push_back(obj); }
-	void addModel(BaseModel* model);
+	void addModel(const BaseModel& model);
 
 	cObjectIt cbeginObject() const { return objects.cbegin(); }
 	cObjectIt cendObject() const { return objects.cend(); }

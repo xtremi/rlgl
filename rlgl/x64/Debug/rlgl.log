@@ -1,0 +1,9 @@
+﻿  rlglBaseApp.cpp
+C:\coding\my_projects\LearnOpenGL\OpenGL_rela\rlgl\rlglBaseApp.cpp(62,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\coding\my_projects\LearnOpenGL\OpenGL_rela\rlgl\rlglBaseApp.cpp(63,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\coding\my_projects\LearnOpenGL\OpenGL_rela\rlgl\rlglBaseApp.cpp(67,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\coding\my_projects\LearnOpenGL\OpenGL_rela\rlgl\rlglBaseApp.cpp(68,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\coding\my_projects\LearnOpenGL\OpenGL_rela\rlgl\rlglBaseApp.cpp(69,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\coding\my_projects\LearnOpenGL\OpenGL_rela\rlgl\rlglBaseApp.cpp(70,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\coding\my_projects\LearnOpenGL\OpenGL_rela\rlgl\rlglBaseApp.cpp(219,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  rlgl.vcxproj -> C:\coding\my_projects\LearnOpenGL\OpenGL_rela\x64\Debug\rlgl.lib

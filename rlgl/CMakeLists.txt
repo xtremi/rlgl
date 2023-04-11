@@ -15,6 +15,8 @@ set(SOURCE_FILES
     rlglBaseModel.cpp
     rlglColors.cpp
     rlglConfig.cpp
+    rlglMeshBank.cpp
+    rlglShaderBank.cpp
     )
     
     set(HEADER_FILES
@@ -34,6 +36,8 @@ set(SOURCE_FILES
     rlglBaseModel.h
     rlglColors.h
     rlglConfig.h
+    rlglMeshBank.h
+    rlglShaderBank.h
 )
 
 add_library(${LIB_NAME} 

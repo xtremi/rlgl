@@ -1,8 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "rlglObject.h"
-#include "rlglColors.h"
-#include "rlglMesh.h"
 
 namespace rlgl {
 
@@ -28,7 +26,7 @@ namespace rlgl {
 			float axesWidth = 0.2f,
 			const glm::vec3& position = glm::vec3(0.0f));
 
-		void create();
+		//void create();
 		void setColors(
 			const glm::vec3& xAxis,
 			const glm::vec3& yAxis,

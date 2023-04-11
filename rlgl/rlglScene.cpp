@@ -10,10 +10,8 @@ void Scene::cleanUp() {
 }
 
 
-void Scene::addModel(BaseModel* model) {
-
-	for (Object* obj : model->objects) {
+void Scene::addModel(const BaseModel& model) {
+	for (Object* obj : model.objects) {
 		addObject(obj);
 	}
-
 }

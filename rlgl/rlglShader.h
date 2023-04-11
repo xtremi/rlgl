@@ -158,15 +158,7 @@ public:
 };
 
 
-class ShaderBank {
-public:
-    static rlgl::ShaderPtr getStandardColorShader();
-    static rlgl::ShaderPtr getStandardTextureShader();
 
-private:
-    static rlgl::ShaderPtr standardColorShader;
-    static rlgl::ShaderPtr standardTexturedShader;
-};
 
 
 }

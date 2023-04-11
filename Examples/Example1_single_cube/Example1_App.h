@@ -39,8 +39,6 @@ protected:
 
 	int prepareScene();						//inherited from BaseApp
 	int updateScene();						//inherited from BaseApp
-	int postRender();						//inherited from BaseApp
-	void processInput(GLFWwindow* window);	//inherited from BaseApp
 
 	//initialization
 	void prepareAssets();	
@@ -49,8 +47,6 @@ protected:
 	void createBox();
 	void createCSYS();
 
-	//Update:
-	void updateBox();
 
 private:
 	static const float BOX_WIDTH;

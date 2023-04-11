@@ -28,13 +28,15 @@ public:
     void use() const;
     bool create(const std::string& vertexPath, const std::string& fragmentPath);
 
-
     virtual void setWorldUniforms(
         const glm::mat4x4& pvMat,
         const rlgl::Camera& cam,
         const rlgl::WorldEnv& worldEnv) const {};
     virtual void setObjectUniforms(rlgl::Object* obj) const {};
     virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const {};
+
+    virtual void preRender() const {}
+    virtual void postRender() const {}
 
 private:
     GLuint compileShader(const std::string& filePath, GLenum shaderType, std::string& err);
@@ -59,7 +61,7 @@ public:
 };
 
 /*!
-    Background shader
+    Background shader (not used - deprecated)
 */
 class BackgroundShader : public StandardShader, public CamDirUniforms {
 public:
@@ -95,6 +97,9 @@ public:
         const glm::mat4x4& pvMat,
         const rlgl::Camera& cam,
         const rlgl::WorldEnv& worldEnv) const;
+
+    virtual void preRender() const;
+    virtual void postRender() const;
 };
 
 

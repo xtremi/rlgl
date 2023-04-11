@@ -89,19 +89,19 @@ int MyApp::prepareScene() {
 
     glClearColor(135.f/255.f, 206.f / 255.f, 250.f / 255.f, 1.0f);
 
-    prepareAssets();
-    
-    objects.skyBox = new rlgl::Object(
-        assets.mesh.cubeMap,
-        assets.shader.skyBox,
-        assets.material.skyCubeMap1);
-    scene.addObject(objects.skyBox);
-    
+    prepareAssets();        
     createLight();
     createWorld();
     createBoxes();
     createCSYS();
     createUI();
+
+    objects.skyBox = new rlgl::Object(
+        assets.mesh.cubeMap,
+        assets.shader.skyBox,
+        assets.material.skyCubeMap1);
+    scene.addObject(objects.skyBox);
+
     return 0;
 }
 

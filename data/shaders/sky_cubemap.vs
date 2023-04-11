@@ -20,4 +20,5 @@ void main()
     vec3 pos = rotMat90x * aPos;
 
     gl_Position = projView * vec4(pos, 1.0);
+    gl_Position = gl_Position.xyww;
 }

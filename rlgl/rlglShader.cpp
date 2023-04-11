@@ -132,6 +132,16 @@ void CubeMapShader::setWorldUniforms(
     StandardUniforms::setProjectViewMatrix(glID, pvMatNoTransl);
 }
 
+void CubeMapShader::preRender() const {
+    glDepthMask(GL_FALSE);
+    glDepthFunc(GL_LEQUAL);
+}
+
+void CubeMapShader::postRender() const {
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
+}
+
 void LightShader::setWorldUniforms(
     const glm::mat4x4& pvMat,
     const rlgl::Camera& cam,

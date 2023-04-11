@@ -16,7 +16,7 @@ public:
 	Object(
 		const MeshPtr mesh, 
 		const ShaderPtr shader, 
-		const MaterialPtr material);
+		const MaterialPtr material = nullptr);
 
 	bool hasColor() const;
 	void setColor(const glm::vec4& col);

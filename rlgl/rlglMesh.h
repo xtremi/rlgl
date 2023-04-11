@@ -55,6 +55,7 @@ public:
 		 bool hasTexCoords);
 
 	void initialize();
+	bool isInitialized() { return VAO != 0; }
 	void bind() const;
 	void draw(int32_t nInstances = 0) const;
 

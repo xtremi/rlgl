@@ -8,3 +8,12 @@ void Scene::cleanUp() {
 	}
 	objects.clear();
 }
+
+
+void Scene::addModel(BaseModel* model) {
+
+	for (Object* obj : model->objects) {
+		addObject(obj);
+	}
+
+}

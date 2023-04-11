@@ -15,6 +15,8 @@ namespace rlgl{
 
 std::string readFile(const std::string& filePath);
 
+
+
 /*!
     Defines a GLSL shader
     Currently has to be composed of vertex and fragment shader
@@ -153,6 +155,17 @@ public:
     using TextureLightShader::TextureLightShader;
 
     virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const;
+};
+
+
+class ShaderBank {
+public:
+    static rlgl::ShaderPtr getStandardColorShader();
+    static rlgl::ShaderPtr getStandardTextureShader();
+
+private:
+    static rlgl::ShaderPtr standardColorShader;
+    static rlgl::ShaderPtr standardTexturedShader;
 };
 
 

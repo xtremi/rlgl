@@ -7,7 +7,9 @@ void rlgl::framebuffer_size_callback(GLFWwindow* window, int width, int height) 
     glViewport(0, 0, width, height);
 }
 
-BaseApp::BaseApp(const std::string& assetDirectory) : _assetDirectory{ assetDirectory } {}
+BaseApp::BaseApp(const std::string& assetDirectory) {
+    GlobalConfig::assetDirectory = assetDirectory;
+}
 
 
 /*!*/

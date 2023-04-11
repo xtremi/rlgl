@@ -12,9 +12,11 @@ set(SOURCE_FILES
     rlglShader.cpp
     rlglShaderUniforms.cpp
     rlglLightProperties.cpp
-)
-
-set(HEADER_FILES
+    rlglBaseModel.cpp
+    rlglConfig.cpp
+    )
+    
+    set(HEADER_FILES
     rlglBaseApp.h
     rlglCamera.h
     rlglErrors.h
@@ -28,6 +30,9 @@ set(HEADER_FILES
     rlglWorldEnv.h
     rlglShaderUniforms.h
     rlglLightProperties.h
+    rlglBaseModel.h
+    rlglColors.h
+    rlglConfig.h
 )
 
 add_library(${LIB_NAME} 

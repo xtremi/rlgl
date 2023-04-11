@@ -1,6 +1,8 @@
 #include "rlglShader.h"
 #include "rlglObject.h"
 #include "rlglMaterial.h"
+#include "rlglConfig.h"
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -170,4 +172,28 @@ void TextureLightMaterialShader::setMaterialUniforms(const rlgl::MaterialPtr mat
 
     MaterialLightPropertiesUniforms::setMaterialLightProperties(glID, 
         std::static_pointer_cast<TextureLightPropMaterial>(material)->lightProperties);
+}
+
+
+
+
+
+
+
+rlgl::ShaderPtr ShaderBank::getStandardColorShader() {
+    if (!standardColorShader) {
+        standardColorShader = std::make_shared<rlgl::StandardShader>(
+            GlobalConfig::assetDirectory + "\\shaders\\object_col.vs",
+            GlobalConfig::assetDirectory + "\\shaders\\object_col.fs");
+    }
+    return standardColorShader;
+}
+
+rlgl::ShaderPtr ShaderBank::getStandardTextureShader() {
+    if (!standardTexturedShader) {
+        standardTexturedShader = std::make_shared<rlgl::TextureShader>(
+            GlobalConfig::assetDirectory + "\\shaders\\object_tex.vs",
+            GlobalConfig::assetDirectory + "\\shaders\\object_tex.fs");
+    }
+    return standardTexturedShader;
 }

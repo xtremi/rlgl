@@ -2,9 +2,9 @@
 using namespace rlgl;
 
 CSYSmodel::CSYSmodel(
-	float axesLength = 5.0f,
-	float axesWidth = 0.2f,
-	const glm::vec3& position = glm::vec3(0.0f))
+	float axesLength,
+	float axesWidth,
+	const glm::vec3& position)
 {
 	if (!primitive_mesh::cube->isInitialized()) {
 		primitive_mesh::cube->initialize();

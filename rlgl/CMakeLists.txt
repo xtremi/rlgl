@@ -13,6 +13,7 @@ set(SOURCE_FILES
     rlglShaderUniforms.cpp
     rlglLightProperties.cpp
     rlglBaseModel.cpp
+    rlglColors.cpp
     rlglConfig.cpp
     )
     

@@ -63,8 +63,8 @@ void MyApp::prepareAssets() {
     assets.material.skyCubeMap1 = std::make_shared<rlgl::TexturedCubeMapMaterial>(
         std::vector<std::string>({
             _assetDirectory + "\\textures\\skybox\\back.jpg",
-            _assetDirectory + "\\textures\\skybox\\right.jpg",
             _assetDirectory + "\\textures\\skybox\\front.jpg",
+            _assetDirectory + "\\textures\\skybox\\right.jpg",
             _assetDirectory + "\\textures\\skybox\\left.jpg",       //ok
             _assetDirectory + "\\textures\\skybox\\top.jpg",        //ok
             _assetDirectory + "\\textures\\skybox\\bottom.jpg"      //ok

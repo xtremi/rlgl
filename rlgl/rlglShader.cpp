@@ -197,3 +197,6 @@ rlgl::ShaderPtr ShaderBank::getStandardTextureShader() {
     }
     return standardTexturedShader;
 }
+
+rlgl::ShaderPtr ShaderBank::standardColorShader = nullptr;
+rlgl::ShaderPtr ShaderBank::standardTexturedShader = nullptr;

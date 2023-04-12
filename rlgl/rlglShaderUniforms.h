@@ -11,39 +11,7 @@ namespace rlgl {
     class Shader;
 
 
-class ShaderUniformSetObject {
-    friend rlgl::Shader;
-    
-    virtual void setUniformValues(rlgl::Object* obj) const {};
-
-    virtual void setWorldUniforms(
-        const glm::mat4x4& pvMat,
-        const rlgl::Camera& cam,
-        const rlgl::WorldEnv& worldEnv) const {};
-    virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const {};
-};
-
-class ShaderUniformSetGlobal {
-
-};
-
-class ShaderUniformSetMaterial {
-
-};
-
-
-
 class ShaderUniforms {
-public:
-    /*virtual void setWorldUniforms(
-        GLuint sID,
-        const glm::mat4x4& pvMat,
-        const glm::vec3& camPos,
-        const rlgl::WorldEnv& worldEnv) const { }
-
-    virtual void setObjectUniforms(GLuint sID, rlgl::Object* obj) const { };
-    virtual void setMaterialUniforms(GLuint sID, rlgl::Object* obj) const { };*/
-
 protected:
     static void setBool(GLuint sID, const std::string& name, bool value);
     static void setFloat(GLuint sID, const std::string& name, float value);
@@ -53,6 +21,29 @@ protected:
     static void setUint(GLuint sID, const std::string& name, GLuint value);
     static void setInt(GLuint sID, const std::string& name, GLint value);
     static void setBool(GLuint sID, const std::string& name, GLboolean value);
+};
+
+
+class ShaderUniformSetObject {
+    friend rlgl::Shader;
+    virtual void setUniformValues(rlgl::Object* obj) const {};
+};
+
+class ShaderUniformSetGlobal {
+    friend rlgl::Shader;
+    virtual void setUniformValues(
+        const glm::mat4x4& pvMat,
+        const rlgl::Camera& cam,
+        const rlgl::WorldEnv& worldEnv) const {};
+};
+
+class ShaderUniformSetMaterial {
+    friend rlgl::Shader;
+    virtual void setUniformValues(const rlgl::MaterialPtr material) const {};
+};
+
+class ObjectColorUniform {
+    void setColor(GLuint sID, const glm::vec4& color) const;
 };
 
 class StandardUniforms : public ShaderUniforms {

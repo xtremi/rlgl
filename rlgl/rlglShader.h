@@ -37,6 +37,7 @@ public:
     virtual void setObjectUniforms(rlgl::Object* obj) const {};
     virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const {};
 
+    //Used for enabling/diabling gl settings before and after the shader is used.
     virtual void preRender() const {}
     virtual void postRender() const {}
 
@@ -156,9 +157,5 @@ public:
 
     virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const;
 };
-
-
-
-
 
 }

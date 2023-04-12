@@ -4,6 +4,8 @@
 
 int main(int argc, char* argv[]) {
 
+    std::cout << "started" << std::endl;
+
     std::string assetDirectory;
     if (argc < 2) {
         std::cout << "ERROR: Asset directory is required as first argument." << std::endl;

@@ -8,7 +8,30 @@
 namespace rlgl {
     class Object;
     class LightProperties;
-}
+    class Shader;
+
+
+class ShaderUniformSetObject {
+    friend rlgl::Shader;
+    
+    virtual void setUniformValues(rlgl::Object* obj) const {};
+
+    virtual void setWorldUniforms(
+        const glm::mat4x4& pvMat,
+        const rlgl::Camera& cam,
+        const rlgl::WorldEnv& worldEnv) const {};
+    virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const {};
+};
+
+class ShaderUniformSetGlobal {
+
+};
+
+class ShaderUniformSetMaterial {
+
+};
+
+
 
 class ShaderUniforms {
 public:
@@ -75,3 +98,4 @@ protected:
     void setCameraDirection(GLuint sID, const glm::vec3& direction) const;
 };
 
+}

@@ -43,6 +43,9 @@ public:
 
 private:
     GLuint compileShader(const std::string& filePath, GLenum shaderType, std::string& err);
+
+
+
 };
 
 typedef std::shared_ptr<rlgl::Shader> ShaderPtr;

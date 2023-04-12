@@ -2,11 +2,11 @@ set(EXE_NAME rlglPlayground)
 
 set(SOURCE_FILES
     main.cpp
-    rlglPlaygroundApp.cpp
+    rlglPlayGroundApp.cpp
 )
 
 set(HEADER_FILES
-    rlglPlaygroundApp.h
+    rlglPlayGroundApp.h
 )
 
 add_executable(${EXE_NAME} 

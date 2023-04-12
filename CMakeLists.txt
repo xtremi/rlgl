@@ -67,7 +67,7 @@ add_subdirectory(rlCommon)
 add_subdirectory(rlOctree)
 
 #Executables
-add_subdirectory(Examples/rlglPlayground)
+#add_subdirectory(Examples/rlglPlayGround)  #need to fix
 add_subdirectory(Examples/Example1_single_cube)
 add_subdirectory(Examples/Example2_cubes)
 

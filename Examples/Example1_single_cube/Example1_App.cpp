@@ -19,17 +19,17 @@ void MyApp::prepareAssets() {
 
     //Shaders:
     assets.shader.textured = std::make_shared<rlgl::TextureShader>(
-        assetDirectory + "\\shaders\\object_tex.vs", 
-        assetDirectory + "\\shaders\\object_tex.fs");
+        assetDirectory + "/shaders/object_tex.vs", 
+        assetDirectory + "/shaders/object_tex.fs");
     assets.shader.colored = std::make_shared<rlgl::StandardShader>(
-        assetDirectory + "\\shaders\\object_col.vs", 
-        assetDirectory + "\\shaders\\object_col.fs");
+        assetDirectory + "/shaders/object_col.vs", 
+        assetDirectory + "/shaders/object_col.fs");
 
     //Materials (Textures):
     assets.material.checker = std::make_shared<rlgl::Textured2dMaterial>(
-        assetDirectory + "\\textures\\checker_grey.jpg", true);
+        assetDirectory + "/textures/checker_grey.jpg", true);
     assets.material.box = std::make_shared<rlgl::Textured2dMaterial>(
-        assetDirectory + "\\textures\\box-texture.png", false);
+        assetDirectory + "/textures/box-texture.png", false);
 
     //UI:
     //Meshes:
@@ -37,8 +37,8 @@ void MyApp::prepareAssets() {
 
     //Shaders:
     assets.shader.ui = std::make_shared<rlgl::StandardShader>(
-        assetDirectory + "\\shaders\\ui_element.vs", 
-        assetDirectory + "\\shaders\\ui_element.fs");
+        assetDirectory + "/shaders/ui_element.vs", 
+        assetDirectory + "/shaders/ui_element.fs");
 }
 
 

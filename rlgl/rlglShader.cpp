@@ -96,7 +96,7 @@ std::string rlgl::readFile(const std::string& filePath) {
 
 
 
-void StandardShader::setWorldUniforms(
+void StandardShader::setGlobalUniforms(
     const glm::mat4x4& pvMat,
     const rlgl::Camera& cam,
     const rlgl::WorldEnv& worldEnv) const
@@ -112,12 +112,12 @@ void StandardShader::setObjectUniforms(rlgl::Object* obj) const {
     }
 }
 
-void BackgroundShader::setWorldUniforms(
+void BackgroundShader::setGlobalUniforms(
     const glm::mat4x4& pvMat,
     const rlgl::Camera& cam,
     const rlgl::WorldEnv& worldEnv) const
 {
-    StandardShader::setWorldUniforms(pvMat, cam, worldEnv);
+    StandardShader::setGlobalUniforms(pvMat, cam, worldEnv);
     CamDirUniforms::setCameraDirection(glID, cam.front);
 }
 
@@ -125,7 +125,7 @@ void TextureShader::setMaterialUniforms(const rlgl::MaterialPtr material) const 
     TextureUniforms::setTexture(glID, material);
 }
 
-void CubeMapShader::setWorldUniforms(
+void CubeMapShader::setGlobalUniforms(
     const glm::mat4x4& pvMat,
     const rlgl::Camera& cam,
     const rlgl::WorldEnv& worldEnv) const
@@ -144,12 +144,12 @@ void CubeMapShader::postRender() const {
     glDepthFunc(GL_LESS);
 }
 
-void LightShader::setWorldUniforms(
+void LightShader::setGlobalUniforms(
     const glm::mat4x4& pvMat,
     const rlgl::Camera& cam,
     const rlgl::WorldEnv& worldEnv) const
 {
-    StandardShader::setWorldUniforms(pvMat, cam, worldEnv);
+    StandardShader::setGlobalUniforms(pvMat, cam, worldEnv);
     setLightPos(glID, worldEnv.lights[0].pos);
     setLightAmbientIntensity(glID, worldEnv.lights[0].ambientIntensity);
     setLightSpecularIntensity(glID, worldEnv.lights[0].specularIntensity);

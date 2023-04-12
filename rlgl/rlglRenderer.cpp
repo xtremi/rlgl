@@ -55,7 +55,7 @@ void Renderer::render(
 		}
 		currentShader->use();
 		currentShader->preRender();
-		currentShader->setWorldUniforms(
+		currentShader->setGlobalUniforms(
 			projViewMat, 
 			cam,
 			scene.worldEnv);

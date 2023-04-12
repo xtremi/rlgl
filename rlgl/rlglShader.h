@@ -30,7 +30,7 @@ public:
     void use() const;
     bool create(const std::string& vertexPath, const std::string& fragmentPath);
 
-    virtual void setWorldUniforms(
+    virtual void setGlobalUniforms(
         const glm::mat4x4& pvMat,
         const rlgl::Camera& cam,
         const rlgl::WorldEnv& worldEnv) const {};
@@ -44,7 +44,9 @@ public:
 private:
     GLuint compileShader(const std::string& filePath, GLenum shaderType, std::string& err);
 
-
+    std::vector<rlgl::ShaderUniformSetObject>   uniformsObj;
+    std::vector<rlgl::ShaderUniformSetGlobal>   uniformsGlobal;
+    std::vector<rlgl::ShaderUniformSetMaterial> uniformsMaterial;
 
 };
 
@@ -58,7 +60,7 @@ class StandardShader : public Shader, public StandardUniforms {
 public:
     using Shader::Shader;
 
-    virtual void setWorldUniforms(
+    virtual void setGlobalUniforms(
         const glm::mat4x4&    pvMat,
         const rlgl::Camera&   cam,
         const rlgl::WorldEnv& worldEnv) const;
@@ -73,7 +75,7 @@ class BackgroundShader : public StandardShader, public CamDirUniforms {
 public:
     using StandardShader::StandardShader;
 
-    virtual void setWorldUniforms(
+    virtual void setGlobalUniforms(
         const glm::mat4x4& pvMat,
         const rlgl::Camera& cam,
         const rlgl::WorldEnv& worldEnv) const;
@@ -99,7 +101,7 @@ class CubeMapShader : public TextureShader {
 public:
     using TextureShader::TextureShader;
 
-    virtual void setWorldUniforms(
+    virtual void setGlobalUniforms(
         const glm::mat4x4& pvMat,
         const rlgl::Camera& cam,
         const rlgl::WorldEnv& worldEnv) const;
@@ -118,7 +120,7 @@ class LightShader : public StandardShader, public LightUniforms {
 public:
     using StandardShader::StandardShader;
 
-    virtual void setWorldUniforms(
+    virtual void setGlobalUniforms(
         const glm::mat4x4& pvMat,
         const rlgl::Camera& cam,
         const rlgl::WorldEnv& worldEnv) const;

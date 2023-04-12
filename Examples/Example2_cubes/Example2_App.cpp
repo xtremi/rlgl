@@ -1,5 +1,6 @@
 #include "Example2_App.h"
 #include "rlMath.h"
+#include "rlglMeshBank.h"
 #include <iostream>
 
 const float MyApp::BOX_WIDTH = 2.5f;
@@ -11,14 +12,10 @@ void MyApp::prepareAssets() {
     std::string assetDirectory = rlgl::GlobalConfig::assetDirectory;
 
     //Meshes:
-    assets.mesh.world = rlgl::primitive_mesh::plane_textureX10;
-    assets.mesh.world->initialize();
-    assets.mesh.cubeTex = rlgl::primitive_mesh::cube_tex;
-    assets.mesh.cubeTex->initialize();
-    assets.mesh.cube = rlgl::primitive_mesh::cube;
-    assets.mesh.cube->initialize();
-    assets.mesh.cubeMap = rlgl::primitive_mesh::cubeMap;
-    assets.mesh.cubeMap->initialize();
+    assets.mesh.world = rlgl::MeshBank::defaultPlane_textureX10();
+    assets.mesh.cubeTex = rlgl::MeshBank::defaultCube();
+    assets.mesh.cube = rlgl::MeshBank::defaultCube();
+    assets.mesh.cubeMap = rlgl::MeshBank::defaultCubeMap();
 
     //Shaders:
     assets.shader.textured = std::make_shared<rlgl::TextureShader>(
@@ -77,8 +74,7 @@ void MyApp::prepareAssets() {
     //############## UI ##########################################
  
     //Meshes:
-    assets.mesh.square = rlgl::primitive_mesh::square;
-    assets.mesh.square->initialize();
+    assets.mesh.square = rlgl::MeshBank::defaultSquare();
 
     //Shaders:
     assets.shader.ui = std::make_shared<rlgl::StandardShader>(

@@ -17,6 +17,7 @@ set(SOURCE_FILES
     rlglConfig.cpp
     rlglMeshBank.cpp
     rlglShaderBank.cpp
+    rlglDefaultMeshes.cpp
     )
     
     set(HEADER_FILES
@@ -38,6 +39,7 @@ set(SOURCE_FILES
     rlglConfig.h
     rlglMeshBank.h
     rlglShaderBank.h
+    rlglDefaultMeshes.h
 )
 
 add_library(${LIB_NAME} 

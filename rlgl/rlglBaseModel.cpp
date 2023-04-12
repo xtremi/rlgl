@@ -1,7 +1,7 @@
 #include "rlglBaseModel.h"
 #include "rlglShaderBank.h"
 #include "rlglColors.h"
-#include "rlglMesh.h"
+#include "rlglMeshBank.h"
 
 using namespace rlgl;
 
@@ -10,13 +10,9 @@ CSYSmodel::CSYSmodel(
 	float axesWidth,
 	const glm::vec3& position)
 {
-	if (!primitive_mesh::cube->isInitialized()) {
-		primitive_mesh::cube->initialize();
-	}
-
 	for (int i = 0; i < 3; i++) {
 		objects.push_back(new rlgl::Object(
-			rlgl::primitive_mesh::cube,
+			rlgl::MeshBank::defaultCube(),
 			rlgl::ShaderBank::standardColorShader()));
 	}
 

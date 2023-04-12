@@ -82,21 +82,8 @@ public:
         const std::vector<glm::vec3>& bot);
 
 };
-
-
-
 typedef std::shared_ptr<rlgl::Mesh> MeshPtr;
 
-namespace primitive_mesh{
-	extern MeshPtr plane;
-	extern MeshPtr square;
-	extern MeshPtr plane_textureX10;
-	extern MeshPtr cube_tex;
-	extern MeshPtr cube;
-	extern MeshPtr cubeMap; //only positions
-	extern MeshPtr grass;
-    extern MeshPtr terrainDummy;
-}
 
 }
 

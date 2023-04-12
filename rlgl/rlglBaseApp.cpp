@@ -1,5 +1,5 @@
 #include "rlglBaseApp.h"
-
+#include "rlglMeshBank.h"
 using namespace rlgl;
 
 
@@ -246,15 +246,10 @@ void DemoApp::processInput(GLFWwindow* window) {
 
 int DemoApp::prepareScene() {
 
-    rlgl::primitive_mesh::plane_textureX10->initialize();
-    rlgl::primitive_mesh::plane->initialize();
-    rlgl::primitive_mesh::cube_tex->initialize();
-    rlgl::primitive_mesh::cube->initialize();
-
-    rlgl::MeshPtr meshWorld = rlgl::primitive_mesh::plane_textureX10;
-    rlgl::MeshPtr meshCubeTex = rlgl::primitive_mesh::cube_tex;
-    rlgl::MeshPtr meshPlane = rlgl::primitive_mesh::plane;
-    rlgl::MeshPtr meshCube = rlgl::primitive_mesh::cube;
+    rlgl::MeshPtr meshWorld = rlgl::MeshBank::defaultPlane_textureX10();
+    rlgl::MeshPtr meshCubeTex = rlgl::MeshBank::defaultCube_tex();
+    rlgl::MeshPtr meshPlane = rlgl::MeshBank::defaultPlane();
+    rlgl::MeshPtr meshCube = rlgl::MeshBank::defaultCube();
 
 
     MaterialPtr material1 = std::make_shared<Textured2dMaterial>(GlobalConfig::assetDirectory + "\\textures\\checker_grey.jpg", true);

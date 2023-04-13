@@ -26,16 +26,16 @@ class Shader
 public:
     GLuint glID;
 
-    Shader(const std::string& vertexPath = "", const std::string& fragmentPath = "");
+    Shader(const std::string& vertexPath, const std::string& fragmentPath);
     void use() const;
     bool create(const std::string& vertexPath, const std::string& fragmentPath);
 
     virtual void setGlobalUniforms(
         const glm::mat4x4& pvMat,
         const rlgl::Camera& cam,
-        const rlgl::WorldEnv& worldEnv) const {};
-    virtual void setObjectUniforms(rlgl::Object* obj) const {};
-    virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const {};
+        const rlgl::WorldEnv& worldEnv) const;
+    virtual void setObjectUniforms(rlgl::Object* obj) const;
+    virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const;
 
     //Used for enabling/diabling gl settings before and after the shader is used.
     virtual void preRender() const {}
@@ -56,16 +56,12 @@ typedef std::shared_ptr<rlgl::Shader> ShaderPtr;
 /*!
     Standard shader
 */
-class StandardShader : public Shader, public StandardUniforms {
+class StandardShader : public Shader {
 public:
-    using Shader::Shader;
+    StandardShader(const std::string& v, const std::string& f) : Shader(v, f) {
 
-    virtual void setGlobalUniforms(
-        const glm::mat4x4&    pvMat,
-        const rlgl::Camera&   cam,
-        const rlgl::WorldEnv& worldEnv) const;
+    }
 
-    virtual void setObjectUniforms(rlgl::Object* obj) const;
 };
 
 /*!

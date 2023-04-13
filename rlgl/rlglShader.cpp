@@ -9,6 +9,21 @@
 
 using namespace rlgl;
 
+std::string rlgl::readFile(const std::string& filePath) {
+    std::ifstream file;
+    file.open(filePath);
+    if (!file.is_open()) {
+        return "";
+    }
+    std::string fileContent;
+    fileContent.assign(
+        std::istreambuf_iterator<char>(file),
+        std::istreambuf_iterator<char>());
+    return fileContent;
+}
+
+
+
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
 
     if (!vertexPath.empty() && !fragmentPath.empty()) {
@@ -81,18 +96,30 @@ void Shader::use() const {
 }
 
 
-std::string rlgl::readFile(const std::string& filePath) {
-    std::ifstream file;
-    file.open(filePath);
-    if (!file.is_open()) {
-        return "";
+void Shader::setGlobalUniforms(
+    const glm::mat4x4& pvMat,
+    const rlgl::Camera& cam,
+    const rlgl::WorldEnv& worldEnv) const
+{
+    for (const rlgl::ShaderUniformSetGlobal& uniformSet : uniformsGlobal) {
+        uniformSet.setUniformValues(pvMat, cam, worldEnv);
     }
-    std::string fileContent;
-    fileContent.assign(
-        std::istreambuf_iterator<char>(file),
-        std::istreambuf_iterator<char>());
-    return fileContent;
 }
+
+void Shader::setObjectUniforms(rlgl::Object* obj) const
+{
+    for (const rlgl::ShaderUniformSetObject& uniformSet : uniformsObj) {
+        uniformSet.setUniformValues(obj);
+    }
+}
+
+void Shader::setMaterialUniforms(const rlgl::MaterialPtr material) const
+{
+    for (const rlgl::ShaderUniformSetMaterial& uniformSet : uniformsMaterial) {
+        uniformSet.setUniformValues(material);
+    }
+}
+
 
 
 

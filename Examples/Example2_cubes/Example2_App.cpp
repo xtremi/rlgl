@@ -230,6 +230,7 @@ void MyApp::createBoxes() {
             boxPos.y = boxPos_0.y;
         }
         i++;
+        break;
 	}
 
 

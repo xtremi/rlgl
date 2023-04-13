@@ -101,56 +101,25 @@ void Shader::setGlobalUniforms(
     const rlgl::Camera& cam,
     const rlgl::WorldEnv& worldEnv) const
 {
-    for (const rlgl::ShaderUniformSetGlobal& uniformSet : uniformsGlobal) {
-        uniformSet.setUniformValues(pvMat, cam, worldEnv);
+    for (std::shared_ptr<uniforms::ShaderUniformSetGlobal> u : uniformsGlobal) {
+        u->setUniformValues(glID, pvMat, cam, worldEnv);
     }
 }
 
 void Shader::setObjectUniforms(rlgl::Object* obj) const
 {
-    for (const rlgl::ShaderUniformSetObject& uniformSet : uniformsObj) {
-        uniformSet.setUniformValues(obj);
+    for (std::shared_ptr<uniforms::ShaderUniformSetObject> u : uniformsObj) {
+        u->setUniformValues(glID, obj);
     }
 }
 
 void Shader::setMaterialUniforms(const rlgl::MaterialPtr material) const
 {
-    for (const rlgl::ShaderUniformSetMaterial& uniformSet : uniformsMaterial) {
-        uniformSet.setUniformValues(material);
+    for (std::shared_ptr<uniforms::ShaderUniformSetMaterial> u : uniformsMaterial) {
+        u->setUniformValues(glID, material);
     }
 }
 
-
-
-
-void StandardShader::setGlobalUniforms(
-    const glm::mat4x4& pvMat,
-    const rlgl::Camera& cam,
-    const rlgl::WorldEnv& worldEnv) const
-{
-    StandardUniforms::setProjectViewMatrix(glID, pvMat);
-}
-
-void StandardShader::setObjectUniforms(rlgl::Object* obj) const {
-    StandardUniforms::setModelMatrix(glID, obj->modelMatrix());
-    StandardUniforms::setHighlight(glID, obj->hasHighlight());
-    if (obj->hasColor()) {
-        StandardUniforms::setColor(glID, obj->getColor());
-    }
-}
-
-void BackgroundShader::setGlobalUniforms(
-    const glm::mat4x4& pvMat,
-    const rlgl::Camera& cam,
-    const rlgl::WorldEnv& worldEnv) const
-{
-    StandardShader::setGlobalUniforms(pvMat, cam, worldEnv);
-    CamDirUniforms::setCameraDirection(glID, cam.front);
-}
-
-void TextureShader::setMaterialUniforms(const rlgl::MaterialPtr material) const {
-    TextureUniforms::setTexture(glID, material);
-}
 
 void CubeMapShader::setGlobalUniforms(
     const glm::mat4x4& pvMat,
@@ -158,7 +127,7 @@ void CubeMapShader::setGlobalUniforms(
     const rlgl::WorldEnv& worldEnv) const
 {
     glm::mat4 pvMatNoTransl = cam.projectionMatrix() * cam.viewMatrix_noTranslation();
-    StandardUniforms::setProjectViewMatrix(glID, pvMatNoTransl);
+    TextureShader::setGlobalUniforms(pvMatNoTransl, cam, worldEnv);
 }
 
 void CubeMapShader::preRender() const {
@@ -171,32 +140,3 @@ void CubeMapShader::postRender() const {
     glDepthFunc(GL_LESS);
 }
 
-void LightShader::setGlobalUniforms(
-    const glm::mat4x4& pvMat,
-    const rlgl::Camera& cam,
-    const rlgl::WorldEnv& worldEnv) const
-{
-    StandardShader::setGlobalUniforms(pvMat, cam, worldEnv);
-    setLightPos(glID, worldEnv.lights[0].pos);
-    setLightAmbientIntensity(glID, worldEnv.lights[0].ambientIntensity);
-    setLightSpecularIntensity(glID, worldEnv.lights[0].specularIntensity);
-    setLightColor(glID, worldEnv.lights[0].color);
-    setCameraPos(glID, cam.position);
-}
-
-
-void LightMaterialShader::setMaterialUniforms(const rlgl::MaterialPtr material) const {
-    MaterialLightPropertiesUniforms::setMaterialLightProperties(glID,
-        std::static_pointer_cast<LightPropMaterial>(material)->lightProperties);
-}
-
-void TextureLightShader::setMaterialUniforms(const rlgl::MaterialPtr material) const {
-    TextureUniforms::setTexture(glID, material);
-}
-
-void TextureLightMaterialShader::setMaterialUniforms(const rlgl::MaterialPtr material) const {
-    TextureLightShader::setMaterialUniforms(material);
-
-    MaterialLightPropertiesUniforms::setMaterialLightProperties(glID, 
-        std::static_pointer_cast<TextureLightPropMaterial>(material)->lightProperties);
-}

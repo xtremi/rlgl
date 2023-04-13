@@ -6,6 +6,7 @@
 #include "rlglLightProperties.h"
 #include <glm/gtc/type_ptr.hpp>
 using namespace rlgl;
+using namespace uniforms;
 
 void ShaderUniforms::setBool(GLuint sID, const std::string& name, bool value) {
     glUniform1i(glGetUniformLocation(sID, name.c_str()), (int)value);

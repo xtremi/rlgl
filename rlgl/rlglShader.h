@@ -41,13 +41,21 @@ public:
     virtual void preRender() const {}
     virtual void postRender() const {}
 
-private:
+    void addGlobalUniforms(std::shared_ptr<uniforms::ShaderUniformSetGlobal> u) {
+        uniformsGlobal.push_back(u);
+    }
+    void addMaterialUniforms(std::shared_ptr<uniforms::ShaderUniformSetMaterial> u) {
+        uniformsMaterial.push_back(u);
+    }
+    void addObjectUniforms(std::shared_ptr<uniforms::ShaderUniformSetObject> u) {
+        uniformsObj.push_back(u);
+    }
+
+protected:
     GLuint compileShader(const std::string& filePath, GLenum shaderType, std::string& err);
-
-    std::vector<rlgl::ShaderUniformSetObject>   uniformsObj;
-    std::vector<rlgl::ShaderUniformSetGlobal>   uniformsGlobal;
-    std::vector<rlgl::ShaderUniformSetMaterial> uniformsMaterial;
-
+    std::vector<std::shared_ptr<uniforms::ShaderUniformSetObject>>   uniformsObj;
+    std::vector<std::shared_ptr<uniforms::ShaderUniformSetGlobal>>   uniformsGlobal;
+    std::vector<std::shared_ptr<uniforms::ShaderUniformSetMaterial>> uniformsMaterial;
 };
 
 typedef std::shared_ptr<rlgl::Shader> ShaderPtr;
@@ -59,7 +67,8 @@ typedef std::shared_ptr<rlgl::Shader> ShaderPtr;
 class StandardShader : public Shader {
 public:
     StandardShader(const std::string& v, const std::string& f) : Shader(v, f) {
-
+        addGlobalUniforms(std::make_shared<uniforms::ProjectViewUniform>());
+        addObjectUniforms(std::make_shared<uniforms::StandardObjectUniforms>());
     }
 
 };
@@ -67,25 +76,22 @@ public:
 /*!
     Background shader (not used - deprecated)
 */
-class BackgroundShader : public StandardShader, public CamDirUniforms {
+class BackgroundShader : public StandardShader{
 public:
-    using StandardShader::StandardShader;
-
-    virtual void setGlobalUniforms(
-        const glm::mat4x4& pvMat,
-        const rlgl::Camera& cam,
-        const rlgl::WorldEnv& worldEnv) const;
+    BackgroundShader(const std::string& v, const std::string& f) : StandardShader(v, f) {
+        addGlobalUniforms(std::make_shared<uniforms::CamDirUniform>());
+    }
 };
 
 /*!
     Standard shader
         + Texture
 */
-class TextureShader : public StandardShader, public TextureUniforms {
+class TextureShader : public StandardShader{
 public:
-    using StandardShader::StandardShader;
-
-    virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const;
+    TextureShader(const std::string& v, const std::string& f) : StandardShader(v, f) {
+        addMaterialUniforms(std::make_shared<uniforms::TextureUniforms>());
+    }
 };
 
 /*!
@@ -106,20 +112,15 @@ public:
     virtual void postRender() const;
 };
 
-
-
 /*!
     Standard shader
         + Light uniforms
 */
-class LightShader : public StandardShader, public LightUniforms {
+class LightShader : public StandardShader {
 public:
-    using StandardShader::StandardShader;
-
-    virtual void setGlobalUniforms(
-        const glm::mat4x4& pvMat,
-        const rlgl::Camera& cam,
-        const rlgl::WorldEnv& worldEnv) const;
+    LightShader(const std::string& v, const std::string& f) : StandardShader(v, f) {
+        addGlobalUniforms(std::make_shared<uniforms::LightUniforms>());
+    }
 };
 
 /*!
@@ -127,11 +128,11 @@ public:
         + Light uniforms
         + Material light properties uniforms
 */
-class LightMaterialShader : public LightShader, public MaterialLightPropertiesUniforms {
+class LightMaterialShader : public LightShader{
 public:
-    using LightShader::LightShader;
-
-    virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const;
+    LightMaterialShader(const std::string& v, const std::string& f) : LightShader(v, f) {
+        addMaterialUniforms(std::make_shared<uniforms::MaterialLightPropertiesUniforms>());
+    }
 };
 
 /*!
@@ -139,24 +140,24 @@ public:
         + Light uniforms
         + Texture
 */
-class TextureLightShader : public LightShader, public TextureUniforms {
+class TextureLightShader : public LightShader{
 public:
-    using LightShader::LightShader;
-
-    virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const;
+    TextureLightShader(const std::string& v, const std::string& f) : LightShader(v, f) {
+        addMaterialUniforms(std::make_shared<uniforms::TextureUniforms>());
+    }
 };
 
 /*!
     Standard shader
         + Light uniforms
+        + Texture
         + Material light properties uniforms
-        + Texture
 */
-class TextureLightMaterialShader : public TextureLightShader, public MaterialLightPropertiesUniforms {
+class TextureLightMaterialShader : public TextureLightShader {
 public:
-    using TextureLightShader::TextureLightShader;
-
-    virtual void setMaterialUniforms(const rlgl::MaterialPtr material) const;
+    TextureLightMaterialShader(const std::string& v, const std::string& f) : TextureLightShader(v, f) {
+        addMaterialUniforms(std::make_shared<uniforms::MaterialLightPropertiesUniforms>());
+    }
 };
 
 }

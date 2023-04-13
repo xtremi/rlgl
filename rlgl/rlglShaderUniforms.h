@@ -13,6 +13,8 @@ namespace rlgl {
     class Camera;
     class LightProperties;
 
+    namespace uniforms{
+
     /*!
         Utility functions for setting uniform values
 
@@ -58,7 +60,7 @@ namespace rlgl {
         Global uniforms:
             ProjectView matrix
     */
-    class ProjectViewUniform : ShaderUniformSetGlobal {
+    class ProjectViewUniform : public ShaderUniformSetGlobal {
         void setUniformValues(GLuint sID, const glm::mat4x4& pvMat, const rlgl::Camera& cam, const rlgl::WorldEnv& worldEnv) const;
     };
 
@@ -68,7 +70,7 @@ namespace rlgl {
             Color
             Highlight
     */
-    class StandardObjectUniforms : ShaderUniformSetObject {
+    class StandardObjectUniforms : public ShaderUniformSetObject {
         void setUniformValues(GLuint sID, rlgl::Object* obj) const;
     };
 
@@ -115,5 +117,5 @@ namespace rlgl {
         virtual void setUniformValues(GLuint sID, const glm::mat4x4& pvMat, const rlgl::Camera& cam, const rlgl::WorldEnv& worldEnv) const;
     };
 
-
+    }
 }

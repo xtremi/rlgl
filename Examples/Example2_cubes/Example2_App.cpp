@@ -13,7 +13,7 @@ void MyApp::prepareAssets() {
 
     //Meshes:
     assets.mesh.world = rlgl::MeshBank::defaultPlane_textureX10();
-    assets.mesh.cubeTex = rlgl::MeshBank::defaultCube();
+    assets.mesh.cubeTex = rlgl::MeshBank::defaultCube_tex();
     assets.mesh.cube = rlgl::MeshBank::defaultCube();
     assets.mesh.cubeMap = rlgl::MeshBank::defaultCubeMap();
 
@@ -230,7 +230,6 @@ void MyApp::createBoxes() {
             boxPos.y = boxPos_0.y;
         }
         i++;
-        break;
 	}
 
 

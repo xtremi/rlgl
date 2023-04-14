@@ -96,13 +96,7 @@ int MyApp::prepareScene() {
     createBoxes();
     createCSYS();
     createUI();
-
-    objects.skyBox = new rlgl::Object(
-        assets.mesh.cubeMap,
-        assets.shader.skyBox,
-        assets.material.skyCubeMap1);
-    scene.addObject(objects.skyBox);
-
+    createSkyBox();
     return 0;
 }
 
@@ -115,14 +109,6 @@ void MyApp::createWorld() {
     objects.worldPlane->setPosition(glm::vec3(0.f));
     objects.worldPlane->setScale(glm::vec3(100.f));
     scene.addObject(objects.worldPlane);
-
-
-
-    //objects.sky = new rlgl::Object(assets.mesh.square, assets.shader.background, NO_MATERIAL);
-    //objects.sky->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
-    //objects.sky->setPosition(glm::vec3(0.f, 0.f, 0.0f));
-    //objects.sky->setScale(2.f);
-    //scene.addObject(objects.sky);
 }
 
 void MyApp::createUI() {
@@ -137,6 +123,15 @@ void MyApp::createUI() {
     uiScene.addObject(uiObjects.aimCross[0]);
     uiScene.addObject(uiObjects.aimCross[1]);
 }
+
+void MyApp::createSkyBox() {
+    objects.skyBox = new rlgl::Object(
+        assets.mesh.cubeMap,
+        assets.shader.skyBox,
+        assets.material.skyCubeMap1);
+    scene.addObject(objects.skyBox);
+}
+
 
 void MyApp::updateLight() {
 

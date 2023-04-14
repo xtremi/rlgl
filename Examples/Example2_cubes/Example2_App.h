@@ -58,6 +58,7 @@ protected:
 	void createBoxes();
 	void createLight();
 	void createCSYS();
+	void createSkyBox();
 
 	//Update:
 	void updateBoxes();

@@ -60,7 +60,6 @@ void MaterialLightPropertiesUniforms::setUniformValues(GLuint sID, const rlgl::M
     setVec3(sID, "materialDiffuseFactor", lp->diffuseStrength);
     setVec3(sID, "materialSpecularFactor", lp->specularStrength);
     setFloat(sID, "materialShininessFactor", lp->shininess);
-
 };
 void LightUniforms::setUniformValues(
     GLuint sID,

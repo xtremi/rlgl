@@ -9,21 +9,39 @@
 namespace rlgl {
 
 	/*!Material based class*/
-	class Material {};
+	class Material {
+	public:
+		virtual ~Material() {}
+		Material() = default;
+	};
 	typedef std::shared_ptr<Material> MaterialPtr;
 
-
-	class TexturedMaterial : public Material {
+	/*!Base class for material with any type of texture*/
+	class TexturedMaterial : public virtual Material {
 	public:
+		~TexturedMaterial(){}
 		TexturedMaterial() = default;
 		GLuint glID = 0;
 
 		virtual void bind() = 0;
 	};
 
-	/*!Material with a texture*/
-	class Textured2dMaterial : public TexturedMaterial {
+	/*!Material with light properties [virtual]*/
+	class LightPropMaterial : public virtual Material {
 	public:
+		~LightPropMaterial(){}
+		LightPropMaterial() = default;
+		LightPropMaterial(const LightProperties& lightProps)
+			: lightProperties{ lightProps } {}
+
+	public:
+		LightProperties lightProperties;
+	};
+
+	/*!Material with a normal 2D texture*/
+	class Textured2dMaterial : public virtual TexturedMaterial {
+	public:
+		~Textured2dMaterial() {}
 		Textured2dMaterial() = default;
 		Textured2dMaterial(const std::string& texturePath, bool repeatTexture);
 
@@ -31,9 +49,10 @@ namespace rlgl {
 		virtual void bind();
 	};
 
-	/*!Material with cubemap texture*/
+	/*!Material with a cubemap texture*/
 	class TexturedCubeMapMaterial : public TexturedMaterial {
 	public:
+		~TexturedCubeMapMaterial() {}
 		TexturedCubeMapMaterial() = default;
 		TexturedCubeMapMaterial(const std::vector<std::string>& texturePaths);
 
@@ -41,27 +60,18 @@ namespace rlgl {
 		virtual void bind();
 	};
 
-	/*!Material with light properties*/
-	class LightPropMaterial : public Material{
-	public:
-		LightPropMaterial(const LightProperties& lightProps) 
-			: lightProperties{lightProps}{}
-	
-	public:
-		LightProperties lightProperties;
-	};
+
 
 	/*!Material with texture and light properties*/
-	class TextureLightPropMaterial : public Textured2dMaterial {
+	class TextureLightPropMaterial : public Textured2dMaterial, public LightPropMaterial {
 	public:
+		~TextureLightPropMaterial(){}
+		TextureLightPropMaterial() = default;
 		TextureLightPropMaterial(
 			const std::string& texturePath,
 			bool			   repeatTexture,
 			const LightProperties& lightProps) 
-			: Textured2dMaterial(texturePath, repeatTexture), lightProperties{lightProps}{}
-
-	public:
-		LightProperties lightProperties;
+			: Textured2dMaterial(texturePath, repeatTexture), LightPropMaterial(lightProps ) {}
 	};
 
 }

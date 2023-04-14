@@ -52,10 +52,13 @@ void MyApp::prepareAssets() {
 
     assets.material.box = std::make_shared<rlgl::TextureLightPropMaterial>(
         assetDirectory + "/textures/box-texture.png", false, rlgl::LightProperties::standard());
+
     assets.material.boxJade = std::make_shared<rlgl::TextureLightPropMaterial>(
         assetDirectory + "/textures/box-texture.png", false, rlgl::LightProperties::jade());
+
     assets.material.boxGold = std::make_shared<rlgl::TextureLightPropMaterial>(
         assetDirectory + "/textures/box-texture.png", false, rlgl::LightProperties::gold());
+
     assets.material.metalic = std::make_shared<rlgl::TextureLightPropMaterial>(
         assetDirectory + "/textures/metal-texture-1.jpg", false, rlgl::LightProperties::mettalic());
  

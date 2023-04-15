@@ -15,6 +15,7 @@ namespace rl {
 
 		class Sphere : public Shape {
 		public:
+			Sphere(float _radius) : radius{_radius}{}
 			float radius = 1.0f;
 		};
 
@@ -36,14 +37,8 @@ namespace rlgl {
 
 	class MeshVertexData {
 	public:
-		float* positions = nullptr;
-		float* normals = nullptr;
-		float* texCoords = nullptr;
-		float* indices = nullptr;
-		size_t nPositions = 0;
-		size_t nNormals = 0;
-		size_t nTexCoords = 0;
-		size_t nIndices = 0;
+		std::vector<float> vertices;
+		std::vector<unsigned int>   indices;
 	};
 
 	class MeshGenerator {
@@ -52,13 +47,17 @@ namespace rlgl {
 		void generateSphere(
 			std::shared_ptr<MeshVertexData> data,
 			const rl::geom::Sphere&	sphere,
-			const glm::vec3& center,
-			int nElementsEdge,
-			bool indexed);
+			int nElementsAround,
+			bool indexed,
+			const glm::vec3& center = glm::vec3(0.0f));
 
 
 		bool generateNormals = true;
 		bool generateTexCoords = true;
+
+	private:
+			
+		void generateSphereIndices(std::vector<unsigned int>& indices, int nElementsAround);
 
 	};
 

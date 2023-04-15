@@ -2,8 +2,8 @@
 #include "rlMath.h"
 #include "rlglBaseModel.h"
 #include "rlglMeshBank.h"
+#include "rlglMeshGenerator.h"
 #include <iostream>
-
 const float MyApp::BOX_WIDTH = 2.5f;
 
 MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory){}
@@ -11,6 +11,15 @@ MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory){}
 void MyApp::prepareAssets() {
 
     std::string assetDirectory = rlgl::GlobalConfig::assetDirectory;
+
+    rlgl::MeshGenerator meshGen;
+    std::shared_ptr<rlgl::MeshVertexData> sphereData = std::make_shared<rlgl::MeshVertexData>();
+    meshGen.generateSphere(sphereData, rl::geom::Sphere(5.0f), 10, true);
+
+    rlgl::MeshPtr sphereMesh = std::make_shared<rlgl::Mesh>(
+        rlgl::GLBuffer<float>(sphereData->vertices),
+        rlgl::GLBuffer<unsigned int>(sphereData->indices),
+        false, false, false);
 
     //Meshes:
     assets.mesh.world = rlgl::MeshBank::defaultPlane_textureX10();

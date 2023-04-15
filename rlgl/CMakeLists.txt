@@ -18,6 +18,7 @@ set(SOURCE_FILES
     rlglMeshBank.cpp
     rlglShaderBank.cpp
     rlglDefaultMeshes.cpp
+    rlglMeshGenerator.cpp
     )
     
     set(HEADER_FILES
@@ -40,6 +41,7 @@ set(SOURCE_FILES
     rlglMeshBank.h
     rlglShaderBank.h
     rlglDefaultMeshes.h
+    rlglMeshGenerator.h
 )
 
 add_library(${LIB_NAME} 

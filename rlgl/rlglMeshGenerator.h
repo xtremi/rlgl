@@ -39,6 +39,10 @@ namespace rlgl {
 	public:
 		std::vector<float> vertices;
 		std::vector<unsigned int> indices;
+		void addVertexVec3(const glm::vec3& vec);
+		void addVertexVec2(const glm::vec2& vec);
+		void addIndices(int elIndices[4]);
+		void addIndices(int triIndex1, int triIndex2, int triIndex3);
 	};
 
 	class MeshGenerator {
@@ -46,10 +50,10 @@ namespace rlgl {
 	public:
 		void generateSphere(
 			std::shared_ptr<MeshVertexData> data,
-			const rl::geom::Sphere&	sphere,
-			int nElementsAround,
-			bool indexed,
-			const glm::vec3& center = glm::vec3(0.0f));
+			const rl::geom::Sphere&			sphere,
+			int								nElementsAround,
+			bool							indexed,
+			const glm::vec3&				center = glm::vec3(0.0f));
 
 
 		bool generateNormals = true;
@@ -57,7 +61,19 @@ namespace rlgl {
 
 	private:
 			
-		void generateSphereIndices(std::vector<unsigned int>& indices, int nElementsAround);
+		void generateSphereIndices(std::shared_ptr<MeshVertexData> data, int nElementsAround);
+		void generateSphereVertices(
+			std::shared_ptr<MeshVertexData> data,
+			const rl::geom::Sphere& sphere,
+			int								nElementsAround,
+			bool							indexed,
+			const glm::vec3& center = glm::vec3(0.0f));
+
+		void generateTriangleFanRow(
+			std::shared_ptr<MeshVertexData> data,
+			int nElements,
+			int indexCenter,
+			int firstIndex);
 
 	};
 

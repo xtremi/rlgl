@@ -4,21 +4,47 @@ using namespace rlgl;
 
 
 
-/*!
-         x--- 
-	    /
-	   x----------
-	   |
-	   x-----
-		\
-		 x---x
-*/
+void MeshVertexData::addVertexVec3(const glm::vec3& vec){
+	vertices.push_back(vec.x);
+	vertices.push_back(vec.y);
+	vertices.push_back(vec.z);
+}
+void MeshVertexData::addVertexVec2(const glm::vec2& vec) {
+	vertices.push_back(vec.x);
+	vertices.push_back(vec.y);
+}
+void MeshVertexData::addIndices(int elIndices[4]) {
+	addIndices(elIndices[0], elIndices[1], elIndices[2]);
+	addIndices(elIndices[0], elIndices[2], elIndices[3]);
+}
+void MeshVertexData::addIndices(int triIndex1, int triIndex2, int triIndex3) {
+	indices.push_back(triIndex1);
+	indices.push_back(triIndex2);
+	indices.push_back(triIndex3);
+}
+
 void MeshGenerator::generateSphere(
 	std::shared_ptr<MeshVertexData> data,
 	const rl::geom::Sphere& sphere,
 	int nElementsAround,
 	bool indexed,
 	const glm::vec3& center)
+{
+	generateSphereVertices(data, sphere, nElementsAround, indexed, center);
+
+	if (indexed) {
+		generateSphereIndices(data, nElementsAround);
+	}
+
+}
+
+
+void MeshGenerator::generateSphereVertices(
+	std::shared_ptr<MeshVertexData> data,
+	const rl::geom::Sphere&			sphere,
+	int								nElementsAround,
+	bool							indexed,
+	const glm::vec3&				center)
 {
 	int nElPhi = 2 * (nElementsAround / 2);	//make even
 	int nElTheta = nElPhi / 2;
@@ -29,10 +55,6 @@ void MeshGenerator::generateSphere(
 	float dAngPhi = glm::two_pi<float>() / (float)(nElPhi);
 	float dAngTheta = dAngPhi;
 	glm::vec3 coords, normal;
-
-	//data->vertices.push_back(center.x);
-	//data->vertices.push_back(center.y);
-	//data->vertices.push_back(center.z - sphere.radius);
 
 	angTheta = dAngTheta;
 
@@ -45,13 +67,10 @@ void MeshGenerator::generateSphere(
 				glm::sin(angTheta) * glm::sin(angPhi),
 				glm::cos(angTheta));
 			coords = sphere.radius * normal + center;
-			data->vertices.push_back(coords.x);
-			data->vertices.push_back(coords.y);
-			data->vertices.push_back(coords.z);
-			if(generateNormals){
-				data->vertices.push_back(normal.x);
-				data->vertices.push_back(normal.y);
-				data->vertices.push_back(normal.z);
+
+			data->addVertexVec3(coords);
+			if(generateNormals) {
+				data->addVertexVec3(normal);
 			}
 			angPhi += dAngPhi;
 		}
@@ -60,15 +79,19 @@ void MeshGenerator::generateSphere(
 		angPhi = 0.f;
 	}
 
-	//data->vertices.push_back(center.x);
-	//data->vertices.push_back(center.y);
-	//data->vertices.push_back(center.z + sphere.radius);
+	glm::vec3 topPos = center + sphere.radius * glm::vec3(0.f, 0.f, 1.f);
+	glm::vec3 botPos = center - sphere.radius * glm::vec3(0.f, 0.f, 1.f);
 
-	if (indexed) {
-		generateSphereIndices(data->indices, nElementsAround);
+	data->addVertexVec3(topPos);
+	if (generateNormals) {
+		data->addVertexVec3(glm::vec3(0.f, 0.f, 1.f));
 	}
-
+	data->addVertexVec3(botPos);
+	if (generateNormals) {
+		data->addVertexVec3(glm::vec3(0.f, 0.f, -1.f));
+	}
 }
+
 /*
 
 	nElementsAround = 6
@@ -82,7 +105,7 @@ void MeshGenerator::generateSphere(
 	0,1,7,6,  1,2,8,7 ... 5,0,6,11
 
 */
-void MeshGenerator::generateSphereIndices(std::vector<unsigned int>&indices, int nElementsAround) {
+void MeshGenerator::generateSphereIndices(std::shared_ptr<MeshVertexData> data, int nElementsAround) {
 
 	int nElPhi = 2 * (nElementsAround / 2);	//make even
 	int nElTheta = nElPhi / 2;
@@ -100,17 +123,37 @@ void MeshGenerator::generateSphereIndices(std::vector<unsigned int>&indices, int
 				elIndices[1] -= nElPhi;
 				elIndices[2] -= nElPhi;
 			}
-			indices.push_back(elIndices[0]);
-			indices.push_back(elIndices[1]);
-			indices.push_back(elIndices[2]);
-			indices.push_back(elIndices[0]);
-			indices.push_back(elIndices[2]);
-			indices.push_back(elIndices[3]);
+			data->addIndices(elIndices);
 			elIndices[0]++;
-
 		}
 	}
 
+	int lastVertexIndex = elIndices[3];
 
+	generateTriangleFanRow(data, nElPhi,
+		lastVertexIndex + 1,	//index of top of shere vertex
+		0);						//first index of sphere
+
+	generateTriangleFanRow(data, nElPhi,
+		lastVertexIndex + 2,	//index of bot of sphere vertex
+		elIndices[1]);			//index of the first vertex of last row
+
+}
+
+void MeshGenerator::generateTriangleFanRow(
+	std::shared_ptr<MeshVertexData> data,
+	int nElements,
+	int indexCenter,
+	int firstIndex)
+{
+	int index2 = firstIndex, index3;
+	for (int j = 0; j < nElements; j++) {
+		index3 = index2 + 1;
+		if (j == (nElements- 1)) {
+			index3 -= nElements;
+		}
+		data->addIndices(indexCenter, index2, index3);
+		index2++;
+	}
 }
 

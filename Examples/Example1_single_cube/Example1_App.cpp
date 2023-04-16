@@ -21,6 +21,7 @@ void MyApp::prepareAssets() {
         rlgl::GLBuffer<unsigned int>(sphereData->indices),
         false, false, false);
 
+
     //Meshes:
     assets.mesh.world = rlgl::MeshBank::defaultPlane_textureX10();
     assets.mesh.cubeTex = rlgl::MeshBank::defaultCube_tex();
@@ -33,6 +34,9 @@ void MyApp::prepareAssets() {
     assets.shader.colored = std::make_shared<rlgl::StandardShader>(
         assetDirectory + "/shaders/object_col.vs", 
         assetDirectory + "/shaders/object_col.fs");
+
+    rlgl::Object* sphere = new rlgl::Object(sphereMesh, assets.shader.colored);
+    scene.addObject(sphere);
 
     //Materials (Textures):
     assets.material.checker = std::make_shared<rlgl::Textured2dMaterial>(

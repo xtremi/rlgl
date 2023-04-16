@@ -7,5 +7,6 @@ uniform mat4 model;
 
 void main()
 {
+	gl_PointSize = 10.0;
     gl_Position = projView * model * vec4(aPos.xyz, 1.0);
 }

@@ -14,8 +14,8 @@ void MyApp::prepareAssets() {
 
     rlgl::MeshGenerator meshGen;
     std::shared_ptr<rlgl::MeshVertexData> sphereData = std::make_shared<rlgl::MeshVertexData>();
-    meshGen.generateSphere(sphereData, rl::geom::Sphere(15.0f), 10, true);
-
+    meshGen.generateSphere(sphereData, rl::geom::Sphere(5.0f), 8, true);
+    //glEnable(GL_PROGRAM_POINT_SIZE);
 
     rlgl::MeshPtr sphereMesh = std::make_shared<rlgl::Mesh>(
         rlgl::GLBuffer<float>(sphereData->vertices),

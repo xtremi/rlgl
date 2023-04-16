@@ -36,7 +36,7 @@ void MeshGenerator::generateSphere(
 				glm::sin(angV) + glm::cos(angH),
 				glm::sin(angV) + glm::sin(angH),
 				glm::cos(angV));
-			coords = sphere.radius + coords;
+			coords = sphere.radius * coords + center;
 			data->vertices.push_back(coords.x);
 			data->vertices.push_back(coords.y);
 			data->vertices.push_back(coords.z);

@@ -14,7 +14,7 @@ void MyApp::prepareAssets() {
 
     rlgl::MeshGenerator meshGen;
     std::shared_ptr<rlgl::MeshVertexData> sphereData = std::make_shared<rlgl::MeshVertexData>();
-    meshGen.generateSphere(sphereData, rl::geom::Sphere(5.0f), 10, true);
+    meshGen.generateSphere(sphereData, rl::geom::Sphere(15.0f), 10, true);
 
 
     rlgl::MeshPtr sphereMesh = std::make_shared<rlgl::Mesh>(
@@ -38,8 +38,8 @@ void MyApp::prepareAssets() {
 
     rlgl::Object* sphere = new rlgl::Object(sphereMesh, assets.shader.colored);
     sphere->setColor(glm::vec3(1.f, 0.f, 0.f));
-    sphere->setPosition(glm::vec3(1.f));
-    sphere->setScale(10.0f);
+    sphere->setPosition(glm::vec3(0.f));
+    //sphere->setScale(10.0f);
 
     scene.addObject(sphere);
 

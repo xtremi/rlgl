@@ -28,7 +28,7 @@ void MeshGenerator::generateSphere(
 	float angTheta = 0.f, angPhi = 0.f;
 	float dAngPhi = glm::two_pi<float>() / (float)(nElPhi);
 	float dAngTheta = dAngPhi;
-	glm::vec3 coords;
+	glm::vec3 coords, normal;
 
 	//data->vertices.push_back(center.x);
 	//data->vertices.push_back(center.y);
@@ -40,14 +40,19 @@ void MeshGenerator::generateSphere(
 
 		for (int j = 0; j < nElPhi; j++) {
 
-			coords = glm::vec3(
+			normal = glm::vec3(
 				glm::sin(angTheta) * glm::cos(angPhi),
 				glm::sin(angTheta) * glm::sin(angPhi),
 				glm::cos(angTheta));
-			coords = sphere.radius * coords + center;
+			coords = sphere.radius * normal + center;
 			data->vertices.push_back(coords.x);
 			data->vertices.push_back(coords.y);
 			data->vertices.push_back(coords.z);
+			if(generateNormals){
+				data->vertices.push_back(normal.x);
+				data->vertices.push_back(normal.y);
+				data->vertices.push_back(normal.z);
+			}
 			angPhi += dAngPhi;
 		}
 
@@ -95,12 +100,6 @@ void MeshGenerator::generateSphereIndices(std::vector<unsigned int>&indices, int
 				elIndices[1] -= nElPhi;
 				elIndices[2] -= nElPhi;
 			}
-			//else {
-			//	elIndices[0] = 0;
-			//	elIndices[1]++;
-			//	elIndices[2] = elIndices[1] + 1;
-			//}
-			
 			indices.push_back(elIndices[0]);
 			indices.push_back(elIndices[1]);
 			indices.push_back(elIndices[2]);

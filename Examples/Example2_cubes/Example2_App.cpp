@@ -1,6 +1,7 @@
 #include "Example2_App.h"
 #include "rlMath.h"
 #include "rlglMeshBank.h"
+#include "rlglMeshGenerator.h"
 #include <iostream>
 
 const float MyApp::BOX_WIDTH = 2.5f;
@@ -73,6 +74,22 @@ void MyApp::prepareAssets() {
             })
         );
 
+
+    rlgl::MeshGenerator meshGen;
+    std::shared_ptr<rlgl::MeshVertexData> sphereData = std::make_shared<rlgl::MeshVertexData>();
+    meshGen.generateSphere(sphereData, rl::geom::Sphere(5.0f), 32, true);
+
+    rlgl::MeshPtr sphereMesh = std::make_shared<rlgl::Mesh>(
+        rlgl::GLBuffer<float>(sphereData->vertices),
+        rlgl::GLBuffer<unsigned int>(sphereData->indices),
+        true, false, false);
+    sphereMesh->initialize();
+
+    rlgl::Object* sphere = new rlgl::Object(sphereMesh, assets.shader.coloredLightMat, assets.material.metalic);
+    sphere->setColor(glm::vec3(0.6f, 0.6f, 0.6f));
+    sphere->setPosition(glm::vec3(0.f, 0.f, 10.f));
+    sphere->setScale(0.5f);
+    scene.addObject(sphere);
 
     //############## UI ##########################################
  

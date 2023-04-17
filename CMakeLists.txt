@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(rlglPlayground VERSION 1.0)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 message("##################################################################")
 message("PROJECT_BINARY_DIR       = " ${PROJECT_BINARY_DIR})
 message("CMAKE_SOURCE_DIR         = " ${CMAKE_SOURCE_DIR})

@@ -1,5 +1,6 @@
 #include "rlglBaseApp.h"
 #include "rlglMeshBank.h"
+#include <iostream>
 using namespace rlgl;
 
 
@@ -7,8 +8,9 @@ void rlgl::framebuffer_size_callback(GLFWwindow* window, int width, int height) 
     glViewport(0, 0, width, height);
 }
 
-BaseApp::BaseApp(const std::string& assetDirectory) {
+BaseApp::BaseApp(const std::string& assetDirectory, bool usingGlfw) {
     GlobalConfig::assetDirectory = assetDirectory;
+    _usingGlfw = usingGlfw;
 }
 
 
@@ -35,7 +37,6 @@ int BaseApp::init(int windowSizeX, int windowSizeY) {
     return 0;
 }
 
-#include <iostream>
 bool FPScontrol::process() {
 	currentTime = glfwGetTime();
 	deltaTime = currentTime - lastTime;
@@ -79,11 +80,10 @@ int BaseApp::loopIteration() {
 	if(int err = postRender()){
 		return err;
 	}
-    glfwSwapBuffers(_window);
-    glfwPollEvents();
-
-
-
+    if(_usingGlfw){
+        glfwSwapBuffers(_window);
+        glfwPollEvents();
+    }
     return 0;
 }
 
@@ -178,46 +178,49 @@ void BaseApp::cleanUp() {
 
 int BaseApp::initializeWindow() {
 
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glfwParams().glVersionMajor);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glfwParams().glVersionMinor);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_SAMPLES, 4);
+    if(_usingGlfw){
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glfwParams().glVersionMajor);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glfwParams().glVersionMinor);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_SAMPLES, 4);
 
-	GLFWmonitor** monitors = nullptr;
-	int nMonitors = 0;
-	monitors = glfwGetMonitors(&nMonitors);
-	if (nMonitors == 0) {
-		glfwTerminate();
-		errmsg = "glfwGetMonitors() - found 0 monitors";
-		return (int)error_code::GLFW_NO_MONITORS;
-	}
-    
-    _window = glfwCreateWindow(
-		windowParams().size.x, windowParams().size.y, 
-		windowParams().label.c_str(), 
-		NULL, NULL);
+        GLFWmonitor** monitors = nullptr;
+        int nMonitors = 0;
+        monitors = glfwGetMonitors(&nMonitors);
+        if (nMonitors == 0) {
+            glfwTerminate();
+            errmsg = "glfwGetMonitors() - found 0 monitors";
+            return (int)error_code::GLFW_NO_MONITORS;
+        }
 
-    if (_window == NULL)
-    {
-        glfwTerminate();
-        errmsg = "glfwCreateWindow() - Failed to create GLFW window";
-        return (int)error_code::GLFW_CREATE_WINDOW;
+        _window = glfwCreateWindow(
+            windowParams().size.x, windowParams().size.y, 
+            windowParams().label.c_str(), 
+            NULL, NULL);
+
+        if (_window == NULL)
+        {
+            glfwTerminate();
+            errmsg = "glfwCreateWindow() - Failed to create GLFW window";
+            return (int)error_code::GLFW_CREATE_WINDOW;
+        }
+        glfwMakeContextCurrent(_window);
     }
-    glfwMakeContextCurrent(_window);
-   
     
     //if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    if (!gladLoadGL(glfwGetProcAddress))
+    int gladLoadGLres = _usingGlfw ? gladLoadGL(glfwGetProcAddress) : gladLoadGL(nullptr);
+    if (!gladLoadGLres)
     {
         errmsg = "gladLoadGLLoader() - Failed to initialize GLAD";
         return (int)error_code::GLAD_LOAD_GL_LOADER;
     }
 
-    glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
-    glfwSetCursorPos(_window, windowParams().size.x /2, windowParams().size.y / 2);
-    glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
+    if(_usingGlfw){
+        glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
+        glfwSetCursorPos(_window, windowParams().size.x /2, windowParams().size.y / 2);
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
     
     //For transperancy:
     glEnable(GL_DEPTH_TEST);

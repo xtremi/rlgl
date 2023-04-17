@@ -53,7 +53,7 @@ private:
 class BaseApp {
 
 public:
-	BaseApp(const std::string& assetDirectory);
+	BaseApp(const std::string& assetDirectory, bool usingGlfw = true);
 
 	int init(int windowSizeX, int windowSizeY);
 	int loopIteration();
@@ -72,6 +72,7 @@ public:
 	}
 
 protected:	
+	bool	   	   _usingGlfw;
 	FPScontrol	   fpsControl;
 	GLFWparams	   _glfwParams;
 	WindowParams   _windowParams;
@@ -87,6 +88,7 @@ protected:
 
 	void handleMouse(double xposIn, double yposIn);
 	int initializeWindow();
+	int initializeWindowGlfw();
 	int renderScene();
 
 	virtual int prepareScene() = 0;

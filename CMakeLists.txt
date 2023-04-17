@@ -37,6 +37,13 @@ message("OPENGL_glu_LIBRARY = " ${OPENGL_glu_LIBRARY})
 message("OPENGL_gl_LIBRARY  = " ${OPENGL_gl_LIBRARY})
 message("OPENGL_LIBRARIES   = " ${OPENGL_LIBRARIES})
 
+#Qt specific
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_PREFIX_PATH "/home/remi/Qt/6.5.0/gcc_64/lib/cmake")
+find_package(Qt6 CONFIG REQUIRED COMPONENTS Core Gui Widgets OpenGL OpenGLWidgets)
+
 
 #DOWNLOAD GIT SUBMODULES
 find_package(Git QUIET)
@@ -71,6 +78,7 @@ add_subdirectory(rlOctree)
 add_subdirectory(Examples/Example1_single_cube)
 add_subdirectory(Examples/Example2_cubes)
 add_subdirectory(Examples/Example3_spheres)
+add_subdirectory(Examples/ExampleQT1)
 
 
 #install(TARGETS ${PROJECT_NAME} DESTINATION bin)

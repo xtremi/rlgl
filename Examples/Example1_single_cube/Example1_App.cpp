@@ -12,17 +12,6 @@ void MyApp::prepareAssets() {
 
     std::string assetDirectory = rlgl::GlobalConfig::assetDirectory;
 
-    rlgl::MeshFactory meshGen;
-    meshGen.generateNormalsON = false;
-    std::shared_ptr<rlgl::MeshVertexData> sphereData = std::make_shared<rlgl::MeshVertexData>();
-    meshGen.generateSphere(sphereData, rl::geom::Sphere(5.0f), 24, true);
-
-    rlgl::MeshPtr sphereMesh = std::make_shared<rlgl::Mesh>(
-        rlgl::GLBuffer<float>(sphereData->vertices),
-        rlgl::GLBuffer<unsigned int>(sphereData->indices),
-        false, false, false);
-    sphereMesh->initialize();
-
     //Meshes:
     assets.mesh.world = rlgl::MeshBank::defaultPlane_textureX10();
     assets.mesh.cubeTex = rlgl::MeshBank::defaultCube_tex();
@@ -35,11 +24,6 @@ void MyApp::prepareAssets() {
     assets.shader.colored = std::make_shared<rlgl::StandardShader>(
         assetDirectory + "/shaders/object_col.vs", 
         assetDirectory + "/shaders/object_col.fs");
-
-    rlgl::Object* sphere = new rlgl::Object(sphereMesh, assets.shader.colored);
-    sphere->setColor(glm::vec3(1.f, 0.f, 0.f));
-    sphere->setPosition(glm::vec3(0.f));
-    scene.addObject(sphere);
 
     //Materials (Textures):
     assets.material.checker = std::make_shared<rlgl::Textured2dMaterial>(

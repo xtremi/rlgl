@@ -1,4 +1,4 @@
-#include "Example2_App.h"
+#include "Example3_App.h"
 #include "rlMath.h"
 #include "rlglMeshBank.h"
 #include "rlglMeshGenerator.h"
@@ -14,7 +14,6 @@ void MyApp::prepareAssets() {
 
     //Meshes:
     assets.mesh.world = rlgl::MeshBank::defaultPlane_textureX10();
-    assets.mesh.cubeTex = rlgl::MeshBank::defaultCube_tex();
     assets.mesh.cube = rlgl::MeshBank::defaultCube();
     assets.mesh.cubeMap = rlgl::MeshBank::defaultCubeMap();
 
@@ -43,22 +42,8 @@ void MyApp::prepareAssets() {
     //http://devernay.free.fr/cours/opengl/materials.html
     assets.material.checker = std::make_shared<rlgl::Textured2dMaterial>(
         assetDirectory + "/textures/checker_grey.jpg", true);
-
-    assets.material.jade = std::make_shared<rlgl::LightPropMaterial>(rlgl::LightProperties::jade());
-    assets.material.gold = std::make_shared<rlgl::LightPropMaterial>(rlgl::LightProperties::gold());
-
-    assets.material.box = std::make_shared<rlgl::TextureLightPropMaterial>(
-        assetDirectory + "/textures/box-texture.png", false, rlgl::LightProperties::standard());
-
-    assets.material.boxJade = std::make_shared<rlgl::TextureLightPropMaterial>(
-        assetDirectory + "/textures/box-texture.png", false, rlgl::LightProperties::jade());
-
-    assets.material.boxGold = std::make_shared<rlgl::TextureLightPropMaterial>(
-        assetDirectory + "/textures/box-texture.png", false, rlgl::LightProperties::gold());
-
     assets.material.metalic = std::make_shared<rlgl::TextureLightPropMaterial>(
         assetDirectory + "/textures/metal-texture-1.jpg", false, rlgl::LightProperties::mettalic());
- 
     assets.material.skyCubeMap1 = std::make_shared<rlgl::TexturedCubeMapMaterial>(
         std::vector<std::string>({
             assetDirectory + "/textures/skybox/right.jpg",
@@ -69,6 +54,25 @@ void MyApp::prepareAssets() {
             assetDirectory + "/textures/skybox/back.jpg",
             })
         );
+
+
+    rlgl::MeshFactory meshGen;
+    std::shared_ptr<rlgl::MeshVertexData> sphereData1 = std::make_shared<rlgl::MeshVertexData>();
+    std::shared_ptr<rlgl::MeshVertexData> sphereData2 = std::make_shared<rlgl::MeshVertexData>();
+    meshGen.generateSphere(sphereData1, rl::geom::Sphere(1.0f), 32, false);
+    meshGen.generateSphere(sphereData2, rl::geom::Sphere(1.0f), 32, true);
+
+    assets.mesh.sphere1 = std::make_shared<rlgl::Mesh>(
+        rlgl::GLBuffer<float>(sphereData1->vertices),
+        true, false, false);
+    assets.mesh.sphere1->initialize();
+    
+    assets.mesh.sphere2 = std::make_shared<rlgl::Mesh>(
+        rlgl::GLBuffer<float>(sphereData2->vertices),
+        rlgl::GLBuffer<unsigned int>(sphereData2->indices),
+        true, false, false);
+    assets.mesh.sphere2->initialize();
+
 
     //############## UI ##########################################
  
@@ -89,7 +93,7 @@ int MyApp::prepareScene() {
     prepareAssets();        
     createLight();
     createWorld();
-    createBoxes();
+    createSpheres();
     createCSYS();
     createUI();
     createSkyBox();
@@ -135,31 +139,8 @@ void MyApp::createSkyBox() {
     scene.addObject(objects.skyBox);
 }
 
-
-void MyApp::updateLight() {
-
-    double curTime = glfwGetTime();
-
-    double speed = 2.2f;
-    double rad = 15.0f;
-    scene.worldEnv.lights[0].pos =
-        glm::vec3(10.0f, -5.0f, 15.0f) + 
-        glm::vec3(rad*0.5f * glm::sin(speed * curTime), rad * glm::cos(speed * curTime), 0.f);
-
-
-    objects.lightBox->setPosition(scene.worldEnv.lights[0].pos);
-    //scene.worldEnv.lights[0].ambientIntensity = 0.0f; // 0.5f * (glm::sin(curTime * speed * 10.0f) + 1.0f);
-    //scene.worldEnv.lights[0].specularIntensity = 0.5f * (glm::sin(curTime * speed * 10.0f) + 1.0f);
-
-    //scene.worldEnv.lights[0].ambientIntensity = 0.5f * (glm::sin(curTime/1.0f) + 1.0f);
-    //scene.worldEnv.lights[0].color.r = 0.5f * (glm::sin(curTime/2.0f) + 1.0f);
-    //scene.worldEnv.lights[0].color.g = 1.0f - scene.worldEnv.lights[0].color.r;
-    //scene.worldEnv.lights[0].color.b = 1.0f - scene.worldEnv.lights[0].color.r;
-}
-
-
 void MyApp::createLight() {
-    glm::vec3 lightPos(5.f, 5.f, 10.f);
+    glm::vec3 lightPos(0.f, 0.f, 10.f);
     glm::vec3 lightColor(1.f, 1.f, 1.f);
 
     scene.worldEnv.lights.push_back({ lightPos, lightColor, 1.0f, 1.0f });
@@ -171,68 +152,47 @@ void MyApp::createLight() {
     scene.addObject(objects.lightBox);
 }
 
-void MyApp::createBoxes() {
+void MyApp::updateLight() {
 
-    objects.boxes = std::vector<rlgl::Object*>({
-        new rlgl::Object(assets.mesh.cubeTex, assets.shader.texturedLightMat, assets.material.box),
-        new rlgl::Object(assets.mesh.cubeTex, assets.shader.texturedLightMat, assets.material.boxJade),
-        new rlgl::Object(assets.mesh.cubeTex, assets.shader.texturedLightMat, assets.material.boxGold),
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.jade),
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.gold),
+    double curTime = glfwGetTime();
 
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.gold),
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.gold),
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.gold),
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.gold),
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.gold),
+    double speed = 2.2f;
+    double rad = 10.0f;
+    scene.worldEnv.lights[0].pos =
+        glm::vec3(0.f, 0.f, 6.0f) + 
+        glm::vec3(rad * glm::sin(speed * curTime), rad * glm::cos(speed * curTime), 0.f);
+
+    objects.lightBox->setPosition(scene.worldEnv.lights[0].pos);
+}
+
+
+
+
+void MyApp::createSpheres() {
+
+    int nSpheres = 24;
+    float sphereRad = 1.5f;
+    float rad = 15.0f;
+    float z1 = 3.f;
+    float z2 = z1 + 2.1f * sphereRad;
+    for (int i = 0; i < nSpheres; i++) {
         
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.jade),
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.jade),
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.jade),
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.jade),
-        new rlgl::Object(assets.mesh.cube,    assets.shader.coloredLightMat,  assets.material.jade),
+        rlgl::Object* sphere1 = new rlgl::Object(assets.mesh.sphere1, assets.shader.coloredLightMat, assets.material.metalic);
+        rlgl::Object* sphere2 = new rlgl::Object(assets.mesh.sphere2, assets.shader.coloredLightMat, assets.material.metalic);
 
-        new rlgl::Object(assets.mesh.cubeTex, assets.shader.texturedLightMat, assets.material.metalic),
-        new rlgl::Object(assets.mesh.cubeTex, assets.shader.texturedLightMat, assets.material.metalic),
-        new rlgl::Object(assets.mesh.cubeTex, assets.shader.texturedLightMat, assets.material.metalic),
-        new rlgl::Object(assets.mesh.cubeTex, assets.shader.texturedLightMat, assets.material.metalic),
-        new rlgl::Object(assets.mesh.cubeTex, assets.shader.texturedLightMat, assets.material.metalic)
-        });
+        float ang = glm::two_pi<float>() * (float)i / (float)nSpheres;
 
+        sphere1->setColor(glm::vec3((float)i / (float)nSpheres, 0.2f, 0.3f));
+        sphere2->setColor(glm::vec3((float)i / (float)nSpheres, 0.2f, 0.3f));
 
-    objects.boxes[3]->setColor(glm::vec3(0.f, 0.659f, 0.42f)); //jade
-    objects.boxes[4]->setColor(glm::vec3(1.f, 0.843f, 0.3f));  //gold
-    
-    objects.boxes[5]->setColor(glm::vec3(1.f, 0.f, 0.f));
-    objects.boxes[6]->setColor(glm::vec3(0.f, 1.f, 0.f)); 
-    objects.boxes[7]->setColor(glm::vec3(0.f, 0.f, 1.f)); 
-    objects.boxes[8]->setColor(glm::vec3(0.9f, 0.9f, 0.1f)); 
-    objects.boxes[9]->setColor(glm::vec3(0.9f, 0.1f, 0.9f)); 
-
-    objects.boxes[10]->setColor(glm::vec3(1.f, 0.f, 0.f));
-    objects.boxes[11]->setColor(glm::vec3(0.f, 1.f, 0.f));
-    objects.boxes[12]->setColor(glm::vec3(0.f, 0.f, 1.f));
-    objects.boxes[13]->setColor(glm::vec3(0.9f, 0.9f, 0.1f));
-    objects.boxes[14]->setColor(glm::vec3(0.9f, 0.1f, 0.9f));
-
-    int i = 0;
-    float boxSize = BOX_WIDTH;
-    glm::vec3 boxPos_0 = glm::vec3(10.f, boxSize, 4.f);
-    glm::vec3 boxPos = boxPos_0;
-
-	for (rlgl::Object* box : objects.boxes){
-		box->setPosition(boxPos);
-        box->setScale(boxSize);
-        scene.addObject(box);
-
-		boxPos.y -= boxSize * 1.5f; 
-        if ((i + 1) % 5 == 0) {
-            boxPos.z += boxSize * 1.5f;
-            boxPos.y = boxPos_0.y;
-        }
-        i++;
-	}
-
+        sphere1->setPosition(glm::vec3(rad * glm::sin(ang), rad * glm::cos(ang), z1));
+        sphere2->setPosition(glm::vec3(rad * glm::sin(ang), rad * glm::cos(ang), z2));
+        sphere1->setScale(sphereRad);
+        sphere2->setScale(sphereRad);
+        
+        scene.addObject(sphere1);
+        scene.addObject(sphere2);
+    }
 
 }
 

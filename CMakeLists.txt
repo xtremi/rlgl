@@ -70,6 +70,7 @@ add_subdirectory(rlOctree)
 #add_subdirectory(Examples/rlglPlayGround)  #need to fix
 add_subdirectory(Examples/Example1_single_cube)
 add_subdirectory(Examples/Example2_cubes)
+add_subdirectory(Examples/Example3_spheres)
 
 
 #install(TARGETS ${PROJECT_NAME} DESTINATION bin)

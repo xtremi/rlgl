@@ -32,13 +32,46 @@ void MeshGenerator::generateSphere(
 {
 	generateSphereVertices(data, sphere, nElementsAround, indexed, center);
 
-	if (indexed) {
+	//if (indexed) {
 		generateSphereIndices(data, nElementsAround);
+	//}
+
+	if (!indexed) {
+
+		MeshVertexData nonIndexedVertices;
+
+		size_t stride = generateNormals ? 6 : 3;
+		for (int i = 0; i < data->indices.size(); i += 3) {
+
+			int index1 = data->indices[i + 0];
+			int index2 = data->indices[i + 1];
+			int index3 = data->indices[i + 2];
+
+			glm::vec3 coords1 = glm::vec3(data->vertices[index1 * stride], data->vertices[index1 * stride + 1], data->vertices[index1 * stride + 2]);
+			glm::vec3 coords2 = glm::vec3(data->vertices[index2 * stride], data->vertices[index2 * stride + 1], data->vertices[index2 * stride + 2]);
+			glm::vec3 coords3 = glm::vec3(data->vertices[index3 * stride], data->vertices[index3 * stride + 1], data->vertices[index3 * stride + 2]);
+			
+			glm::vec3 d1 = glm::normalize(coords2 - coords1);
+			glm::vec3 d2 = glm::normalize(coords3 - coords1);
+			glm::vec3 normal = glm::cross(d1, d2);
+
+			nonIndexedVertices.addVertexVec3(coords1);
+			if (generateNormals) nonIndexedVertices.addVertexVec3(normal);
+			nonIndexedVertices.addVertexVec3(coords2);
+			if (generateNormals) nonIndexedVertices.addVertexVec3(normal);
+			nonIndexedVertices.addVertexVec3(coords3);
+			if (generateNormals) nonIndexedVertices.addVertexVec3(normal);
+		}
+
+		*data.get() = nonIndexedVertices;
 	}
+
 
 }
 
 
+	//Theta = [0, pi]
+	//Phi   = [0,2pi]
 void MeshGenerator::generateSphereVertices(
 	std::shared_ptr<MeshVertexData> data,
 	const rl::geom::Sphere&			sphere,
@@ -48,14 +81,11 @@ void MeshGenerator::generateSphereVertices(
 {
 	int nElPhi = 2 * (nElementsAround / 2);	//make even
 	int nElTheta = nElPhi / 2;
-
-	//Theta = [0, pi]
-	//Phi   = [0,2pi]
 	float angTheta = 0.f, angPhi = 0.f;
 	float dAngPhi = glm::two_pi<float>() / (float)(nElPhi);
 	float dAngTheta = dAngPhi;
+	
 	glm::vec3 coords, normal;
-
 	angTheta = dAngTheta;
 
 	for (int i = 0; i < (nElTheta - 1); i++) {
@@ -79,16 +109,15 @@ void MeshGenerator::generateSphereVertices(
 		angPhi = 0.f;
 	}
 
-	glm::vec3 topPos = center + sphere.radius * glm::vec3(0.f, 0.f, 1.f);
-	glm::vec3 botPos = center - sphere.radius * glm::vec3(0.f, 0.f, 1.f);
 
-	data->addVertexVec3(topPos);
-	if (generateNormals) {
-		data->addVertexVec3(glm::vec3(0.f, 0.f, 1.f));
-	}
-	data->addVertexVec3(botPos);
-	if (generateNormals) {
-		data->addVertexVec3(glm::vec3(0.f, 0.f, -1.f));
+	std::vector<glm::vec3> topAndBotNormals({ glm::vec3(0.f, 0.f, 1.f) ,  glm::vec3(0.f, 0.f, -1.f) });
+	for (const glm::vec3& vec : topAndBotNormals) {
+		coords = center + sphere.radius * vec;
+		normal = vec;
+		data->addVertexVec3(coords);
+		if (generateNormals) {
+			data->addVertexVec3(normal);
+		}
 	}
 }
 

@@ -62,12 +62,13 @@ namespace rlgl {
 	private:
 			
 		void generateSphereIndices(std::shared_ptr<MeshVertexData> data, int nElementsAround);
+		
 		void generateSphereVertices(
 			std::shared_ptr<MeshVertexData> data,
-			const rl::geom::Sphere& sphere,
+			const rl::geom::Sphere&			sphere,
 			int								nElementsAround,
 			bool							indexed,
-			const glm::vec3& center = glm::vec3(0.0f));
+			const glm::vec3&				center = glm::vec3(0.0f));
 
 		void generateTriangleFanRow(
 			std::shared_ptr<MeshVertexData> data,

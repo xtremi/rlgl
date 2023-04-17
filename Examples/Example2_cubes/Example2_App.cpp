@@ -75,21 +75,33 @@ void MyApp::prepareAssets() {
         );
 
 
-    rlgl::MeshGenerator meshGen;
-    std::shared_ptr<rlgl::MeshVertexData> sphereData = std::make_shared<rlgl::MeshVertexData>();
-    meshGen.generateSphere(sphereData, rl::geom::Sphere(5.0f), 32, false);
+    rlgl::MeshFactory meshGen;
+    std::shared_ptr<rlgl::MeshVertexData> sphereData1 = std::make_shared<rlgl::MeshVertexData>();
+    std::shared_ptr<rlgl::MeshVertexData> sphereData2 = std::make_shared<rlgl::MeshVertexData>();
+    meshGen.generateSphere(sphereData1, rl::geom::Sphere(1.0f), 32, false);
+    meshGen.generateSphere(sphereData2, rl::geom::Sphere(1.0f), 32, true);
 
-    rlgl::MeshPtr sphereMesh = std::make_shared<rlgl::Mesh>(
-        rlgl::GLBuffer<float>(sphereData->vertices),
-        //rlgl::GLBuffer<unsigned int>(sphereData->indices),
+    rlgl::MeshPtr sphereMesh1 = std::make_shared<rlgl::Mesh>(
+        rlgl::GLBuffer<float>(sphereData1->vertices),
         true, false, false);
-    sphereMesh->initialize();
+    rlgl::MeshPtr sphereMesh2 = std::make_shared<rlgl::Mesh>(
+        rlgl::GLBuffer<float>(sphereData2->vertices),
+        rlgl::GLBuffer<unsigned int>(sphereData2->indices),
+        true, false, false);
 
-    rlgl::Object* sphere = new rlgl::Object(sphereMesh, assets.shader.coloredLightMat, assets.material.metalic);
-    sphere->setColor(glm::vec3(0.6f, 0.6f, 0.6f));
-    sphere->setPosition(glm::vec3(0.f, 0.f, 5.f));
-    sphere->setScale(0.5f);
-    scene.addObject(sphere);
+    sphereMesh1->initialize();
+    sphereMesh2->initialize();
+
+    rlgl::Object* sphere1 = new rlgl::Object(sphereMesh1, assets.shader.coloredLightMat, assets.material.metalic);
+    sphere1->setColor(glm::vec3(0.6f, 0.2f, 0.3f));
+    sphere1->setPosition(glm::vec3(0.f, 0.f, 10.f));
+    sphere1->setScale(2.5f);
+    scene.addObject(sphere1);
+    rlgl::Object* sphere2 = new rlgl::Object(sphereMesh2, assets.shader.coloredLightMat, assets.material.metalic);
+    sphere2->setColor(glm::vec3(0.6f, 0.2f, 0.3f));
+    sphere2->setPosition(glm::vec3(0.f, 5.f, 10.f));
+    sphere2->setScale(2.5f);
+    scene.addObject(sphere2);
 
     //############## UI ##########################################
  
@@ -114,6 +126,13 @@ int MyApp::prepareScene() {
     createCSYS();
     createUI();
     createSkyBox();
+    return 0;
+}
+
+int MyApp::updateScene() {
+    //camera.position.z = 2.f;
+    updateBoxes();
+    updateLight();
     return 0;
 }
 
@@ -266,13 +285,7 @@ void MyApp::createCSYS() {
 }
 
 
-static rlgl::Object* lastHitObj = nullptr;
-int MyApp::updateScene() {
-    //camera.position.z = 2.f;
-    updateBoxes();
-    updateLight();
-    return 0;
-}
+
 
 int MyApp::postRender(){
 	return 0;

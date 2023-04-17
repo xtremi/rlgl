@@ -12,8 +12,8 @@ void MyApp::prepareAssets() {
 
     std::string assetDirectory = rlgl::GlobalConfig::assetDirectory;
 
-    rlgl::MeshGenerator meshGen;
-    meshGen.generateNormals = false;
+    rlgl::MeshFactory meshGen;
+    meshGen.generateNormalsON = false;
     std::shared_ptr<rlgl::MeshVertexData> sphereData = std::make_shared<rlgl::MeshVertexData>();
     meshGen.generateSphere(sphereData, rl::geom::Sphere(5.0f), 24, true);
 

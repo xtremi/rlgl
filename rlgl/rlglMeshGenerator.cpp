@@ -1,5 +1,5 @@
 #include "rlglMeshGenerator.h"
-#include <glm\gtc\constants.hpp>
+#include <glm/gtc/constants.hpp>
 using namespace rlgl;
 
 

@@ -91,7 +91,7 @@ int BaseApp::loopIteration() {
         glfwSwapBuffers(_window);
         glfwPollEvents();
     }
-    return 0;
+    return 1;
 }
 
 bool BaseApp::windowClosed() {

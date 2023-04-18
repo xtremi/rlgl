@@ -24,6 +24,14 @@ void rlglQOpenGLWidget::initializeGL(){
     {
         throw("gladLoadGLLoader() - Failed to initialize GLAD");
     }
+
+    QSurfaceFormat format;
+    format.setVersion(4,0);
+    format.setSamples(4);
+    format.setProfile(QSurfaceFormat::NoProfile);
+    format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+    setFormat(format);
+
     initRlglApp();
 }
 
@@ -39,13 +47,28 @@ int rlglQOpenGLWidget::initRlglApp(){
 
 }
 
-
+static int paintGLcount = 0;
 void rlglQOpenGLWidget::paintGL(){
+    std::cout << "paintGL " << paintGLcount++ << std::endl;
+    //if(rlglApp->loopIteration()){
+        //update();
+        //this->context()->makeCurrent(this);
 
-    if(int err = rlglApp->loopIteration()){
-        throw("rlglApp->loopIteration() returned error");
-    }
+    //}
     QOpenGLWidget::paintGL();
+
+}
+
+static int updateRequestCount = 0;
+bool rlglQOpenGLWidget::eventFilter(QObject* o, QEvent *e) {
+    std::cout << "rlglQOpenGLWidget::event " << std::endl;
+
+    if (e->type() == QEvent::UpdateRequest){
+        std::cout << "UpdateRequest " << updateRequestCount++ << std::endl;
+        rlglApp->loopIteration();
+        return true;
+    }
+    return QWidget::eventFilter(o, e);
 }
 
 

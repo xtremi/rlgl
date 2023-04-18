@@ -4,7 +4,7 @@
 #include "rlglMeshGenerator.h"
 #include <iostream>
 #include <QKeyEvent>
-
+#include <QOpenGLContext>
 
 const float MyApp::BOX_WIDTH = 2.5f;
 
@@ -264,7 +264,7 @@ int MyApp::postRender(){
 
 static int eventCount = 0;
 bool MyApp::eventFilter(QObject* obj, QEvent *event){
-    std::cout << "eventCount: " << eventCount++ << std::endl;
+    //std::cout << "eventCount: " << eventCount++ << std::endl;
 
     if(event->type() == QEvent::KeyPress){
 

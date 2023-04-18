@@ -20,8 +20,7 @@ public:
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;
-
-
+    bool eventFilter(QObject* o, QEvent *e);
 };
 
 #endif // RLGLQOPENGLWIDGET_H

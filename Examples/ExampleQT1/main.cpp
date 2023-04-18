@@ -1,5 +1,6 @@
 #include <iostream>
 #include <QApplication>
+#include "glad/gl.h"
 #include "mainwindow.h"
 //#include <QOpenGLContext>
 

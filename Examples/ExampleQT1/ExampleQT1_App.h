@@ -39,6 +39,7 @@ struct UIobjects {
 class MyApp : public rlgl::BaseApp
 {
 public:
+    MyApp():rlgl::BaseApp(""){}
 	MyApp(const std::string& assetDirectory);
 
 protected:

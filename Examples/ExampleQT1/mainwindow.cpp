@@ -41,6 +41,7 @@ MainWindow::MainWindow()
     setWindowTitle(tr("Hello GL"));
 
     glWidget->makeCurrent();
+    glWidget->initRlglApp();
 }
 
 

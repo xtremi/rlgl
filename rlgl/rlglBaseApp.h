@@ -54,6 +54,7 @@ class BaseApp {
 
 public:
 	BaseApp(const std::string& assetDirectory, bool usingGlfw = true);
+    ~BaseApp(){}
 
 	int init(int windowSizeX, int windowSizeY, GLADloadfunc gladLoadFunction = nullptr);
 	int loopIteration();

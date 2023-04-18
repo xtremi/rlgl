@@ -11,7 +11,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow();
-
+    void initRlGlApp();
     rlglQOpenGLWidget* glWidget;
 
 private slots:

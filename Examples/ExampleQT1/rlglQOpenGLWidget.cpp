@@ -2,6 +2,7 @@
 #include <iostream>
 #include <QOpenGLContext>
 #include <QFunctionPointer>
+#include <QMouseEvent>
 
 void* getOpenGLProcAddress(const char* functionName)
 {
@@ -14,29 +15,46 @@ void* getOpenGLProcAddress(const char* functionName)
     return reinterpret_cast<void*>(context->getProcAddress(functionName));
 }
 
-rlglQOpenGLWidget::rlglQOpenGLWidget() : QOpenGLWidget(nullptr)
-{
+rlglQOpenGLWidget::rlglQOpenGLWidget() : QOpenGLWidget(nullptr){}
 
 
-}
-
-int rlglQOpenGLWidget::initRlglApp(){
-    rlglApp = new MyApp("../../data");
+void rlglQOpenGLWidget::initializeGL(){
 
     if (!gladLoadGL(reinterpret_cast<GLADloadfunc>(getOpenGLProcAddress)))
     {
-        std::cout << "gladLoadGLLoader() - Failed to initialize GLAD" << std::endl;
-        return 1;
+        throw("gladLoadGLLoader() - Failed to initialize GLAD");
     }
+    initRlglApp();
+}
 
+
+int rlglQOpenGLWidget::initRlglApp(){
+    setFocus();
+    rlglApp = new MyApp("../../../data");
+
+    this->installEventFilter(rlglApp);
     if (int err = rlglApp->init(720, 480/*, qtGlContext->getProcAddress*/)) {
         return err;
     }
+
 }
 
 
 void rlglQOpenGLWidget::paintGL(){
+
     if(int err = rlglApp->loopIteration()){
         throw("rlglApp->loopIteration() returned error");
     }
+    QOpenGLWidget::paintGL();
 }
+
+
+void rlglQOpenGLWidget::mousePressEvent(QMouseEvent *event){
+    if (event->button() == Qt::LeftButton && rect().contains(event->pos())) {
+        setFocus();
+        std::cout << "focus on" << std::endl;
+    }
+}
+
+
+

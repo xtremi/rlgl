@@ -3,12 +3,14 @@
 #include "rlglMeshBank.h"
 #include "rlglMeshGenerator.h"
 #include <iostream>
-
+#include <QKeyEvent>
 
 
 const float MyApp::BOX_WIDTH = 2.5f;
 
-MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory, false){}
+MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory, false),QObject(){
+
+}
 
 void MyApp::prepareAssets() {
 
@@ -260,6 +262,31 @@ int MyApp::postRender(){
 	return 0;
 }
 
+static int eventCount = 0;
+bool MyApp::eventFilter(QObject* obj, QEvent *event){
+    std::cout << "eventCount: " << eventCount++ << std::endl;
+
+    if(event->type() == QEvent::KeyPress){
+
+        std::cout << "key" << std::endl;
+
+        QKeyEvent *ke = static_cast<QKeyEvent *>(event);
+        if (ke->key() == Qt::Key_W) {
+            std::cout <<"W" << std::endl;
+            camera.moveForward(0.15f);
+        }
+        else if (ke->key() == Qt::Key_S) {
+            std::cout <<"S" << std::endl;
+            camera.moveBackward(0.15f);
+        }
+
+    }
+    return QObject::eventFilter(obj, event);
+}
+bool MyApp::event(QEvent *event) {
+
+    return QObject::event(event);
+}
 
 void MyApp::processInput(GLFWwindow* window) {
     //BaseApp::processInput(window);

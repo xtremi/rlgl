@@ -44,7 +44,7 @@ int BaseApp::init(int windowSizeX, int windowSizeY, GLADloadfunc gladLoadFunctio
 }
 
 bool FPScontrol::process() {
-    return true;
+    //return true;
 	currentTime = glfwGetTime();
 	deltaTime = currentTime - lastTime;
 	if (deltaTime >= maxPeriod){
@@ -149,7 +149,7 @@ void BaseApp::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
-    else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
+    else if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_RELEASE) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -185,8 +185,8 @@ void BaseApp::cleanUp() {
 
 int BaseApp::initializeWindow(GLADloadfunc gladLoadFunction) {
 
+    glfwInit();
     if(_usingGlfw){
-        glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glfwParams().glVersionMajor);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glfwParams().glVersionMinor);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

@@ -2,9 +2,6 @@
 #include <QApplication>
 #include "glad/gl.h"
 #include "mainwindow.h"
-//#include <QOpenGLContext>
-
-
 
 int main(int argc, char* argv[]) {
 
@@ -21,6 +18,7 @@ int main(int argc, char* argv[]) {
     QCoreApplication::setApplicationVersion(QT_VERSION_STR);
     
     MainWindow mainWindow;
+    qapp.installEventFilter(&mainWindow);
     mainWindow.resize(QSize(720, 480));
     mainWindow.show();
     return qapp.exec();

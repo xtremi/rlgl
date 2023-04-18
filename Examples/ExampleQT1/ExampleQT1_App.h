@@ -1,5 +1,6 @@
 #pragma once
 #include "rlglBaseApp.h"
+#include <QObject>
 
 struct Assets {
 	struct Meshes {
@@ -36,8 +37,9 @@ struct UIobjects {
 	std::vector<rlgl::Object*> aimCross;
 };
 
-class MyApp : public rlgl::BaseApp
+class MyApp : public QObject, public rlgl::BaseApp
 {
+    Q_OBJECT;
 public:
 	MyApp(const std::string& assetDirectory);
 
@@ -46,10 +48,12 @@ protected:
 	UIobjects	 uiObjects;
 	Assets		 assets;
 
-	int prepareScene();						//inherited from BaseApp
-	int updateScene();						//inherited from BaseApp
-	int postRender();						//inherited from BaseApp
-	void processInput(GLFWwindow* window);	//inherited from BaseApp
+    int prepareScene() override;                            //inherited from BaseApp
+    int updateScene() override;                             //inherited from BaseApp
+    int postRender() override;                              //inherited from BaseApp
+    void processInput(GLFWwindow* window) override;         //inherited from BaseApp
+    bool event(QEvent *event) override;                     //inherited from QObject
+    bool eventFilter(QObject*, QEvent *event) override;                     //inherited from QObject
 
 	//initialization
 	void prepareAssets();	

@@ -41,9 +41,12 @@ MainWindow::MainWindow()
     setWindowTitle(tr("Hello GL"));
 
     glWidget->makeCurrent();
-    glWidget->initRlglApp();
+    this->installEventFilter(glWidget);
 }
 
+void MainWindow::initRlGlApp(){
+    glWidget->initRlglApp();
+}
 
 void MainWindow::onAddNew()
 {

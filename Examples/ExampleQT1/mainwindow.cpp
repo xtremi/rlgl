@@ -3,8 +3,7 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QMessageBox>
-#include <QOpenGLWidget>
-#include <QOpenGLFunctions>
+#include "rlglQOpenGLWidget.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QSlider>
@@ -19,7 +18,7 @@ MainWindow::MainWindow()
     connect(addNew, &QAction::triggered, this, &MainWindow::onAddNew);
     setMenuBar(menuBar);
 
-    glWidget = new QOpenGLWidget();
+    glWidget = new rlglQOpenGLWidget();
 
     QSlider *slider1 = new QSlider(Qt::Vertical);
     QSlider *slider2 = new QSlider(Qt::Vertical);
@@ -42,10 +41,8 @@ MainWindow::MainWindow()
     setWindowTitle(tr("Hello GL"));
 
     glWidget->makeCurrent();
-
-    //QOpenGLFunctions glF;
-    //glF.initializeOpenGLFunctions();
 }
+
 
 void MainWindow::onAddNew()
 {

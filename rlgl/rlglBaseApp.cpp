@@ -15,7 +15,7 @@ BaseApp::BaseApp(const std::string& assetDirectory, bool usingGlfw) {
 
 
 /*!*/
-int BaseApp::init(int windowSizeX, int windowSizeY) {
+int BaseApp::init(int windowSizeX, int windowSizeY, GLADloadfunc gladLoadFunction) {
     activeCamera = &camera;
     windowParams().size = glm::ivec2(windowSizeX, windowSizeY);
     camera.aspectRatio = windowParams().aspect();
@@ -26,9 +26,15 @@ int BaseApp::init(int windowSizeX, int windowSizeY) {
 	uiCamera.aspectRatio = windowParams().aspect();
     uiCamera.isOrthoGraphic = true;
 
-    if (int err = initializeWindow()) {
+    if (int err = initializeWindow(gladLoadFunction)) {
         return err;
     }
+
+    //For transperancy (and other stuff) TODO: clean:
+    glEnable(GL_DEPTH_TEST);
+    //glDisable(GL_CULL_FACE);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     if (int err = prepareScene()) {
         return err;
@@ -38,6 +44,7 @@ int BaseApp::init(int windowSizeX, int windowSizeY) {
 }
 
 bool FPScontrol::process() {
+    return true;
 	currentTime = glfwGetTime();
 	deltaTime = currentTime - lastTime;
 	if (deltaTime >= maxPeriod){
@@ -176,7 +183,7 @@ void BaseApp::cleanUp() {
 }
 
 
-int BaseApp::initializeWindow() {
+int BaseApp::initializeWindow(GLADloadfunc gladLoadFunction) {
 
     if(_usingGlfw){
         glfwInit();
@@ -206,27 +213,23 @@ int BaseApp::initializeWindow() {
             return (int)error_code::GLFW_CREATE_WINDOW;
         }
         glfwMakeContextCurrent(_window);
-    }
+    //}
     
     //if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    int gladLoadGLres = _usingGlfw ? gladLoadGL(glfwGetProcAddress) : gladLoadGL(nullptr);
+    int gladLoadGLres = _usingGlfw ? gladLoadGL(glfwGetProcAddress) : gladLoadGL(gladLoadFunction);
     if (!gladLoadGLres)
     {
         errmsg = "gladLoadGLLoader() - Failed to initialize GLAD";
         return (int)error_code::GLAD_LOAD_GL_LOADER;
     }
 
-    if(_usingGlfw){
+    //if(_usingGlfw){
         glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
         glfwSetCursorPos(_window, windowParams().size.x /2, windowParams().size.y / 2);
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     
-    //For transperancy:
-    glEnable(GL_DEPTH_TEST);
-    //glDisable(GL_CULL_FACE);
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     
     return 0;
 }

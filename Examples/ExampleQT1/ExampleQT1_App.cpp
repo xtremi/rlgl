@@ -4,6 +4,8 @@
 #include "rlglMeshGenerator.h"
 #include <iostream>
 
+
+
 const float MyApp::BOX_WIDTH = 2.5f;
 
 MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory, false){}
@@ -260,7 +262,8 @@ int MyApp::postRender(){
 
 
 void MyApp::processInput(GLFWwindow* window) {
-    BaseApp::processInput(window);
+    //BaseApp::processInput(window);
+    activeCamera->setFront(glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 void MyApp::updateBoxes() {

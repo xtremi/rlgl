@@ -58,7 +58,7 @@ target_include_directories(${LIB_NAME}
 message("Calling glad_add_library to generate GLAD opengl interface:")
 glad_add_library(
     glad_gl_core_40
-	DYNAMIC
+    SHARED
 	LOCATION ${PROJECT_BINARY_DIR}/glad-gen
 	API gl:core=4.0)
 

@@ -1,8 +1,20 @@
 #include <iostream>
 #include <QApplication>
-#include "mainwindow.h"
 #include "ExampleQT1_App.h"
+#include "mainwindow.h"
+#include <QOpenGLContext>
+#include "rlglQOpenGLWidget.h"
 
+void* getOpenGLProcAddress(const char* functionName)
+{
+    QOpenGLContext* context = QOpenGLContext::currentContext();
+    if (!context)
+    {
+        return nullptr;
+    }
+
+    return reinterpret_cast<void*>(context->getProcAddress(functionName));
+}
 
 int main(int argc, char* argv[]) {
 
@@ -25,15 +37,23 @@ int main(int argc, char* argv[]) {
     mainWindow.resize(QSize(windowSize.x, windowSize.y));
     mainWindow.show();
 
+    if (!gladLoadGL(reinterpret_cast<GLADloadfunc>(getOpenGLProcAddress)))
+    {
+        std::cout << "gladLoadGLLoader() - Failed to initialize GLAD" << std::endl;
+        return 1;
+    }
+
 
     MyApp app(assetDirectory);
-    if (int err = app.init(windowSize.x, windowSize.y)) {
+    if (int err = app.init(windowSize.x, windowSize.y/*, qtGlContext->getProcAddress*/)) {
         return err;
     }
-    while (!app.windowClosed()){
+    while (true){
         if (int err = app.loopIteration()) {
             return err;
         }
+        QCoreApplication::processEvents();
+        mainWindow.glWidget->update();
     }
 
 

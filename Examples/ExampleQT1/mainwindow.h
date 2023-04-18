@@ -1,6 +1,9 @@
 #pragma once
 #include <QMainWindow>
-class QOpenGLWidget;
+
+class rlglQOpenGLWidget;
+
+typedef QFunctionPointer (*myLoadFunction)(const char *name);
 
 class MainWindow : public QMainWindow
 {
@@ -9,8 +12,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
 
-
-    QOpenGLWidget* glWidget;
+    rlglQOpenGLWidget* glWidget;
 
 private slots:
     void onAddNew();

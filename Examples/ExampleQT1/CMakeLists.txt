@@ -4,11 +4,13 @@ set(SOURCE_FILES
     main.cpp
     ExampleQT1_App.cpp
     mainwindow.cpp
+    rlglQOpenGLWidget.cpp
     )
     
 set(HEADER_FILES
     ExampleQT1_App.h
     mainwindow.h
+    rlglQOpenGLWidget.h
 )
 
 add_executable(${EXE_NAME} 

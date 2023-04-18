@@ -55,7 +55,7 @@ class BaseApp {
 public:
 	BaseApp(const std::string& assetDirectory, bool usingGlfw = true);
 
-	int init(int windowSizeX, int windowSizeY);
+	int init(int windowSizeX, int windowSizeY, GLADloadfunc gladLoadFunction = nullptr);
 	int loopIteration();
 	void cleanUp();
 	bool windowClosed();
@@ -87,7 +87,7 @@ protected:
 
 
 	void handleMouse(double xposIn, double yposIn);
-	int initializeWindow();
+	int initializeWindow(GLADloadfunc gladLoadFunction = nullptr);
 	int initializeWindowGlfw();
 	int renderScene();
 

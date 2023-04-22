@@ -4,35 +4,45 @@ out vec4 FragColor;
 in vec3 normal;
 in vec3 fragPos;
 
-//Object
+uniform vec3 camPos;
+
+//Object:
 uniform bool highlight;
 uniform vec4 color;
 
-//Environment:
-uniform vec3 camPos;
-uniform vec3 lightPos;
-uniform vec3 lightColor;
-uniform float lightAmbientIntensity;
-uniform float lightSpecularIntensity;
+//Light:
+struct PointLight{
+	vec3 pos;
+	vec3 col;
+	vec3 ambientIntensity;
+	vec3 specularIntensity;
+};
+uniform PointLight pointLight;
 
 //Material:
-uniform vec3 materialAmbientFactor;
-uniform vec3 materialDiffuseFactor;
-uniform vec3 materialSpecularFactor;
-uniform float materialShininessFactor;
+struct MaterialProperties{
+	vec3 ambientFactor;
+	vec3 diffuseFactor;
+	vec3 specularFactor;
+	float shininessFactor;
+};
+uniform MaterialProperties matProp;
 
-void main()
+vec3 pointLightContribution(
+	vec3 	   		   camPos,
+	PointLight 		   light,
+	MaterialProperties mat,
+	vec3 			   normal,
+	vec3 			   fragPos)
 {
-	FragColor = color;
-
-	vec3 lightDir = normalize(lightPos - fragPos);
+	vec3 lightDir = normalize(light.pos - fragPos);
 	vec3 viewDir = normalize(camPos - fragPos);
 	vec3 reflectDir = reflect(-lightDir, normal);
 
 	//Light contribution (Phong: ambient + diffuse + specular):
-	float ambient = lightAmbientIntensity;	
+	float ambient = mat.ambientIntensity;	
 	float diffuse = max(dot(normal, lightDir), 0.0);
-	float specular = lightSpecularIntensity 
+	float specular = light.specularIntensity 
 		* pow(max(dot(viewDir, reflectDir), 0.0), materialShininessFactor);
 		
 	//+ Light material properties contribution:
@@ -42,6 +52,20 @@ void main()
 		specular * materialSpecularFactor;
 
 	lightContribution *= lightColor;
+}
+
+void main()
+{
+	FragColor = color;
+
+	vec3 lightContribution = pointLightContribution(
+		camPos,
+		pointLight,
+		matProp,
+		normal,
+		fragPos);
+
+
 
 	FragColor = FragColor * vec4(lightContribution, 1.0);
 } 

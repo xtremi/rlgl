@@ -56,10 +56,10 @@ void TextureUniforms::setUniformValues(GLuint sID, const rlgl::MaterialPtr mater
 
 void MaterialLightPropertiesUniforms::setUniformValues(GLuint sID, const rlgl::MaterialPtr material) const {
     rlgl::LightProperties* lp = &std::dynamic_pointer_cast<LightPropMaterial>(material)->lightProperties;
-    setVec3(sID, "materialAmbientFactor", lp->ambientStrength);
-    setVec3(sID, "materialDiffuseFactor", lp->diffuseStrength);
-    setVec3(sID, "materialSpecularFactor", lp->specularStrength);
-    setFloat(sID, "materialShininessFactor", lp->shininess);
+    setVec3(sID, "matProp.ambientFactor", lp->ambientStrength);
+    setVec3(sID, "matProp.diffuseFactor", lp->diffuseStrength);
+    setVec3(sID, "matProp.specularFactor", lp->specularStrength);
+    setFloat(sID, "matProp.shininessFactor", lp->shininess);
 };
 void LightUniforms::setUniformValues(
     GLuint sID,
@@ -70,10 +70,10 @@ void LightUniforms::setUniformValues(
     if (worldEnv.lights.size() == 0) {
         throw("LightUniforms::setUniformValues - attempted to set light uniforms, but no lights exist in WorldEnv");
     }
-    setVec3(sID, "lightPos", worldEnv.lights[0].pos);
-    setFloat(sID, "lightAmbientIntensity", worldEnv.lights[0].ambientIntensity);
-    setFloat(sID, "lightSpecularIntensity", worldEnv.lights[0].specularIntensity);
-    setVec3(sID, "lightColor", worldEnv.lights[0].color);
+    setVec3(sID, "pointLight.pos", worldEnv.lights[0].pos);
+    setVec3(sID, "pointLight.col", worldEnv.lights[0].color);
+    setFloat(sID, "pointLight.ambientIntensity", worldEnv.lights[0].ambientIntensity);
+    setFloat(sID, "pointLight.specularIntensity", worldEnv.lights[0].specularIntensity);
     setVec3(sID, "camPos", cam.position);
 
 };

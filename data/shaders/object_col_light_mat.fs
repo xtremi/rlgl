@@ -14,8 +14,8 @@ uniform vec4 color;
 struct PointLight{
 	vec3 pos;
 	vec3 col;
-	vec3 ambientIntensity;
-	vec3 specularIntensity;
+	float ambientIntensity;
+	float specularIntensity;
 };
 uniform PointLight pointLight;
 
@@ -40,18 +40,19 @@ vec3 pointLightContribution(
 	vec3 reflectDir = reflect(-lightDir, normal);
 
 	//Light contribution (Phong: ambient + diffuse + specular):
-	float ambient = mat.ambientIntensity;	
+	float ambient = light.ambientIntensity;	
 	float diffuse = max(dot(normal, lightDir), 0.0);
 	float specular = light.specularIntensity 
-		* pow(max(dot(viewDir, reflectDir), 0.0), materialShininessFactor);
+		* pow(max(dot(viewDir, reflectDir), 0.0), mat.shininessFactor);
 		
 	//+ Light material properties contribution:
 	vec3 lightContribution = 
-		ambient  * materialAmbientFactor + 
-		diffuse  * materialDiffuseFactor + 
-		specular * materialSpecularFactor;
+		ambient  * mat.ambientFactor + 
+		diffuse  * mat.diffuseFactor + 
+		specular * mat.specularFactor;
 
-	lightContribution *= lightColor;
+	lightContribution *= light.col;
+	return lightContribution;
 }
 
 void main()
@@ -64,8 +65,6 @@ void main()
 		matProp,
 		normal,
 		fragPos);
-
-
 
 	FragColor = FragColor * vec4(lightContribution, 1.0);
 } 

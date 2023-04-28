@@ -143,26 +143,32 @@ void MyApp::createLight() {
     glm::vec3 lightPos(0.f, 0.f, 10.f);
     glm::vec3 lightColor(1.f, 1.f, 1.f);
 
-    scene.worldEnv.lights.push_back({ lightPos, lightColor, 1.0f, 1.0f });
-    objects.lightBox = new rlgl::Object(assets.mesh.cube, assets.shader.colored, NO_MATERIAL);
-    objects.lightBox->setPosition(lightPos);
-    objects.lightBox->setColor(lightColor);
-    objects.lightBox->setScale(0.4f);
+    for(int i = 0; i < 3; i++){
 
-    scene.addObject(objects.lightBox);
+        scene.worldEnv.lights.push_back({ lightPos, lightColor, 1.0f, 1.0f });
+        objects.lightBoxes.push_back(new rlgl::Object(assets.mesh.cube, assets.shader.colored, NO_MATERIAL));
+        objects.lightBoxes[i]->setPosition(lightPos);
+        objects.lightBoxes[i]->setColor(lightColor);
+        objects.lightBoxes[i]->setScale(0.4f);
+
+        scene.addObject(objects.lightBoxes[i]);
+    }
 }
 
 void MyApp::updateLight() {
 
     double curTime = glfwGetTime();
 
-    double speed = 2.2f;
-    double rad = 10.0f;
-    scene.worldEnv.lights[0].pos =
-        glm::vec3(0.f, 0.f, 6.0f) + 
-        glm::vec3(rad * glm::sin(speed * curTime), rad * glm::cos(speed * curTime), 0.f);
+    double speed[3] = { 0.25f, 2.2f, 4.0f };
+    double rad[3] = { 5.f, 7.5f, 10.0f };
 
-    objects.lightBox->setPosition(scene.worldEnv.lights[0].pos);
+    for(int i = 0; i < scene.worldEnv.lights.size(); i++){
+        scene.worldEnv.lights[i].pos =
+            glm::vec3(0.f, 0.f, 6.0f) + 
+            glm::vec3(rad[i] * glm::sin(speed[i] * curTime), rad[i] * glm::cos(speed[i] * curTime), 0.f);
+        
+        objects.lightBoxes[i]->setPosition(scene.worldEnv.lights[i].pos);
+    }
 }
 
 

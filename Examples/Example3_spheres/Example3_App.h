@@ -28,7 +28,7 @@ struct Assets {
 struct WorldObjects {
 	rlgl::Object*			   worldPlane, *skyBox;
 	std::vector<rlgl::Object*> axes;
-	rlgl::Object*			   lightBox;
+	std::vector<rlgl::Object*> lightBoxes;
 };
 
 struct UIobjects {

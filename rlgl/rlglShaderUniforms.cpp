@@ -70,11 +70,20 @@ void LightUniforms::setUniformValues(
     if (worldEnv.lights.size() == 0) {
         throw("LightUniforms::setUniformValues - attempted to set light uniforms, but no lights exist in WorldEnv");
     }
-    setVec3(sID, "pointLight.pos", worldEnv.lights[0].pos);
-    setVec3(sID, "pointLight.col", worldEnv.lights[0].color);
-    setFloat(sID, "pointLight.ambientIntensity", worldEnv.lights[0].ambientIntensity);
-    setFloat(sID, "pointLight.specularIntensity", worldEnv.lights[0].specularIntensity);
     setVec3(sID, "camPos", cam.position);
+    setInt(sID, "nLights", worldEnv.lights.size());
+
+    int index = 0;
+    for (const rlgl::StandardLight& light : worldEnv.lights) {
+
+        std::string indexStr = "[" + std::to_string(index) + "]";
+
+        setVec3(sID,  "pointLight" + indexStr + ".pos", light.pos);
+        setVec3(sID,  "pointLight" + indexStr + ".col", light.color);
+        setFloat(sID, "pointLight" + indexStr + ".ambientIntensity", light.ambientIntensity);
+        setFloat(sID, "pointLight" + indexStr + ".specularIntensity", light.specularIntensity);
+    }
+
 
 };
     

@@ -17,7 +17,9 @@ struct PointLight{
 	float ambientIntensity;
 	float specularIntensity;
 };
-uniform PointLight pointLight;
+#define MAX_NUMBER_OF_LIGHTS 32
+uniform int nLights;
+uniform PointLight pointLight[MAX_NUMBER_OF_LIGHTS];
 
 //Material:
 struct MaterialProperties{
@@ -59,12 +61,15 @@ void main()
 {
 	FragColor = color;
 
-	vec3 lightContribution = pointLightContribution(
-		camPos,
-		pointLight,
-		matProp,
-		normal,
-		fragPos);
+	vec3 lightContribution = vec3(0.0);
+	for(int i = 0; i < nLights; i++){
+		lightContribution += pointLightContribution(
+			camPos,
+			pointLight[i],
+			matProp,
+			normal,
+			fragPos);
+	}
 
 	FragColor = FragColor * vec4(lightContribution, 1.0);
 } 

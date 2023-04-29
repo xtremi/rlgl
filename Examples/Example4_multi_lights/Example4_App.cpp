@@ -138,21 +138,18 @@ void MyApp::createSkyBox() {
 }
 
 void MyApp::createLight() {
-    glm::vec3 lightPos(0.f, 0.f, 0.f);
     glm::vec3 lightColors[3] = {
         glm::vec3(1.0f, 0.1f, 0.1f),
-        glm::vec3(0.0f, 1.0f, 0.1f),
-        glm::vec3(0.0f, 0.1f, 1.0f)
+        glm::vec3(0.1f, 1.0f, 0.1f),
+        glm::vec3(0.1f, 0.1f, 1.0f)
     };
 
     for(int i = 0; i < 3; i++){
 
-        scene.worldEnv.lights.push_back({ lightPos, lightColors[i], 0.3f, 0.3f});
-        objects.lightBoxes.push_back(new rlgl::Object(assets.mesh.cube, assets.shader.colored, NO_MATERIAL));
-        objects.lightBoxes[i]->setPosition(lightPos);
+        scene.worldEnv.lights.push_back({ glm::vec3(0.f), lightColors[i], 0.1f, 0.3f});
+        objects.lightBoxes.push_back(new rlgl::Object(assets.mesh.sphere1, assets.shader.colored, NO_MATERIAL));
         objects.lightBoxes[i]->setColor(lightColors[i]);
         objects.lightBoxes[i]->setScale(0.4f);
-
         scene.addObject(objects.lightBoxes[i]);
     }
 }
@@ -161,8 +158,8 @@ void MyApp::updateLight() {
 
     double curTime = glfwGetTime();
 
-    double speed[3] = { 0.25f, 2.2f, 4.0f };
-    double rad[3] = { 2.5f, 4.5f, 6.0f };
+    double speed[3] = { 0.25f, 1.5f, 3.0f };
+    double rad[3] = { 2.5f, 3.5f, 4.5f };
 
     for(int i = 0; i < scene.worldEnv.lights.size(); i++){
         scene.worldEnv.lights[i].pos =
@@ -177,8 +174,8 @@ void MyApp::updateLight() {
 
 
 void MyApp::createSpheres() {
-    rlgl::Object* sphere1 = new rlgl::Object(assets.mesh.sphere1, assets.shader.coloredLightMat, assets.material.metalic);
-    sphere1->setColor(glm::vec3(0.5f, 0.5f, 0.5f));
+    rlgl::Object* sphere1 = new rlgl::Object(assets.mesh.sphere2, assets.shader.coloredLightMat, assets.material.metalic);
+    sphere1->setColor(glm::vec3(0.8f, 0.8f, 0.8f));
     sphere1->setPosition(glm::vec3(5.f, 0.f, 5.f));
     sphere1->setScale(2.f);
     scene.addObject(sphere1);

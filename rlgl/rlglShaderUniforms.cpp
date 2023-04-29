@@ -76,7 +76,7 @@ void LightUniforms::setUniformValues(
     int index = 0;
     for (const rlgl::StandardLight& light : worldEnv.lights) {
 
-        std::string indexStr = "[" + std::to_string(index) + "]";
+        std::string indexStr = "[" + std::to_string(index++) + "]";
 
         setVec3(sID,  "pointLight" + indexStr + ".pos", light.pos);
         setVec3(sID,  "pointLight" + indexStr + ".col", light.color);

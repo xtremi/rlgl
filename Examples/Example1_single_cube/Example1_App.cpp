@@ -2,6 +2,7 @@
 #include "rlMath.h"
 #include "rlglBaseModel.h"
 #include "rlglMeshBank.h"
+#include "rlglShaderBank.h"
 #include "rlglMeshGenerator.h"
 #include <iostream>
 const float MyApp::BOX_WIDTH = 2.5f;
@@ -18,12 +19,8 @@ void MyApp::prepareAssets() {
     assets.mesh.cube = rlgl::MeshBank::defaultCube();
 
     //Shaders:
-    assets.shader.textured = std::make_shared<rlgl::TextureShader>(
-        assetDirectory + "/shaders/object_tex.vs", 
-        assetDirectory + "/shaders/object_tex.fs");
-    assets.shader.colored = std::make_shared<rlgl::StandardShader>(
-        assetDirectory + "/shaders/object_col.vs", 
-        assetDirectory + "/shaders/object_col.fs");
+    assets.shader.textured = rlgl::ShaderBank::standardTextureShader();
+    assets.shader.colored = rlgl::ShaderBank::standardColorShader();
 
     //Materials (Textures):
     assets.material.checker = std::make_shared<rlgl::Textured2dMaterial>(
@@ -36,9 +33,7 @@ void MyApp::prepareAssets() {
     assets.mesh.square = rlgl::MeshBank::defaultSquare();
 
     //Shaders:
-    assets.shader.ui = std::make_shared<rlgl::StandardShader>(
-        assetDirectory + "/shaders/ui_element.vs", 
-        assetDirectory + "/shaders/ui_element.fs");
+    assets.shader.ui = rlgl::ShaderBank::standardUIcolShader();
 }
 
 

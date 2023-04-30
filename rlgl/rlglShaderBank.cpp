@@ -21,21 +21,11 @@ rlgl::ShaderPtr ShaderBank::standardColorShader() {
 }
 
 rlgl::ShaderPtr ShaderBank::standardTextureShader() {
-    if (!_standardTexturedShader) {
-        _standardTexturedShader = std::make_shared<rlgl::TextureShader>(
-            GlobalConfig::assetDirectory + "/shaders/object_tex.vs",
-            GlobalConfig::assetDirectory + "/shaders/object_tex.fs");
-    }
-    return _standardTexturedShader;
+    return retreiveShader(_standardTexturedShader, "/shaders/object_tex.vs", "/shaders/object_tex.fs");
 }
 
 rlgl::ShaderPtr ShaderBank::standardUIcolShader() {
-    if (!_standardUIcolShader) {
-        _standardUIcolShader = std::make_shared<rlgl::StandardShader>(
-            GlobalConfig::assetDirectory + "/shaders/ui_element.vs",
-            GlobalConfig::assetDirectory + "/shaders/ui_element.fs");
-    }
-    return _standardUIcolShader;
+    return retreiveShader(_standardUIcolShader, "/shaders/ui_element.vs", "/shaders/ui_element.fs");
 }
 
 

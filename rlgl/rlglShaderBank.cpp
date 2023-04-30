@@ -19,7 +19,7 @@ rlgl::ShaderPtr ShaderBank::textureLightMaterialShader() {
 }
 
 rlgl::ShaderPtr ShaderBank::lightMaterialShader() {
-    return retreiveShader<rlgl::LightMaterialShader>(_lightMaterialShader, "/shaders/object_col_light_mat.vs", "/shaders/object_tex_object_col_light_mat.fs");
+    return retreiveShader<rlgl::LightMaterialShader>(_lightMaterialShader, "/shaders/object_col_light_mat.vs", "/shaders/object_col_light_mat.fs");
 }
 
 rlgl::ShaderPtr ShaderBank::cubeMapShader() {
@@ -36,5 +36,4 @@ rlgl::ShaderPtr ShaderBank::_standardUIcolShader = nullptr;
 rlgl::ShaderPtr ShaderBank::_textureLightShader = nullptr;
 rlgl::ShaderPtr ShaderBank::_textureLightMaterialShader = nullptr;
 rlgl::ShaderPtr ShaderBank::_lightMaterialShader = nullptr;
-rlgl::ShaderPtr ShaderBank::_textureLightShader = nullptr;
 rlgl::ShaderPtr ShaderBank::_cubeMapShader = nullptr;

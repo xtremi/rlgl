@@ -1,5 +1,6 @@
 #include "Example4_App.h"
 #include "rlMath.h"
+#include "rlglShaderBank.h"
 #include "rlglMeshBank.h"
 #include "rlglMeshGenerator.h"
 #include <iostream>
@@ -16,25 +17,11 @@ void MyApp::prepareAssets() {
     assets.mesh.cubeMap = rlgl::MeshBank::defaultCubeMap();
 
     //Shaders:
-    assets.shader.textured = std::make_shared<rlgl::TextureShader>(
-        assetDirectory + "/shaders/object_tex.vs",
-        assetDirectory + "/shaders/object_tex.fs");
-    assets.shader.texturedLight = std::make_shared<rlgl::TextureLightShader>(
-        assetDirectory + "/shaders/object_tex_light.vs",
-        assetDirectory + "/shaders/object_tex_light.fs");
-    assets.shader.texturedLightMat = std::make_shared<rlgl::TextureLightMaterialShader>(
-        assetDirectory + "/shaders/object_tex_light_mat.vs",
-        assetDirectory + "/shaders/object_tex_light_mat.fs");
-    assets.shader.coloredLightMat = std::make_shared<rlgl::LightMaterialShader>(
-        assetDirectory + "/shaders/object_col_light_mat.vs",
-        assetDirectory + "/shaders/object_col_light_mat.fs");
-    assets.shader.colored = std::make_shared<rlgl::StandardShader>(
-        assetDirectory + "/shaders/object_col.vs",
-        assetDirectory + "/shaders/object_col.fs");
-
-    assets.shader.skyBox = std::make_shared<rlgl::CubeMapShader>(
-        assetDirectory + "/shaders/sky_cubemap.vs",
-        assetDirectory + "/shaders/sky_cubemap.fs");
+    assets.shader.texturedLight = rlgl::ShaderBank::textureLightShader();
+    assets.shader.texturedLightMat = rlgl::ShaderBank::textureLightMaterialShader();
+    assets.shader.coloredLightMat = rlgl::ShaderBank::lightMaterialShader();
+    assets.shader.colored = rlgl::ShaderBank::standardColorShader();
+    assets.shader.skyBox = rlgl::ShaderBank::cubeMapShader();
 
     //Materials (Textures):
     //http://devernay.free.fr/cours/opengl/materials.html
@@ -78,9 +65,7 @@ void MyApp::prepareAssets() {
     assets.mesh.square = rlgl::MeshBank::defaultSquare();
 
     //Shaders:
-    assets.shader.ui = std::make_shared<rlgl::StandardShader>(
-        assetDirectory + "/shaders/ui_element.vs", 
-        assetDirectory + "/shaders/ui_element.fs");
+    assets.shader.ui = rlgl::ShaderBank::standardUIcolShader();
 }
 
 

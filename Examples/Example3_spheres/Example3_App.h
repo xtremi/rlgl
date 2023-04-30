@@ -8,7 +8,7 @@ struct Assets {
 		rlgl::MeshPtr sphere1, sphere2;
 	};
 	struct Shaders {
-		rlgl::ShaderPtr textured, texturedLight, texturedLightMat;
+		rlgl::ShaderPtr texturedLight, texturedLightMat;
 		rlgl::ShaderPtr colored, coloredLightMat;
 		rlgl::ShaderPtr ui;
 		rlgl::ShaderPtr skyBox;

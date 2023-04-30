@@ -3,25 +3,15 @@
 
 using namespace rlgl;
 
-rlgl::ShaderPtr ShaderBank::retreiveShader(
-    rlgl::ShaderPtr shader,
-    const std::string& vertexShaderPath,
-    const std::string& fragShaderPath)
-{
-    if (!shader) {
-        shader = std::make_shared<rlgl::StandardShader>(
-            GlobalConfig::assetDirectory + vertexShaderPath,
-            GlobalConfig::assetDirectory + fragShaderPath);
-    }
-    return shader;
-}
+
+
 
 rlgl::ShaderPtr ShaderBank::standardColorShader() {
-    return retreiveShader(_standardColorShader, "/shaders/object_col.vs", "/shaders/object_col.fs");
+    return retreiveShader<rlgl::StandardShader>(_standardColorShader, "/shaders/object_col.vs", "/shaders/object_col.fs");
 }
 
 rlgl::ShaderPtr ShaderBank::standardTextureShader() {
-    return retreiveShader(_standardTexturedShader, "/shaders/object_tex.vs", "/shaders/object_tex.fs");
+    return retreiveShader<standardTextureShader>(_standardTexturedShader, "/shaders/object_tex.vs", "/shaders/object_tex.fs");
 }
 
 rlgl::ShaderPtr ShaderBank::standardUIcolShader() {

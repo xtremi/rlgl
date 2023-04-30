@@ -28,7 +28,7 @@ void MyApp::prepareAssets() {
     assets.material.box = std::make_shared<rlgl::Textured2dMaterial>(
         assetDirectory + "/textures/box-texture.png", false);
 
-    //UI:
+    //UI:   
     //Meshes:
     assets.mesh.square = rlgl::MeshBank::defaultSquare();
 
@@ -41,9 +41,9 @@ int MyApp::prepareScene() {
     glClearColor(135.f/255.f, 206.f / 255.f, 250.f / 255.f, 1.0f);
     prepareAssets();
     createWorld();
-    createBox();
-    createCSYS();
-    createUI();
+    //createBox();
+    //createCSYS();
+    //createUI();
     return 0;
 }
 
@@ -85,7 +85,7 @@ int MyApp::updateScene() {
     camera.position.z = 2.f;
 
     double curTime = glfwGetTime();
-    objects.cube->rotate(0.01f, glm::vec3(1.0f, 1.0f, 0.0f));
+    //objects.cube->rotate(0.01f, glm::vec3(1.0f, 1.0f, 0.0f));
     
     return 0;
 }

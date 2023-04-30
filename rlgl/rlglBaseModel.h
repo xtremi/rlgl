@@ -17,9 +17,10 @@ namespace rlgl {
 		std::vector<Object*> objects;
 	};
 
-
+	/*!
+		3D Coordinate sytem
+	*/
 	class CSYSmodel : public BaseModel {
-
 	public:
 		CSYSmodel(
 			float axesLength = 5.0f,
@@ -39,6 +40,17 @@ namespace rlgl {
 		float _axesLength;
 		float _axesWidth;
 		glm::vec3 _position;
+	};
+
+	/*!
+		Aim cross (UI)
+	*/
+	class AimCross : public BaseModel {
+	public:
+		AimCross(
+			const glm::vec3& color,
+			float length = 0.2f,
+			float width = 0.01f);
 	};
 
 }

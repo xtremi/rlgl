@@ -2,8 +2,24 @@
 #include "rlglShaderBank.h"
 #include "rlglColors.h"
 #include "rlglMeshBank.h"
-
 using namespace rlgl;
+
+AimCross::AimCross(
+	const glm::vec3& color,
+	float length,
+	float width)
+{
+	for (int i = 0; i < 2; i++) {
+		objects.push_back(new rlgl::Object(
+			rlgl::MeshBank::defaultSquare(),
+			rlgl::ShaderBank::standardUIcolShader()));
+		objects[i]->setColor(color);
+		objects[i]->setPosition(glm::vec3(0.f, 0.f, 0.2f));
+	}
+
+	objects[0]->setScale(glm::vec3(length, width, 1.f));
+	objects[1]->setScale(glm::vec3(width, length, 1.f));
+}
 
 CSYSmodel::CSYSmodel(
 	float axesLength,

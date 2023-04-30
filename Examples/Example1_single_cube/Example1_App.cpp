@@ -4,7 +4,9 @@
 #include "rlglMeshBank.h"
 #include "rlglShaderBank.h"
 #include "rlglMeshGenerator.h"
+#include "rlglColors.h"
 #include <iostream>
+
 const float MyApp::BOX_WIDTH = 2.5f;
 
 MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory){}
@@ -55,16 +57,8 @@ void MyApp::createWorld() {
 }
 
 void MyApp::createUI() {
-    uiObjects.aimCross.push_back(new rlgl::Object(assets.mesh.square, assets.shader.ui, NO_MATERIAL));
-    uiObjects.aimCross.push_back(new rlgl::Object(assets.mesh.square, assets.shader.ui, NO_MATERIAL));
-    uiObjects.aimCross[0]->setPosition(glm::vec3(0.f, 0.f, 0.2f));
-    uiObjects.aimCross[0]->setScale(glm::vec3(0.2f, 0.01f, 1.f));
-    uiObjects.aimCross[1]->setPosition(glm::vec3(0.0f, 0.0f, 0.2f));
-    uiObjects.aimCross[1]->setScale(glm::vec3(0.01f, 0.2f, 1.f));
-    uiObjects.aimCross[0]->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
-    uiObjects.aimCross[1]->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
-    uiScene.addObject(uiObjects.aimCross[0]);
-    uiScene.addObject(uiObjects.aimCross[1]);
+    rlgl::AimCross aimCross(rlgl::color::red);
+    uiScene.addModel(aimCross);
 }
 
 void MyApp::createBox() {

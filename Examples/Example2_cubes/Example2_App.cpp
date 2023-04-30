@@ -1,6 +1,7 @@
 #include "Example2_App.h"
 #include "rlMath.h"
 #include "rlglMeshBank.h"
+#include "rlglShaderBank.h"
 #include "rlglMeshGenerator.h"
 #include <iostream>
 
@@ -19,9 +20,7 @@ void MyApp::prepareAssets() {
     assets.mesh.cubeMap = rlgl::MeshBank::defaultCubeMap();
 
     //Shaders:
-    assets.shader.textured = std::make_shared<rlgl::TextureShader>(
-        assetDirectory + "/shaders/object_tex.vs",
-        assetDirectory + "/shaders/object_tex.fs");
+    assets.shader.textured = rlgl::ShaderBank::standardTextureShader();
     assets.shader.texturedLight = std::make_shared<rlgl::TextureLightShader>(
         assetDirectory + "/shaders/object_tex_light.vs",
         assetDirectory + "/shaders/object_tex_light.fs");

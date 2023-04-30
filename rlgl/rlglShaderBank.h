@@ -13,6 +13,11 @@ namespace rlgl{
         static rlgl::ShaderPtr _standardColorShader;
         static rlgl::ShaderPtr _standardTexturedShader;
         static rlgl::ShaderPtr _standardUIcolShader;
+        static rlgl::ShaderPtr _textureLightShader;
+        static rlgl::ShaderPtr _textureLightMaterialShader;
+        static rlgl::ShaderPtr _lightMaterialShader;
+        static rlgl::ShaderPtr _textureLightShader;
+        static rlgl::ShaderPtr _cubeMapShader;
     };
 
 

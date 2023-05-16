@@ -1,12 +1,12 @@
-set(EXE_NAME rlglPlayground)
+set(EXE_NAME Example5_playground)
 
 set(SOURCE_FILES
     main.cpp
-    rlglPlayGroundApp.cpp
+    Example5_App.cpp
 )
 
 set(HEADER_FILES
-    rlglPlayGroundApp.h
+    Example5_App.h
 )
 
 add_executable(${EXE_NAME} 

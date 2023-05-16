@@ -1,12 +1,13 @@
 #pragma once
-#include "rlglBaseApp.h"
+#include "Example5_App.h"
 #include "rlOctree.h"
 #include "rlglLodController.h"
+#include "rlglObject.h"
 
 class TerrainQuadObject : public rlgl::Object {
 public:
-	TerrainQuadObject(uint64_t meshID, uint64_t shaderID, int _level, rlgl::LODloc _loc) 
-		: rlgl::Object(meshID, shaderID, INT64_MAX), level{_level}, loc{_loc}{}
+	TerrainQuadObject(rlgl::MeshPtr mesh, rlgl::ShaderPtr shader, int _level, rlgl::LODloc _loc) 
+		: rlgl::Object(mesh, shader), level{_level}, loc{_loc}{}
 
 	int level;
 	rlgl::LODloc loc;

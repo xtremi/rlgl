@@ -1,5 +1,5 @@
 #include <iostream>
-#include "MyApp.h"
+#include "Example5_App.h"
 
 
 int main(int argc, char* argv[]) {
@@ -11,21 +11,21 @@ int main(int argc, char* argv[]) {
     }
     assetDirectory = argv[1];
 
-    glm::ivec2 windowSize(1920, 1440);
+    glm::ivec2 windowSize(1920 / 2, 1440 / 2);
 
-	//rlgl::DemoApp app;
+    //rlgl::DemoApp app;
     MyApp app(assetDirectory);
     if (int err = app.init(windowSize.x, windowSize.y)) {
         return err;
     }
 
-    while (!app.windowClosed()){
+    while (!app.windowClosed()) {
         if (int err = app.loopIteration()) {
             return err;
         }
     }
 
-	app.cleanUp();
+    app.cleanUp();
 
     glfwTerminate();
     return 0;

@@ -72,7 +72,7 @@ add_subdirectory(Examples/Example1_single_cube)
 add_subdirectory(Examples/Example2_cubes)
 add_subdirectory(Examples/Example3_spheres)
 add_subdirectory(Examples/Example4_multi_lights)
-
+add_subdirectory(Examples/Example5_playground)
 
 #install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 #install(FILES "${PROJECT_BINARY_DIR}/rlLearnCMakeConfig.h" DESTINATION include)

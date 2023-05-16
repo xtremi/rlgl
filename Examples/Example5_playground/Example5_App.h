@@ -3,6 +3,7 @@
 #include "rlOctree.h"
 #include "rlglLodController.h"
 #include "rlglObject.h"
+#include "rlglBaseApp.h"
 
 class TerrainQuadObject : public rlgl::Object {
 public:
@@ -16,15 +17,15 @@ public:
 
 struct Assets {
 	struct Meshes {
-		uint64_t world, cubeTex, cube, square, cubeInst, terrainDummy, frustum;
-		uint64_t grass;
+		rlgl::MeshPtr world, cubeTex, cube, square, cubeInst, terrainDummy, frustum;
+		rlgl::MeshPtr grass;
 	};
 	struct Materials {
-		uint64_t checker, box, boxMetal;
+		rlgl::MaterialPtr checker, box, boxMetal;
 	};
 	struct Shaders {
-		uint64_t textured, colored, ui, inst;
-		uint64_t grass;
+		rlgl::ShaderPtr textured, colored, ui, inst;
+		rlgl::ShaderPtr grass;
 
 	};
 	Meshes	  mesh;

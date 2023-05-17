@@ -59,15 +59,9 @@ void MyApp::prepareAssets() {
     assets.shader.inst = shaderInst;
     assets.shader.grass = shaderGrass;
 
-
     //UI:
-    rlgl::primitive_mesh::square.initialize();
-    assets.mesh.square = uiScene.addMesh(&rlgl::primitive_mesh::square);
-
-    rlgl::Shader uiShader;
-    uiShader.initialize(_assetDirectory + "\\shaders\\ui_element.vs", _assetDirectory + "\\shaders\\ui_element.fs");
-
-    assets.shader.ui = uiScene.addShader(uiShader);
+    assets.mesh.square = rlgl::MeshBank::defaultSquare();
+    assets.shader.ui = rlgl::ShaderBank::standardUIcolShader();
 }
 
 

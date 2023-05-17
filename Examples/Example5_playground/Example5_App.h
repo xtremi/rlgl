@@ -62,8 +62,8 @@ protected:
 	WorldObjects objects;
 	UIobjects	 uiObjects;
 	Assets	 assets;
-	rlgl::Mesh	 cubeTexInstMesh;
-	rlgl::Mesh	 frustumMesh;
+	rlgl::MeshPtr cubeTexInstMesh;
+	rlgl::MeshPtr frustumMesh;
 
 	int prepareScene();						//inherited from BaseApp
 	int updateScene();						//inherited from BaseApp

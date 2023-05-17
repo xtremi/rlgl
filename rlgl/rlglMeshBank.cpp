@@ -33,4 +33,7 @@ MeshPtr MeshBank::defaultTerrainDummy() {
 	return getInitializedMesh(DefaultMeshes::terrainDummy);
 }
 
+MeshPtr MeshBank::cube() {
+	return std::make_shared<Mesh>(*defaultCube());
+}
 

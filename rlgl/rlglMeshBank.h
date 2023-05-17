@@ -16,6 +16,8 @@ namespace rlgl {
 		static MeshPtr defaultCubeMap();
 		static MeshPtr defaultGrass();
 		static MeshPtr defaultTerrainDummy();
+		
+		static MeshPtr cube();
 
 	private:
 		static MeshPtr getInitializedMesh(MeshPtr mesh);

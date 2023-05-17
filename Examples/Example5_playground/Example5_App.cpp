@@ -1,5 +1,8 @@
 #include "Example5_App.h"
 #include "rlMath.h"
+#include "rlglMeshBank.h"
+#include "rlglShaderBank.h"
+#include "rlglDefaultMeshes.h"
 #include <iostream>
 
 const float MyApp::BOX_WIDTH = 2.5f;
@@ -8,8 +11,10 @@ MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory){}
 
 void MyApp::prepareAssets() {
 
-    cubeTexInstMesh = rlgl::primitive_mesh::cube_tex;
-    frustumMesh = rlgl::primitive_mesh::cube;
+    std::string assetDirectory = rlgl::GlobalConfig::assetDirectory;
+
+    cubeTexInstMesh = rlgl::MeshBank::defaultCube_tex();
+    frustumMesh = rlgl::MeshBank::cube();
 
     glm::vec3 b1, b2, b3, b4, t1, t2, t3, t4;
     b1 = glm::vec3(10.f, 0.f, 0.f);
@@ -21,54 +26,38 @@ void MyApp::prepareAssets() {
     t3 = b3 + glm::vec3(0.f, 0.f, 2.f);
     t4 = b4 + glm::vec3(0.f, 0.f, 2.f);
 
-    frustumMesh.vertices.data = rlgl::Mesh::createHexagonal(
+    frustumMesh->vertices.data = rlgl::Mesh::createHexagonal(
         std::vector<glm::vec3>({ b1,b2,b3,b4 }),
         std::vector<glm::vec3>({ t1,t2,t3,t4 }));
-    frustumMesh.initialize();
+    frustumMesh->initialize();
     
-    frustumMesh.vertices.data = rlgl::Mesh::createHexagonal(
+    frustumMesh->vertices.data = rlgl::Mesh::createHexagonal(
         std::vector<glm::vec3>({ b1,b2,b3,b4 }),
         std::vector<glm::vec3>({ t1,t2,t3,t4 + glm::vec3(0.f, 0.f, 1.f) }));
-    frustumMesh.vertices.bindBuffer(GL_ARRAY_BUFFER);
-    frustumMesh.vertices.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    frustumMesh->vertices.bindBuffer(GL_ARRAY_BUFFER);
+    frustumMesh->vertices.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 
+    assets.mesh.world = rlgl::MeshBank::defaultPlane_textureX10();
+    assets.mesh.cubeTex = rlgl::MeshBank::defaultCube_tex();
+    assets.mesh.cube = rlgl::MeshBank::defaultCube();
+    assets.mesh.terrainDummy = rlgl::MeshBank::defaultPlane();
+    assets.mesh.grass = rlgl::MeshBank::defaultGrass();
+    assets.mesh.frustum = frustumMesh;
 
+    assets.material.checker = std::make_shared<rlgl::Textured2dMaterial>(
+        assetDirectory + "/textures/checker_grey.jpg", true);
+    assets.material.box = std::make_shared<rlgl::Textured2dMaterial>(
+        assetDirectory + "/textures/box-texture.png", false);
+    assets.material.boxMetal = std::make_shared<rlgl::Textured2dMaterial>(
+        assetDirectory + "/textures/metal-texture-1.jpg", false);
 
-    rlgl::primitive_mesh::plane_textureX10.initialize();
-    rlgl::primitive_mesh::plane.initialize();
-    rlgl::primitive_mesh::cube_tex.initialize();
-    rlgl::primitive_mesh::cube.initialize();
-    rlgl::primitive_mesh::terrainDummy.initialize();
-    rlgl::primitive_mesh::grass.initialize();
-
-    assets.mesh.world = scene.addMesh(&rlgl::primitive_mesh::plane_textureX10);
-    assets.mesh.cubeTex = scene.addMesh(&rlgl::primitive_mesh::cube_tex);
-    assets.mesh.cube = scene.addMesh(&rlgl::primitive_mesh::cube);
-    assets.mesh.terrainDummy = scene.addMesh(&rlgl::primitive_mesh::terrainDummy);
-	assets.mesh.grass = scene.addMesh(&rlgl::primitive_mesh::grass);
-    assets.mesh.frustum = scene.addMesh(&frustumMesh);
-
-
-    rlgl::Material materialChecker, materialBox, materialBoxMetal;
-    materialChecker.initialize(_assetDirectory + "\\textures\\checker_grey.jpg", true);
-    materialBox.initialize(_assetDirectory + "\\textures\\box-texture.png", false);
-    materialBoxMetal.initialize(_assetDirectory + "\\textures\\box_metal.jpg", false);
-
-    assets.material.checker = scene.addMaterial(materialChecker);
-    assets.material.box = scene.addMaterial(materialBox);
-    assets.material.boxMetal = scene.addMaterial(materialBoxMetal);
-
-    rlgl::Shader shaderTextured, shaderColored, shaderInst, shaderGrass;
-    shaderTextured.initialize(_assetDirectory + "\\shaders\\object.vs", _assetDirectory + "\\shaders\\object.fs");
-    shaderTextured.setInt("textureID", materialChecker.glID);
-    shaderColored.initialize(_assetDirectory + "\\shaders\\object_col.vs", _assetDirectory + "\\shaders\\object_col.fs");
-    shaderInst.initialize(_assetDirectory + "\\shaders\\object_inst.vs", _assetDirectory + "\\shaders\\object_inst.fs");
-	shaderGrass.initialize(_assetDirectory + "\\shaders\\grass.vs", _assetDirectory + "\\shaders\\grass.fs");
-
-    assets.shader.textured = scene.addShader(shaderTextured);
-    assets.shader.colored = scene.addShader(shaderColored);
-    assets.shader.inst = scene.addShader(shaderInst);
-    assets.shader.grass = scene.addShader(shaderGrass);
+    rlgl::ShaderPtr shaderInst = std::make_shared<rlgl::Shader>(assetDirectory + "\\shaders\\object_inst.vs", assetDirectory + "\\shaders\\object_inst.fs");
+    rlgl::ShaderPtr shaderGrass = std::make_shared<rlgl::Shader>(assetDirectory + "\\shaders\\grass.vs", assetDirectory + "\\shaders\\grass.fs");
+    
+    assets.shader.textured = rlgl::ShaderBank::standardTextureShader();
+    assets.shader.colored = rlgl::ShaderBank::standardColorShader();
+    assets.shader.inst = shaderInst;
+    assets.shader.grass = shaderGrass;
 
 
     //UI:

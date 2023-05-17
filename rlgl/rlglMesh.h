@@ -59,10 +59,12 @@ public:
 	void bind() const;
 	void draw(int32_t nInstances = 0) const;
 
-protected:
+public:
     GLBuffer<float>  vertices;
     GLBuffer<GLuint> indices;
     GLBuffer<float>  instances;
+
+protected:
 	GLuint VAO = 0;
 
 	bool hasIndices = false;

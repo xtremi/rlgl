@@ -1,3 +1,4 @@
+#pragma once
 #include "rlglMesh.h"
 
 namespace rlgl {

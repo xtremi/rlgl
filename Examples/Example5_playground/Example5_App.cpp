@@ -190,13 +190,13 @@ void MyApp::createBoxes() {
         glm::mat4 mMat = tMat * sMat;
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 4; k++) {
-                cubeTexInstMesh.instances.data.push_back(mMat[j][k]);
+                cubeTexInstMesh->instances.data.push_back(mMat[j][k]);
             }
         }
     }
-    cubeTexInstMesh.hasInstances = true;
-    cubeTexInstMesh.initialize();
-    assets.mesh.cubeInst = scene.addMesh(&cubeTexInstMesh);
+    cubeTexInstMesh->hasInstances = true;
+    cubeTexInstMesh->initialize();
+    assets.mesh.cubeInst = cubeTexInstMesh;
 
     objects.instObj = new rlgl::Object(assets.mesh.cubeInst, assets.shader.inst, assets.material.boxMetal);
     objects.instObj->setNinstances(nInstances);
@@ -261,7 +261,7 @@ void MyApp::createCSYS() {
     std::vector<glm::vec3> axesScales({ glm::vec3(axesL, axesW, axesW),glm::vec3(axesW, axesL, axesW), glm::vec3(axesW, axesW, axesL) });
     std::vector<glm::vec4> axesColor({ glm::vec4(1.f, 0.f, 0.f, 1.f),glm::vec4(0.f, 1.f, 0.f, 1.f), glm::vec4(0.f, 0.f, 1.f, 1.f) });
     for (int i = 0; i < axesDir.size(); i++) {
-        objects.axes.push_back(new rlgl::Object(assets.mesh.cube, assets.shader.colored, UINT32_MAX));
+        objects.axes.push_back(new rlgl::Object(assets.mesh.cube, assets.shader.colored));
         objects.axes[i]->setColor(axesColor[i]);
         objects.axes[i]->setPosition(axesDir[i] * axesL / 2.f);
         objects.axes[i]->setScale(axesScales[i]);
@@ -276,9 +276,9 @@ int MyApp::updateScene() {
     camera.computeFrustum();
     std::vector<glm::vec3> near, far;
     camera.frustumCorners(near, far);
-    frustumMesh.vertices.data = rlgl::Mesh::createHexagonal(near, far);
-    frustumMesh.vertices.bindBuffer(GL_ARRAY_BUFFER);
-    frustumMesh.vertices.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    frustumMesh->vertices.data = rlgl::Mesh::createHexagonal(near, far);
+    frustumMesh->vertices.bindBuffer(GL_ARRAY_BUFFER);
+    frustumMesh->vertices.bufferData(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 
     if(octreeFrustumCullingON){
         octTree.callOnOctTreeObjects(

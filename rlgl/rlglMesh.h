@@ -63,6 +63,7 @@ public:
     GLBuffer<float>  vertices;
     GLBuffer<GLuint> indices;
     GLBuffer<float>  instances;
+	bool hasInstances = false;
 
 protected:
 	GLuint VAO = 0;
@@ -71,7 +72,6 @@ protected:
 	bool hasNormals = false;	
 	bool hasColours = false;
 	bool hasTexCoords = false;
-	bool hasInstances = false;
 
 	GLsizei nVertices = 0;
 	GLsizei nIndices  = 0;

@@ -18,10 +18,6 @@ void MyApp::prepareAssets() {
 
     assets.shader.textured = rlgl::ShaderBank::standardTextureShader();
     assets.shader.colored = rlgl::ShaderBank::standardColorShader();
-
-    //UI:
-    assets.mesh.square = rlgl::MeshBank::defaultSquare();
-    assets.shader.ui = rlgl::ShaderBank::standardUIcolShader();
 }
 
 

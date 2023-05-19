@@ -75,6 +75,7 @@ add_subdirectory(Examples/Example4_multi_lights)
 add_subdirectory(Examples/Example5_playground)
 add_subdirectory(Examples/Example5_simpleLOD)
 add_subdirectory(Examples/Example6_instancing)
+add_subdirectory(Examples/Example7_raytrace_picking)
 
 
 #install(TARGETS ${PROJECT_NAME} DESTINATION bin)

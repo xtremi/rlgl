@@ -70,18 +70,20 @@ void MyApp::createBoxes() {
     glm::vec3 boxPos;
 
     int nInstances = 1e4;
-    float radiusMin = 30.0f;
-    float radiusMax = 50.0f;
+    float radiusMin = 10.0f;
+    float radiusMax = 20.0f;
 
     for (int i = 0; i < nInstances; i++) {
+        // Simple sphere distribution method (not perfect)
+        // https://stackoverflow.com/a/33977070/4572356
         float rad   = rl::rand(radiusMin, radiusMax);
-        float alpha = rl::rand(0.f, glm::pi<float>() * 2.f);
-		float x     = rl::rand(0.f, 1.f);
-		float theta = glm::acos(2.f*x - 1.f);   //cos(0.0 -> 1.0f)
+        float theta = rl::rand(0.f, glm::two_pi<float>());
+		float x     = rl::rand(-1.f, 1.f);
+		float phi   = glm::acos(x);
         boxPos = glm::vec3(
-            rad * glm::sin(alpha) * glm::cos(theta), 
-            rad * glm::sin(alpha) * glm::sin(theta), 
-            rad * glm::cos(alpha));
+            rad * glm::cos(theta) * glm::sin(phi), 
+            rad * glm::sin(theta) * glm::sin(phi),
+            rad * glm::cos(phi));
 
         glm::mat4 tMat = glm::translate(glm::mat4(1.f), boxPos);
         glm::mat4 sMat = glm::scale(glm::mat4(1.f), glm::vec3(0.25f));

@@ -13,9 +13,6 @@ MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory){}
 void MyApp::prepareAssets() {
 
     std::string assetDirectory = rlgl::GlobalConfig::assetDirectory;
-
-    cubeTexInstMesh = rlgl::MeshBank::defaultCube_tex();
-    
     assets.mesh.world = rlgl::MeshBank::defaultPlane_textureX10();
     assets.mesh.cubeTex = rlgl::MeshBank::defaultCube_tex();
     assets.mesh.cube = rlgl::MeshBank::defaultCube();
@@ -101,9 +98,7 @@ void MyApp::createBoxes() {
     objects.instObj = new rlgl::Object(assets.mesh.cubeInst, assets.shader.inst, assets.material.boxMetal);
     objects.instObj->setNinstances(nInstances);
     scene.addObject(objects.instObj);
-
 }
-
     
 int MyApp::updateScene() {
     camera.position.z = 2.f;
@@ -113,7 +108,6 @@ int MyApp::updateScene() {
 int MyApp::postRender(){
 	return 0;
 }
-
 
 void MyApp::processInput(GLFWwindow* window) {
 

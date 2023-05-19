@@ -2,11 +2,11 @@ set(EXE_NAME Example7_raytrace_picking)
 
 set(SOURCE_FILES
     main.cpp
-    Example6_App.cpp
+    Example7_App.cpp
 )
 
 set(HEADER_FILES
-    Example6_App.h
+    Example7_App.h
 )
 
 add_executable(${EXE_NAME} 

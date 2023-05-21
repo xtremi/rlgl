@@ -35,10 +35,10 @@ int MyApp::prepareScene() {
     secondaryCam.aspectRatio = windowParams().aspect();
     secondaryCam.far = 800.f;
 
-    prepareAssets(); 
     uiScene.addModel(rlgl::AimCross(rlgl::color::paleVioletRed));    
     scene.addModel(rlgl::CSYSmodel(5.0f, 0.05f, glm::vec3(0.f, 0.f, 0.f)));
 
+    prepareAssets(); 
     createWorld();
     createBoxes();
     return 0;

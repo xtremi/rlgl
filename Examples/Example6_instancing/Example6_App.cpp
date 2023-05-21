@@ -14,13 +14,10 @@ void MyApp::prepareAssets() {
 
     std::string assetDirectory = rlgl::GlobalConfig::assetDirectory;
     assets.mesh.world = rlgl::MeshBank::defaultPlane_textureX10();
-    assets.mesh.cubeTex = rlgl::MeshBank::defaultCube_tex();
-    assets.mesh.cube = rlgl::MeshBank::defaultCube();
+    cubeTexInstMesh = rlgl::MeshBank::defaultCube_tex();
 
     assets.material.checker = std::make_shared<rlgl::Textured2dMaterial>(
         assetDirectory + "/textures/checker_grey.jpg", true);
-    assets.material.box = std::make_shared<rlgl::Textured2dMaterial>(
-        assetDirectory + "/textures/box-texture.png", false);
     assets.material.boxMetal = std::make_shared<rlgl::Textured2dMaterial>(
         assetDirectory + "/textures/metal-texture-1.jpg", false);
 
@@ -29,7 +26,6 @@ void MyApp::prepareAssets() {
         assetDirectory + "\\shaders\\object_inst.fs");
     
     assets.shader.textured = rlgl::ShaderBank::standardTextureShader();
-    assets.shader.colored = rlgl::ShaderBank::standardColorShader();
     assets.shader.inst = shaderInst;
 }
 
@@ -45,10 +41,8 @@ int MyApp::prepareScene() {
     secondaryCam.aspectRatio = windowParams().aspect();
     secondaryCam.far = 800.f;
 
-    rlgl::AimCross aimCross(rlgl::color::red);
-    uiScene.addModel(aimCross);
-    rlgl::CSYSmodel csysModel(5.0f, 0.05f, glm::vec3(0.f, 0.f, 0.f));
-    scene.addModel(csysModel);
+    uiScene.addModel(rlgl::AimCross(rlgl::color::paleVioletRed));
+    scene.addModel(rlgl::CSYSmodel(5.0f, 0.05f, glm::vec3(0.f, 0.f, 0.f)));
 
     prepareAssets();
     createWorld();

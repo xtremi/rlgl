@@ -1,8 +1,6 @@
 #pragma once
-#include "Example5_App.h"
 #include "rlOctree.h"
 #include "rlglLodController.h"
-#include "rlglObject.h"
 #include "rlglBaseApp.h"
 
 class TerrainQuadObject : public rlgl::Object {
@@ -17,10 +15,10 @@ public:
 
 struct Assets {
 	struct Meshes {
-		rlgl::MeshPtr cube, square, terrainDummy;
+		rlgl::MeshPtr cube, terrainDummy;
 	};
 	struct Shaders {
-		rlgl::ShaderPtr textured, colored, ui;
+		rlgl::ShaderPtr colored;
 
 	};
 	Meshes	  mesh;
@@ -28,12 +26,7 @@ struct Assets {
 };
 
 struct WorldObjects {
-	std::vector<rlgl::Object*> axes;
 	std::vector<TerrainQuadObject*>  terrainLODquads;
-};
-
-struct UIobjects {
-	std::vector<rlgl::Object*> aimCross;
 };
 
 class MyApp : public rlgl::BaseApp
@@ -42,24 +35,20 @@ public:
 	MyApp(const std::string& assetDirectory);
 
 protected:
+	rlgl::Camera		secondaryCam;
 	rl::Octree			octTree;
 	rlgl::LODcontroller lodControl;
-	rlgl::Camera		secondaryCam;
+	WorldObjects		objects;
+	Assets				assets;
 
-	WorldObjects  objects;
-	UIobjects	  uiObjects;
-	Assets		  assets;
+	int prepareScene() override;
+	int updateScene() override;
+	int postRender() override;
+	void processInput(GLFWwindow* window) override;
 
-	int prepareScene();						//inherited from BaseApp
-	int updateScene();						//inherited from BaseApp
-	int postRender();						//inherited from BaseApp
-	void processInput(GLFWwindow* window);	//inherited from BaseApp
-
-	//initialization
 	void prepareAssets();	
 	void createLODterrain();
 
-	//update
 	void updateTerrainLOD();
 
 private:

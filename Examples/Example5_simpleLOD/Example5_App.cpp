@@ -16,7 +16,6 @@ void MyApp::prepareAssets() {
     assets.mesh.cube = rlgl::MeshBank::defaultCube();
     assets.mesh.terrainDummy = rlgl::MeshBank::defaultPlane();
 
-    assets.shader.textured = rlgl::ShaderBank::standardTextureShader();
     assets.shader.colored = rlgl::ShaderBank::standardColorShader();
 }
 
@@ -35,11 +34,8 @@ int MyApp::prepareScene() {
     secondaryCam.aspectRatio = windowParams().aspect();
     secondaryCam.far = 800.f;
 
-    rlgl::AimCross aimCross(rlgl::color::red);
-    uiScene.addModel(aimCross);
-    rlgl::CSYSmodel csysModel(5.0f, 0.05f, glm::vec3(0.f, 0.f, 0.f));
-    scene.addModel(csysModel);
-
+    uiScene.addModel(rlgl::AimCross(rlgl::color::red));
+    scene.addModel(rlgl::CSYSmodel(5.0f, 0.05f, glm::vec3(0.f, 0.f, 0.f)));
     prepareAssets();
     createLODterrain();
     return 0;

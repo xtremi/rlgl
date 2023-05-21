@@ -5,13 +5,13 @@
 
 struct Assets {
 	struct Meshes {
-		rlgl::MeshPtr world, cubeTex, cube, square;
+		rlgl::MeshPtr world, cubeTex;
 	};
 	struct Materials {
 		rlgl::MaterialPtr checker, box;
 	};
 	struct Shaders {
-		rlgl::ShaderPtr textured, colored, ui;
+		rlgl::ShaderPtr textured;
 
 	};
 	Meshes	  mesh;
@@ -22,11 +22,6 @@ struct Assets {
 struct WorldObjects {
 	rlgl::Object*			   worldPlane;
 	std::vector<rlgl::Object*> cubes;
-	std::vector<rlgl::Object*> axes;
-};
-
-struct UIobjects {
-	std::vector<rlgl::Object*> aimCross;
 };
 
 class MyApp : public rlgl::BaseApp
@@ -38,30 +33,22 @@ protected:
 	rl::Octree	 octTree;
 	rlgl::Camera secondaryCam;
 	WorldObjects objects;
-	UIobjects	 uiObjects;
 	Assets		 assets;
 
-	rlgl::MeshPtr cubeTexInstMesh;
-	rlgl::MeshPtr frustumMesh;
+	int prepareScene() override;
+	int updateScene() override;
+	int postRender() override;
+	void processInput(GLFWwindow* window) override;
 
-	int prepareScene();						//inherited from BaseApp
-	int updateScene();						//inherited from BaseApp
-	int postRender();						//inherited from BaseApp
-	void processInput(GLFWwindow* window);	//inherited from BaseApp
-
-	//initialization
 	void prepareAssets();	
 	void createWorld();
-	void createUI();
 	void createBoxes();
 
-	//update
 	void updateBoxes();
 	void updateHitTestOctTree();
 
 private:
 	static const float BOX_WIDTH;
-	bool octreeFrustumCullingON = true;
 };
 
 /*!

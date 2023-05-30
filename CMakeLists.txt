@@ -76,7 +76,7 @@ add_subdirectory(Examples/Example5_playground)
 add_subdirectory(Examples/Example5_simpleLOD)
 add_subdirectory(Examples/Example6_instancing)
 add_subdirectory(Examples/Example7_raytrace_picking)
-
+add_subdirectory(Examples/Example8_frustumCulling)
 
 #install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 #install(FILES "${PROJECT_BINARY_DIR}/rlLearnCMakeConfig.h" DESTINATION include)

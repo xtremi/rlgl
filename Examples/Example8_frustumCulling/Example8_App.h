@@ -1,30 +1,17 @@
 #pragma once
 #include "rlOctree.h"
-#include "rlglLodController.h"
 #include "rlglObject.h"
 #include "rlglBaseApp.h"
 
-class TerrainQuadObject : public rlgl::Object {
-public:
-	TerrainQuadObject(rlgl::MeshPtr mesh, rlgl::ShaderPtr shader, int _level, rlgl::LODloc _loc) 
-		: rlgl::Object(mesh, shader), level{_level}, loc{_loc}{}
-
-	int level;
-	rlgl::LODloc loc;
-};
-
-
 struct Assets {
 	struct Meshes {
-		rlgl::MeshPtr world, cubeTex, cube, square, cubeInst, terrainDummy, frustum;
-		rlgl::MeshPtr grass;
+		rlgl::MeshPtr world, cubeTex, cube, frustum;
 	};
 	struct Materials {
 		rlgl::MaterialPtr checker, box, boxMetal;
 	};
 	struct Shaders {
-		rlgl::ShaderPtr textured, colored, ui, inst;
-		rlgl::ShaderPtr grass;
+		rlgl::ShaderPtr textured, colored;
 
 	};
 	Meshes	  mesh;
@@ -35,17 +22,8 @@ struct Assets {
 struct WorldObjects {
 	rlgl::Object*			   worldPlane;
 	std::vector<rlgl::Object*> cubes;
-	std::vector<rlgl::Object*> axes;
 	rlgl::Object*			   instObj;
-
-	std::vector<TerrainQuadObject*>  terrainLODquads;
-	std::vector<rlgl::Object*> grass;
-
-	rlgl::Object* frustum;
-};
-
-struct UIobjects {
-	std::vector<rlgl::Object*> aimCross;
+	rlgl::Object*			   frustum;
 };
 
 class MyApp : public rlgl::BaseApp
@@ -54,35 +32,27 @@ public:
 	MyApp(const std::string& assetDirectory);
 
 protected:
-	rl::Octree			octTree;
-	rlgl::LODcontroller lodControl;
+	rl::Octree	 octTree;
 	rlgl::Camera secondaryCam;
 
-	WorldObjects objects;
-	UIobjects	 uiObjects;
-	Assets	 assets;
+	WorldObjects  objects;
+	Assets		  assets;
 	rlgl::MeshPtr cubeTexInstMesh;
 	rlgl::MeshPtr frustumMesh;
 
-	int prepareScene();						//inherited from BaseApp
-	int updateScene();						//inherited from BaseApp
-	int postRender();						//inherited from BaseApp
-	void processInput(GLFWwindow* window);	//inherited from BaseApp
+	int prepareScene() override;
+	int updateScene() override;
+	int postRender() override;
+	void processInput(GLFWwindow* window) override;
 
 	//initialization
 	void prepareAssets();	
 	void createWorld();
-	void createUI();
 	void createBoxes();
-	void createLODterrain();
-	void createCSYS();
 	void createFrustumObject();
-	void createGrass();
 
 	//update
 	void updateBoxes();
-	void updateHitTestOctTree();
-	void updateTerrainLOD();
 
 private:
 	static const float BOX_WIDTH;

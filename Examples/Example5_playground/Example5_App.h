@@ -1,5 +1,4 @@
 #pragma once
-#include "Example5_App.h"
 #include "rlOctree.h"
 #include "rlglLodController.h"
 #include "rlglObject.h"

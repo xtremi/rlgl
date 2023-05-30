@@ -1,7 +1,6 @@
 #pragma once
 #include "rlglBaseApp.h"
 #include "rlOctree.h"
-#include "rlglBaseApp.h"
 
 struct Assets {
 	struct Meshes {

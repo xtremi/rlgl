@@ -1,15 +1,14 @@
 {
     "version": "0.2.0",
     "configurations": [
-
-
         {
-            "name": "Debug 1",
+            "name": "Debug cmake",
             "type": "cppdbg",
             "request": "launch",
+
             // Resolved by CMake Tools:
             "program": "${command:cmake.launchTargetPath}",
-            "args": ["asdad", "asdasd"],
+            "args": ["${workspaceFolder}/data"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",
             "environment": [

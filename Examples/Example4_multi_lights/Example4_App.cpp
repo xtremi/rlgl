@@ -2,6 +2,7 @@
 #include "rlMath.h"
 #include "rlglMeshBank.h"
 #include "rlglMeshGenerator.h"
+#include "rlglColors.h"
 #include <iostream>
 
 MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory){}
@@ -117,16 +118,8 @@ void MyApp::createWorld() {
 }
 
 void MyApp::createUI() {
-    uiObjects.aimCross.push_back(new rlgl::Object(assets.mesh.square, assets.shader.ui, NO_MATERIAL));
-    uiObjects.aimCross.push_back(new rlgl::Object(assets.mesh.square, assets.shader.ui, NO_MATERIAL));
-    uiObjects.aimCross[0]->setPosition(glm::vec3(0.f, 0.f, 0.2f));
-    uiObjects.aimCross[0]->setScale(glm::vec3(0.2f, 0.01f, 1.f));
-    uiObjects.aimCross[1]->setPosition(glm::vec3(0.0f, 0.0f, 0.2f));
-    uiObjects.aimCross[1]->setScale(glm::vec3(0.01f, 0.2f, 1.f));
-    uiObjects.aimCross[0]->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
-    uiObjects.aimCross[1]->setColor(glm::vec4(1.f, 0.f, 0.f, 1.f));
-    uiScene.addObject(uiObjects.aimCross[0]);
-    uiScene.addObject(uiObjects.aimCross[1]);
+    rlgl::AimCross aimCross(glm::vec4(rlgl::color::red, 1.f));
+    uiScene.addModel(aimCross); 
 }
 
 void MyApp::createSkyBox() {
@@ -182,22 +175,9 @@ void MyApp::createSpheres() {
 }
 
 void MyApp::createCSYS() {
-    float axesL = 5.f;
-    float axesW = 0.2f;
-    std::vector<glm::vec3> axesDir({ glm::vec3(1.f, 0.f, 0.f),glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f , 0.f, 1.f) });
-    std::vector<glm::vec3> axesScales({ glm::vec3(axesL, axesW, axesW),glm::vec3(axesW, axesL, axesW), glm::vec3(axesW, axesW, axesL) });
-    std::vector<glm::vec4> axesColor({ glm::vec4(1.f, 0.f, 0.f, 1.f),glm::vec4(0.f, 1.f, 0.f, 1.f), glm::vec4(0.f, 0.f, 1.f, 1.f) });
-    for (int i = 0; i < axesDir.size(); i++) {
-        objects.axes.push_back(new rlgl::Object(assets.mesh.cube, assets.shader.colored, NO_MATERIAL));
-        objects.axes[i]->setColor(axesColor[i]);
-        objects.axes[i]->setPosition(axesDir[i] * axesL / 2.f);
-        objects.axes[i]->setScale(axesScales[i]);
-        scene.addObject(objects.axes[i]);
-    }
+    rlgl::CSYSmodel csysModel(5.0f, 0.2f, glm::vec3(0.f, 0.f, 0.f));
+    scene.addModel(csysModel);
 }
-
-
-
 
 int MyApp::postRender(){
 	return 0;

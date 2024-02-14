@@ -21,7 +21,15 @@ rlgl::ShaderPtr ShaderBank::standardTextureShader() {
     return _standardTexturedShader;
 }
 
-
+rlgl::ShaderPtr ShaderBank::standardUIshader() {
+    if (!_standardUIshader) {
+        _standardUIshader = std::make_shared<rlgl::StandardShader>(
+            GlobalConfig::assetDirectory + "/shaders/ui_element.vs",
+            GlobalConfig::assetDirectory + "/shaders/ui_element.fs");
+    }
+    return _standardUIshader;
+}
 
 rlgl::ShaderPtr ShaderBank::_standardColorShader = nullptr;
 rlgl::ShaderPtr ShaderBank::_standardTexturedShader = nullptr;
+rlgl::ShaderPtr ShaderBank::_standardUIshader = nullptr;

@@ -41,4 +41,9 @@ namespace rlgl {
 		glm::vec3 _position;
 	};
 
+	class AimCross : public BaseModel {
+	public:
+		AimCross(const glm::vec4& color);
+	};
+
 }

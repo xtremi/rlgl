@@ -5,6 +5,22 @@
 
 using namespace rlgl;
 
+AimCross::AimCross(const glm::vec4& color)
+{
+	for(size_t i = 0; i < 2; ++i){
+		objects.push_back(new rlgl::Object(
+			rlgl::MeshBank::defaultSquare(),
+			rlgl::ShaderBank::standardUIshader()));
+	}
+
+    objects[0]->setPosition(glm::vec3(0.f, 0.f, 0.2f));
+    objects[0]->setScale(glm::vec3(0.2f, 0.01f, 1.f));
+    objects[1]->setPosition(glm::vec3(0.0f, 0.0f, 0.2f));
+    objects[1]->setScale(glm::vec3(0.01f, 0.2f, 1.f));
+    objects[0]->setColor(color);
+    objects[1]->setColor(color);
+}
+
 CSYSmodel::CSYSmodel(
 	float axesLength,
 	float axesWidth,

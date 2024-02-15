@@ -39,18 +39,17 @@ vec3 pointLightContribution(
 	float specular = light.specularIntensity 
 		* pow(max(dot(viewDir, reflectDir), 0.0), 32);
 		
-	vec4 lightContribution = vec4(
-		(ambient + diffuse + specular) * light.col, 1.0);
+	vec3 lightContribution = vec3(
+		(ambient + diffuse + specular) * light.col);
 	return lightContribution;
 }
 
-
 void main()
 {
-	FragColor = texture(textureID, texCoords);
+	FragColor = texture(textureID, texCoords);>
 
 	if(highlight){
-		FragColor *= color;
+		FragColor *= color;>
 	}
 
 	vec3 lightContribution = vec3(0.0);

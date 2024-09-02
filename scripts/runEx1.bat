@@ -1,0 +1,1 @@
+%cd%/build/Examples/Example1_single_cube/Example1_single_cube.exe .\data

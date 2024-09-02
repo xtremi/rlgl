@@ -39,6 +39,22 @@ void MeshFactory::generateSphere(
 	}
 }
 
+void MeshFactory::generatePlane(
+	std::shared_ptr<MeshVertexData> data,
+	const rl::geom::Rectangle&      shape,
+	int 							nElementsSide,
+	bool							indexed,
+	const glm::vec3& 				center = glm::vec3(0.f))
+{
+	
+}
+
+
+
+MeshGenerator::MeshGenerator(bool _includeNormals, bool _includeTexCoords) : 
+	includeNormals{_includeNormals},
+	includeTexCoords{_includeTexCoords}
+{}
 
 /*!
 	Based on vertices and indcies in <data>. Iterates trought triangles,
@@ -75,9 +91,6 @@ void MeshGenerator::makeNonIndexed(std::shared_ptr<MeshVertexData> data) {
 	*data.get() = nonIndexedVertices;
 }
 
-
-
-
 /*!
 	Fills data.indices with indices for triangles shaped like a "fan"
 	where indexCenter is the index of the center vertex,
@@ -105,6 +118,15 @@ void MeshGenerator::generateTriangleFanRow(
 		data->addIndices(indexCenter, index3, index2);
 		index2++;
 	}
+}
+
+
+SphereMeshGenerator::SphereMeshGenerator(
+	int nElementsAround, bool _includeNormals, bool _includeTexCoords) 
+	: MeshGenerator(_includeNormals, _includeTexCoords) 
+{
+	nElementsPhi = 2 * (nElementsAround / 2);	//make even
+	nElementsTheta = nElementsPhi / 2;
 }
 
 
@@ -211,3 +233,54 @@ void SphereMeshGenerator::generateIndices(std::shared_ptr<MeshVertexData> data) 
 
 }
 
+GridMeshGenerator::GridMeshGenerator(
+	int _nElementsX, int _nElementsY,  bool _includeNormals, bool _includeTexCoords) 
+	: MeshGenerator(_includeNormals, _includeTexCoords) 
+{
+	nElementsX = _nElementsX;
+	nElementsY = _nElementsY;
+}
+
+
+/*!
+
+    ^ z
+    |
+    9--10--11--12
+    |\  | \ | \ |
+	|  \|  \|  \|
+    5---6---7---8
+    |\  | \ | \ |
+	|  \|  \|  \|
+	1---2---3---4  -->x
+
+  
+*/
+void GridMeshGenerator::generateVertices(
+	std::shared_ptr<MeshVertexData> data,
+	const rl::geom::Rectangle&		shape,
+	const glm::vec3&				center)
+{
+
+	const glm::vec3 startPos = center - glm::vec3(-shape.width, -shape.height, 0.f);
+	const glm::vec3 deltaElX(shape.width/static_cast<float>(nElementsX), 0.f, 0.f);
+	const glm::vec3 deltaElY(0.f, shape.height/static_cast<float>(nElementsY), 0.f);
+
+	for(int i = 0; i < nElementsX + 1; i++)
+	{
+		for(int j = 0; j < nElementsY + 1; j++)
+		{
+			data->addVertexVec3(
+				startPos + 
+				static_cast<float>(j) * deltaElX +
+				static_cast<float>(j) * deltaElY
+			);
+		}
+	}
+
+}
+
+void GridMeshGenerator::generateIndices(std::shared_ptr<MeshVertexData> data)
+{
+
+}

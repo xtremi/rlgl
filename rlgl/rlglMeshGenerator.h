@@ -29,7 +29,6 @@ namespace rl {
 		public:
 			float length = 1.0f;
 		};
-
 	}
 }
 
@@ -53,8 +52,15 @@ namespace rlgl {
 			const rl::geom::Sphere&			sphere,
 			int								nElementsAround,
 			bool							indexed,
-			const glm::vec3&				center = glm::vec3(0.0f));
+			const glm::vec3&				center = glm::vec3(0.f));
 
+
+		void generatePlane(
+			std::shared_ptr<MeshVertexData> data,
+			const rl::geom::Rectangle&      shape,
+			int 							nElementsSide,
+			bool							indexed,
+			const glm::vec3& 				center = glm::vec3(0.f));
 
 		bool generateNormalsON = true;
 		bool generateTexCoordsON = true;
@@ -63,16 +69,11 @@ namespace rlgl {
 
 	};
 
-
 	class MeshGenerator {
 		friend class MeshFactory;
 	
 	protected:
-		MeshGenerator(bool _includeNormals, bool _includeTexCoords) : 
-			includeNormals{_includeNormals}, includeTexCoords{_includeTexCoords}{}
-
-
-		bool includeNormals = false, includeTexCoords = false;
+		MeshGenerator(bool _includeNormals, bool _includeTexCoords);
 
 		void makeNonIndexed(std::shared_ptr<MeshVertexData> data);
 		void generateTriangleFanRow(
@@ -80,20 +81,16 @@ namespace rlgl {
 			int nElements,
 			int indexCenter,
 			int firstIndex);
+
+		bool includeNormals = false;
+		bool includeTexCoords = false;
 	};
 
 
 	class SphereMeshGenerator : public MeshGenerator{
 		friend class MeshFactory;
 
-		SphereMeshGenerator(int nElementsAround, bool _includeNormals, bool _includeTexCoords) 
-			: MeshGenerator(_includeNormals, _includeTexCoords) 
-		{
-			nElementsPhi = 2 * (nElementsAround / 2);	//make even
-			nElementsTheta = nElementsPhi / 2;
-			includeNormals = _includeNormals;
-			includeTexCoords = _includeTexCoords;
-		}
+		SphereMeshGenerator(int nElementsAround, bool _includeNormals, bool _includeTexCoords);
 
 		void generateVertices(
 			std::shared_ptr<MeshVertexData> data,
@@ -104,6 +101,29 @@ namespace rlgl {
 
 		int nElementsPhi = 0;
 		int nElementsTheta = 0;
+	};
+
+	class GridMeshGenerator : public MeshGenerator{
+		friend class MeshFactory;
+
+		GridMeshGenerator(int _nElementsX, int _nElementsY,  bool _includeNormals, bool _includeTexCoords) 
+			: MeshGenerator(_includeNormals, _includeTexCoords) 
+		{
+			nElementsX = _nElementsX;
+			nElementsY = _nElementsY;
+			includeNormals = _includeNormals;
+			includeTexCoords = _includeTexCoords;
+		}
+
+		void generateVertices(
+			std::shared_ptr<MeshVertexData> data,
+			const rl::geom::Rectangle&		shape,
+			const glm::vec3&				center = glm::vec3(0.0f));
+
+		void generateIndices(std::shared_ptr<MeshVertexData> data);
+
+		int nElementsX = 0;
+		int nElementsY = 0;
 	};
 
 }

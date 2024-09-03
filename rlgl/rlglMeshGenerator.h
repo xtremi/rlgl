@@ -19,8 +19,10 @@ namespace rl {
 			float radius = 1.0f;
 		};
 
-		class Rectangle : public Sphere {
+		class Rectangle : public Shape {
 		public:
+		    Rectangle(float _width, float _height)
+				: width{_width}, height{_height}{}
 			float width = 1.0f;
 			float height = 1.0f;
 		};
@@ -106,14 +108,7 @@ namespace rlgl {
 	class GridMeshGenerator : public MeshGenerator{
 		friend class MeshFactory;
 
-		GridMeshGenerator(int _nElementsX, int _nElementsY,  bool _includeNormals, bool _includeTexCoords) 
-			: MeshGenerator(_includeNormals, _includeTexCoords) 
-		{
-			nElementsX = _nElementsX;
-			nElementsY = _nElementsY;
-			includeNormals = _includeNormals;
-			includeTexCoords = _includeTexCoords;
-		}
+		GridMeshGenerator(int _nElementsX, int _nElementsY,  bool _includeNormals, bool _includeTexCoords);
 
 		void generateVertices(
 			std::shared_ptr<MeshVertexData> data,

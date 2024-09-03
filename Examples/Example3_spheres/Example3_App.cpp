@@ -74,9 +74,16 @@ void MyApp::prepareAssets() {
         true, false, false);
     assets.mesh.sphere2->initialize();
 
+    auto planeData1 = std::make_shared<rlgl::MeshVertexData>();
+    meshGen.generatePlane(planeData1, rl::geom::Rectangle(8.0f, 8.0f), 4, true);
+
+    assets.mesh.plane1 = std::make_shared<rlgl::Mesh>(
+        rlgl::GLBuffer<float>(planeData1->vertices),
+        rlgl::GLBuffer<unsigned int>(planeData1->indices),
+        true, false, false);
+    assets.mesh.plane1->initialize();
 
     //############## UI ##########################################
- 
     //Meshes:
     assets.mesh.square = rlgl::MeshBank::defaultSquare();
 
@@ -193,6 +200,11 @@ void MyApp::createSpheres() {
         scene.addObject(sphere2);
     }
 
+    rlgl::Object* plane1 = new rlgl::Object(assets.mesh.plane1, assets.shader.coloredLightMat, assets.material.metalic);
+    plane1->setColor(glm::vec3(1.f, 0.f, 0.f));
+    plane1->setPosition(glm::vec3(0.f, 0.f, z1));
+    plane1->setScale(2.f);
+    scene.addObject(plane1);
 }
 
 void MyApp::createCSYS() {

@@ -46,10 +46,10 @@ vec3 pointLightContribution(
 
 void main()
 {
-	FragColor = texture(textureID, texCoords);>
+	FragColor = texture(textureID, texCoords);
 
 	if(highlight){
-		FragColor *= color;>
+		FragColor *= color;
 	}
 
 	vec3 lightContribution = vec3(0.0);

@@ -44,9 +44,15 @@ void MeshFactory::generatePlane(
 	const rl::geom::Rectangle&      shape,
 	int 							nElementsSide,
 	bool							indexed,
-	const glm::vec3& 				center = glm::vec3(0.f))
+	const glm::vec3& 				center)
 {
-	
+	GridMeshGenerator planeGen(nElementsSide, nElementsSide, generateNormalsON, generateTexCoordsON);
+    planeGen.generateVertices(data, shape, center);
+	planeGen.generateIndices(data);
+
+	if (!indexed) {
+		planeGen.makeNonIndexed(data);
+	}
 }
 
 
@@ -253,34 +259,65 @@ GridMeshGenerator::GridMeshGenerator(
     |\  | \ | \ |
 	|  \|  \|  \|
 	1---2---3---4  -->x
-
-  
 */
 void GridMeshGenerator::generateVertices(
 	std::shared_ptr<MeshVertexData> data,
 	const rl::geom::Rectangle&		shape,
 	const glm::vec3&				center)
 {
-
-	const glm::vec3 startPos = center - glm::vec3(-shape.width, -shape.height, 0.f);
+	const glm::vec3 startPos = center - glm::vec3(shape.width/2.f, shape.height/2.f, 0.f);
 	const glm::vec3 deltaElX(shape.width/static_cast<float>(nElementsX), 0.f, 0.f);
 	const glm::vec3 deltaElY(0.f, shape.height/static_cast<float>(nElementsY), 0.f);
+	const glm::vec3 normal(0.f, 0.f, 1.f);
 
-	for(int i = 0; i < nElementsX + 1; i++)
+	for(int i = 0; i < (nElementsY + 1); i++)
 	{
-		for(int j = 0; j < nElementsY + 1; j++)
+		for(int j = 0; j < (nElementsX + 1); j++)
 		{
 			data->addVertexVec3(
 				startPos + 
 				static_cast<float>(j) * deltaElX +
-				static_cast<float>(j) * deltaElY
+				static_cast<float>(i) * deltaElY
 			);
+
+			if(includeNormals) {
+				data->addVertexVec3(normal);
+			}
 		}
 	}
 
 }
 
+/*!
+
+    ^ z
+    |
+    8---9--10--11
+    |\  | \ | \ |
+	|  \|  \|  \|
+    4---5---6---7
+    |\  | \ | \ |
+	|  \|  \|  \|
+	0---1---2---3  -->x
+
+	15
+*/
 void GridMeshGenerator::generateIndices(std::shared_ptr<MeshVertexData> data)
 {
+	int elIndices[4] = { 0, 0, 0, 0 };
 
+	for (int i = 0; i < nElementsY; i++) {
+
+		for (int j = 0; j < nElementsX; j++) {
+
+			elIndices[1] = elIndices[0] + 1;
+			elIndices[2] = elIndices[1] + (nElementsX + 1);
+			elIndices[3] = elIndices[2] - 1;
+			data->addIndices(elIndices);
+			elIndices[0]++;
+
+			if(j == (nElementsX - 1))
+				elIndices[0]++;
+		}
+	}
 }

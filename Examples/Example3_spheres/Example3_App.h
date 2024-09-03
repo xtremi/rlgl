@@ -5,7 +5,7 @@ struct Assets {
 	struct Meshes {
 		rlgl::MeshPtr cube, cubeMap;
 		rlgl::MeshPtr world, square;
-		rlgl::MeshPtr sphere1, sphere2;
+		rlgl::MeshPtr sphere1, sphere2, plane1;
 	};
 	struct Shaders {
 		rlgl::ShaderPtr textured, texturedLight, texturedLightMat;

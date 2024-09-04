@@ -1,0 +1,1 @@
+%cd%/build/Examples/Example5_surface/Example5_surface.exe %cd%/data

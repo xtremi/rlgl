@@ -1,0 +1,1 @@
+%cd%/build/Examples/Example4_multi_lights/Example4_multi_lights.exe %cd%/data

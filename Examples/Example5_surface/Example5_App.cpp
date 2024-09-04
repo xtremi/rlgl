@@ -1,11 +1,9 @@
-#include "Example3_App.h"
+#include "Example5_App.h"
 #include "rlMath.h"
 #include "rlglMeshBank.h"
 #include "rlglMeshGenerator.h"
 #include "rlglColors.h"
 #include <iostream>
-
-const float MyApp::BOX_WIDTH = 2.5f;
 
 MyApp::MyApp(const std::string& assetDirectory) : BaseApp(assetDirectory){}
 
@@ -58,22 +56,6 @@ void MyApp::prepareAssets() {
 
 
     rlgl::MeshFactory meshGen;
-    auto sphereData1 = std::make_shared<rlgl::MeshVertexData>();
-    auto sphereData2 = std::make_shared<rlgl::MeshVertexData>();
-    meshGen.generateSphere(sphereData1, rl::geom::Sphere(1.0f), 32, false);
-    meshGen.generateSphere(sphereData2, rl::geom::Sphere(1.0f), 32, true);
-
-    assets.mesh.sphere1 = std::make_shared<rlgl::Mesh>(
-        rlgl::GLBuffer<float>(sphereData1->vertices),
-        true, false, false);
-    assets.mesh.sphere1->initialize();
-    
-    assets.mesh.sphere2 = std::make_shared<rlgl::Mesh>(
-        rlgl::GLBuffer<float>(sphereData2->vertices),
-        rlgl::GLBuffer<unsigned int>(sphereData2->indices),
-        true, false, false);
-    assets.mesh.sphere2->initialize();
-
     auto planeData1 = std::make_shared<rlgl::MeshVertexData>();
     meshGen.generatePlane(planeData1, rl::geom::Rectangle(8.0f, 8.0f), 4, true);
 
@@ -84,6 +66,7 @@ void MyApp::prepareAssets() {
     assets.mesh.plane1->initialize();
 
     //############## UI ##########################################
+ 
     //Meshes:
     assets.mesh.square = rlgl::MeshBank::defaultSquare();
 
@@ -99,9 +82,8 @@ int MyApp::prepareScene() {
     glClearColor(135.f/255.f, 206.f / 255.f, 250.f / 255.f, 1.0f);
 
     prepareAssets();        
-    createLight();
     createWorld();
-    createSpheres();
+    createSurface();
     createCSYS();
     createUI();
     createSkyBox();
@@ -109,9 +91,6 @@ int MyApp::prepareScene() {
 }
 
 int MyApp::updateScene() {
-    //camera.position.z = 2.f;
-    updateBoxes();
-    updateLight();
     return 0;
 }
 
@@ -139,67 +118,12 @@ void MyApp::createSkyBox() {
     scene.addObject(objects.skyBox);
 }
 
-void MyApp::createLight() {
-    glm::vec3 lightPos(0.f, 0.f, 10.f);
-    glm::vec3 lightColor(1.f, 1.f, 1.f);
 
-    for(int i = 0; i < 3; i++){
-
-        scene.worldEnv.lights.push_back({ lightPos, lightColor, 1.0f, 1.0f });
-        objects.lightBoxes.push_back(new rlgl::Object(assets.mesh.cube, assets.shader.colored, NO_MATERIAL));
-        objects.lightBoxes[i]->setPosition(lightPos);
-        objects.lightBoxes[i]->setColor(lightColor);
-        objects.lightBoxes[i]->setScale(0.4f);
-
-        scene.addObject(objects.lightBoxes[i]);
-    }
-}
-
-void MyApp::updateLight() {
-
-    double curTime = glfwGetTime();
-
-    double speed[3] = { 0.25f, 2.2f, 4.0f };
-    double rad[3] = { 5.f, 7.5f, 10.0f };
-
-    for(int i = 0; i < scene.worldEnv.lights.size(); i++){
-        scene.worldEnv.lights[i].pos =
-            glm::vec3(0.f, 0.f, 6.0f) + 
-            glm::vec3(rad[i] * glm::sin(speed[i] * curTime), rad[i] * glm::cos(speed[i] * curTime), 0.f);
-        
-        objects.lightBoxes[i]->setPosition(scene.worldEnv.lights[i].pos);
-    }
-}
-
-void MyApp::createSpheres() {
-
-    int nSpheres = 24;
-    float sphereRad = 1.5f;
-    float rad = 15.0f;
-    float z1 = 3.f;
-    float z2 = z1 + 2.1f * sphereRad;
-    for (int i = 0; i < nSpheres; i++) {
-        
-        rlgl::Object* sphere1 = new rlgl::Object(assets.mesh.sphere1, assets.shader.coloredLightMat, assets.material.metalic);
-        rlgl::Object* sphere2 = new rlgl::Object(assets.mesh.sphere2, assets.shader.coloredLightMat, assets.material.metalic);
-
-        float ang = glm::two_pi<float>() * (float)i / (float)nSpheres;
-
-        sphere1->setColor(glm::vec3((float)i / (float)nSpheres, 0.2f, 0.3f));
-        sphere2->setColor(glm::vec3((float)i / (float)nSpheres, 0.2f, 0.3f));
-
-        sphere1->setPosition(glm::vec3(rad * glm::sin(ang), rad * glm::cos(ang), z1));
-        sphere2->setPosition(glm::vec3(rad * glm::sin(ang), rad * glm::cos(ang), z2));
-        sphere1->setScale(sphereRad);
-        sphere2->setScale(sphereRad);
-        
-        scene.addObject(sphere1);
-        scene.addObject(sphere2);
-    }
+void MyApp::createSurface() {
 
     rlgl::Object* plane1 = new rlgl::Object(assets.mesh.plane1, assets.shader.coloredLightMat, assets.material.metalic);
     plane1->setColor(glm::vec3(1.f, 0.f, 0.f));
-    plane1->setPosition(glm::vec3(0.f, 0.f, z1));
+    plane1->setPosition(glm::vec3(0.f, 0.f, 10.f));
     plane1->setScale(2.f);
     scene.addObject(plane1);
 }
@@ -213,20 +137,6 @@ int MyApp::postRender(){
 	return 0;
 }
 
-
 void MyApp::processInput(GLFWwindow* window) {
     BaseApp::processInput(window);
-}
-
-void MyApp::updateBoxes() {
-
-    double curTime = glfwGetTime();
-    //for (rlgl::Object* obj : objects.cubes) {
-    //
-    //    obj->translate(glm::vec3(0.1f * glm::sin(curTime * 2.5f), 0.f, 0.f));
-    //    rl::BoundingBox bbox = rl::BoundingBox::createCubeBoundingBox(obj->getPosition(), BOX_WIDTH);
-    //
-    //    octTree.moveObject(obj, bbox);
-    //}
-
 }
